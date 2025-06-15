@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="356bb338-97be-4466-b26d-dfa17b3b6499" name="Changes" comment="init">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main/templates/main/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/main/templates/main/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/css/bootstrap/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/css/my_css.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/css/my_footer_css.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/favicon/android-chrome-192x192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/favicon/android-chrome-512x512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/favicon/apple-touch-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/favicon/favicon-16x16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/favicon/favicon-32x32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/favicon/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/favicon/site.webmanifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/basket2-fill.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/box-arrow-in-left.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/box-arrow-in-right.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/cart-plus.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/facebook.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/github.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/google.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/grid-fill.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/icons/trash3-fill.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/Not found image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/baseavatar.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/bg-image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/bedside table.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/corner sofa.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/double bed.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/flower.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/kitchen table 2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/kitchen table.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/office chair.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/plants.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/set of tea table and three chairs.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/set of tea table and two chairs.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/sofa.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/images/goods/strange table.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/js/bootstrap/bootstrap.bundle.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/js/jquery-ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/js/jquery-events.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/deps/js/jquery/jquery-3.7.0.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates-for-Django-4-course-Home/index.html" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Nasru105&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/PythonHubStudio/templates-for-Django-4-course-Home.git&quot;,
+    &quot;accountId&quot;: &quot;e4e99342-d0dc-47fa-8e01-062864d80f76&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2yV89frZXA5UViNQE8t9FxLFd3a" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.manage.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Nasru/PycharmProjects/Internet_shop&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Nasru\PycharmProjects\Internet_shop\app\main\static" />
+      <recent name="C:\Users\Nasru\PycharmProjects\Internet_shop\app\main\templates\main" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="manage" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Internet_shop" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/manage.py" />
+      <option name="PARAMETERS" value="runserver" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.manage" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-6a3326d57233-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.24807.21" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="356bb338-97be-4466-b26d-dfa17b3b6499" name="Changes" comment="" />
+      <created>1749908230462</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749908230462</updated>
+    </task>
+    <task id="LOCAL-00001" summary="init">
+      <option name="closed" value="true" />
+      <created>1749908405913</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1749908405913</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init" />
+    <option name="LAST_COMMIT_MESSAGE" value="init" />
+  </component>
+</project>
