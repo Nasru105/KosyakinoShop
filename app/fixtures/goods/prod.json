@@ -1,0 +1,44 @@
+[
+{
+    "model": "goods.products",
+    "pk": 1,
+    "fields": {
+        "name": "Чайный столик и три стула",
+        "slug": "chajnyj-stolik-i-tri-stula",
+        "description": "\"Комплект из трёх стульев и дизайнерский столик для гостинной комнаты.",
+        "image": "",
+        "price": "150.00",
+        "discount": "10.00",
+        "quantity": 4,
+        "category": 7
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 2,
+    "fields": {
+        "name": "Двухспальная кровать",
+        "slug": "dvuhspalnaya-krovat",
+        "description": "Кровать двухспальная с надголовником и вообще очень ортопедичная.",
+        "image": "",
+        "price": "670.00",
+        "discount": "14.00",
+        "quantity": 6,
+        "category": 6
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 3,
+    "fields": {
+        "name": "Кухонный стол с раковиной",
+        "slug": "kuhonnyj-stol-s-rakovinoj",
+        "description": "Кухонный стол для обеда с встроенной раковиной и стульями.",
+        "image": "",
+        "price": "365.00",
+        "discount": "45.00",
+        "quantity": 123,
+        "category": 5
+    }
+}
+]
