@@ -44,13 +44,12 @@
 
         {% for product in goods%}
         
-
             <!-- Карта товара -->
             <div class="col-lg-4 col-md-6 p-4">
                 <div class="card border-primary rounded custom-shadow">
                     <img src="{% static product.image %}" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <a href="../goods/product.html">
+                        <a href="/catalog/product">
                             <p class="card-title">{{ product.name }}</p>
                         </a>
                         <p class="card-text text-truncate">{{ product.description }}</p>
