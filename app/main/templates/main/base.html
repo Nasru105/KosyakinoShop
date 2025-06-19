@@ -1,4 +1,6 @@
 {% load static %}
+{% load goods_tags %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,10 +11,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static "deps/css/bootstrap/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "deps/css/my_css.css" %}">
+
     <!-- Стиль footer-a для главной страницы -->
-    {% block css %}
+    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
     
-    {% endblock css %}
     <!-- Favicons for different platforms -->
     <link rel="apple-touch-icon" sizes="180x180" href="{% static "deps/favicon/apple-touch-icon.png" %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static "deps/favicon/favicon-32x32.png" %}">
@@ -88,6 +90,7 @@
                             height="16">
                     </button>
                     <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
+                        {% tag_categories as categories%}
                         {% for category in categories %}
                             <li><a class="dropdown-item text-white" href="{% url "catalog:index" %}">{{ category.name }}</a></li>
                         {% endfor %}
@@ -182,7 +185,11 @@
             </div>
         </div>
     </section>
-    {% block footer %} {% endblock footer %}
+    <footer class="py-2 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Kosyakino 2025</p>
+        </div>
+    </footer>
     <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
     <script src="{% static "deps/js/jquery-events.js" %}"></script>
     <script src="{% static "deps/js/jquery-ajax.js" %}"></script>
