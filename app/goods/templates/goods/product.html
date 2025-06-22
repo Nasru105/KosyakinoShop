@@ -8,8 +8,11 @@
             <div class="row">
                 <!-- Миниатюры -->
                 <div class="col-md-4">
-                    <img src="{{ product.image.url }}"  alt="{{ product.name }}"
-                        class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
+                    {% else %}
+                        <img src={% static "deps/images/Not found image.png" %} alt="{{ product.name }}" class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
+                    {% endif %}
                 </div>
                 <div class="col-md-4 ">
                     <p class="product_id mt-3">id: {{ product.display_id }}</p>
@@ -25,7 +28,11 @@
                                     aria-label="Закрыть"></button>
                             </div>
                             <div class="modal-body">
-                                <img src="{{ product.image.url }}" class="img-fluid"  alt="{{ product.name }}">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" >
+                                {% else %}
+                                    <img src={% static "deps/images/Not found image.png" %} alt="{{ product.name }}" class="img-fluid">
+                                {% endif %}
                             </div>
                         </div>
                     </div>

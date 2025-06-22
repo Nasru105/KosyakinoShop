@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="{% static "deps/css/my_css.css" %}">
 
     <!-- Стиль footer-a для главной страницы -->
+    {% if not goods %}
     <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+    {% endif %}
     
     <!-- Favicons for different platforms -->
     <link rel="apple-touch-icon" sizes="180x180" href="{% static "deps/favicon/apple-touch-icon.png" %}">
@@ -185,11 +187,11 @@
             </div>
         </div>
     </section>
-    {% comment %} <footer class="py-2 bg-dark">
+    <footer class="py-2 bg-dark">
         <div class="container">
             <p class="m-0 text-center text-white">Copyright &copy; Kosyakino 2025</p>
         </div>
-    </footer> {% endcomment %}
+    </footer>
     <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
     <script src="{% static "deps/js/jquery-events.js" %}"></script>
     <script src="{% static "deps/js/jquery-ajax.js" %}"></script>
