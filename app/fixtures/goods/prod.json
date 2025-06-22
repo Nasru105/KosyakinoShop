@@ -3,12 +3,12 @@
     "model": "goods.products",
     "pk": 1,
     "fields": {
-        "name": "Чайный столик и три стула",
+        "name": "Р§Р°Р№РЅС‹Р№ СЃС‚РѕР»РёРє Рё С‚СЂРё СЃС‚СѓР»Р°",
         "slug": "chajnyj-stolik-i-tri-stula",
-        "description": "\"Комплект из трёх стульев и дизайнерский столик для гостинной комнаты.",
-        "image": "",
+        "description": "\"РљРѕРјРїР»РµРєС‚ РёР· С‚СЂС‘С… СЃС‚СѓР»СЊРµРІ Рё РґРёР·Р°Р№РЅРµСЂСЃРєРёР№ СЃС‚РѕР»РёРє РґР»СЏ РіРѕСЃС‚РёРЅРЅРѕР№ РєРѕРјРЅР°С‚С‹.",
+        "image": "goods_images/set_of_tea_table_and_three_chairs.jpg",
         "price": "150.00",
-        "discount": "10.00",
+        "discount": "10.23",
         "quantity": 4,
         "category": 7
     }
@@ -17,10 +17,10 @@
     "model": "goods.products",
     "pk": 2,
     "fields": {
-        "name": "Двухспальная кровать",
+        "name": "Р”РІСѓС…СЃРїР°Р»СЊРЅР°СЏ РєСЂРѕРІР°С‚СЊ",
         "slug": "dvuhspalnaya-krovat",
-        "description": "Кровать двухспальная с надголовником и вообще очень ортопедичная.",
-        "image": "",
+        "description": "РљСЂРѕРІР°С‚СЊ РґРІСѓС…СЃРїР°Р»СЊРЅР°СЏ СЃ РЅР°РґРіРѕР»РѕРІРЅРёРєРѕРј Рё РІРѕРѕР±С‰Рµ РѕС‡РµРЅСЊ РѕСЂС‚РѕРїРµРґРёС‡РЅР°СЏ.",
+        "image": "goods_images/double_bed.jpg",
         "price": "670.00",
         "discount": "14.00",
         "quantity": 6,
@@ -31,14 +31,224 @@
     "model": "goods.products",
     "pk": 3,
     "fields": {
-        "name": "Кухонный стол с раковиной",
+        "name": "РљСѓС…РѕРЅРЅС‹Р№ СЃС‚РѕР» СЃ СЂР°РєРѕРІРёРЅРѕР№",
         "slug": "kuhonnyj-stol-s-rakovinoj",
-        "description": "Кухонный стол для обеда с встроенной раковиной и стульями.",
-        "image": "",
+        "description": "РљСѓС…РѕРЅРЅС‹Р№ СЃС‚РѕР» РґР»СЏ РѕР±РµРґР° СЃ РІСЃС‚СЂРѕРµРЅРЅРѕР№ СЂР°РєРѕРІРёРЅРѕР№ Рё СЃС‚СѓР»СЊСЏРјРё.",
+        "image": "goods_images/kitchen_table_2.jpg",
         "price": "365.00",
         "discount": "45.00",
         "quantity": 123,
         "category": 5
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 4,
+    "fields": {
+        "name": "РЈРіР»РѕРІРѕР№ РґРёРІР°РЅ РґР»СЏ РіРѕСЃС‚РёРЅРЅРѕР№",
+        "slug": "uglovoj-divan-dlya-gostinnoj",
+        "description": "РЈРіР»РѕРІРѕР№ РґРёРІР°РЅ, СЂР°СЃРєР»Р°РґС‹РІР°РµС‚СЃСЏ РІ РґРІСѓС…СЃРїР°Р»СЊРЅСѓСЋ РєСЂРѕРІР°С‚СЊ, РґР»СЏ РіРѕСЃС‚РёРЅРЅРѕР№ Рё РїСЂРёРµРјР° РіРѕСЃС‚РµР№ СЃР°РјРѕРµ С‚Рѕ!",
+        "image": "",
+        "price": "610.00",
+        "discount": "54.23",
+        "quantity": 34,
+        "category": 7
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 5,
+    "fields": {
+        "name": "123",
+        "slug": "123",
+        "description": "",
+        "image": "",
+        "price": "0.00",
+        "discount": "0.00",
+        "quantity": 0,
+        "category": 4
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 6,
+    "fields": {
+        "name": "234",
+        "slug": "234",
+        "description": "",
+        "image": "",
+        "price": "0.00",
+        "discount": "0.00",
+        "quantity": 0,
+        "category": 5
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 7,
+    "fields": {
+        "name": "345",
+        "slug": "345",
+        "description": "",
+        "image": "",
+        "price": "0.00",
+        "discount": "0.00",
+        "quantity": 0,
+        "category": 8
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 8,
+    "fields": {
+        "name": "456",
+        "slug": "456",
+        "description": "",
+        "image": "",
+        "price": "0.00",
+        "discount": "0.00",
+        "quantity": 0,
+        "category": 8
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 9,
+    "fields": {
+        "name": "678",
+        "slug": "678",
+        "description": "",
+        "image": "",
+        "price": "0.00",
+        "discount": "0.00",
+        "quantity": 0,
+        "category": 6
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 10,
+    "fields": {
+        "name": "100",
+        "slug": "100",
+        "description": "",
+        "image": "",
+        "price": "12312.00",
+        "discount": "99.99",
+        "quantity": 1123,
+        "category": 9
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 12,
+    "fields": {
+        "name": "421",
+        "slug": "421",
+        "description": "21",
+        "image": "",
+        "price": "23.01",
+        "discount": "32.00",
+        "quantity": 0,
+        "category": 9
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 13,
+    "fields": {
+        "name": "qwe",
+        "slug": "qwe",
+        "description": "",
+        "image": "",
+        "price": "12312.00",
+        "discount": "2.00",
+        "quantity": 1123,
+        "category": 7
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 14,
+    "fields": {
+        "name": "2133",
+        "slug": "2133",
+        "description": "",
+        "image": "",
+        "price": "213.00",
+        "discount": "3.00",
+        "quantity": 0,
+        "category": 8
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 15,
+    "fields": {
+        "name": "Р°СѓС†3324Р°",
+        "slug": "auc3324a",
+        "description": "",
+        "image": "",
+        "price": "213.00",
+        "discount": "32.00",
+        "quantity": 0,
+        "category": 5
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 16,
+    "fields": {
+        "name": "Р№С†СѓР°С†Р№Сѓ",
+        "slug": "jcuacju",
+        "description": "",
+        "image": "",
+        "price": "3234.00",
+        "discount": "23.00",
+        "quantity": 0,
+        "category": 5
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 17,
+    "fields": {
+        "name": "Рє324РєРІ32",
+        "slug": "k324kv32",
+        "description": "",
+        "image": "",
+        "price": "34.00",
+        "discount": "42.00",
+        "quantity": 42,
+        "category": 5
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 18,
+    "fields": {
+        "name": "33323",
+        "slug": "33323",
+        "description": "3123",
+        "image": "",
+        "price": "3.00",
+        "discount": "23.00",
+        "quantity": 123,
+        "category": 8
+    }
+},
+{
+    "model": "goods.products",
+    "pk": 19,
+    "fields": {
+        "name": "332133",
+        "slug": "332133",
+        "description": "",
+        "image": "",
+        "price": "13123.00",
+        "discount": "32.00",
+        "quantity": 123,
+        "category": 9
     }
 }
 ]
