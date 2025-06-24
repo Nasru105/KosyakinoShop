@@ -8,11 +8,11 @@
             <div class="row">
                 <!-- Миниатюры -->
                 <div class="col-md-4">
-                    {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
-                    {% else %}
-                        <img src={% static "deps/images/Not found image.png" %} alt="{{ product.name }}" class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
-                    {% endif %}
+                        <img src="
+                        {% if product.image %} {{ product.image.url }}
+                        {% else %} {% static "deps/images/Not found image.png" %}
+                        {% endif %}"
+                        alt="{{ product.name }}" class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
                 </div>
                 <div class="col-md-4 ">
                     <p class="product_id mt-3">id: {{ product.display_id }}</p>
