@@ -2,10 +2,10 @@ from re import search
 from goods.models import Products
 from django.db.models import Q
 from django.contrib.postgres.search import (
+    SearchHeadline,  # type: ignore
     SearchVector,
     SearchRank,
     SearchQuery,
-    SearchHeadline,
 )
 
 
@@ -13,14 +13,13 @@ def q_search(query):
     if query.isdigit() and len(query) <= 5:
         return Products.objects.filter(id=int(query))
 
-    vector = SearchVector("name", "description")
-    query = SearchQuery(query)
+    vector = SearchVector("name") + SearchVector("description")
+    query = SearchQuery(query, config="russian")  # Указываем язык для морфологии
 
-    goods = (
-        Products.objects.annotate(rank=SearchRank(vector, query))
-        .filter(rank__gt=0)
-        .order_by("-rank")
-    )
+    goods = Products.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gt=0).order_by("-rank")
+
+    for good in goods:
+        print(f"q_search: {good},")
 
     goods = goods.annotate(
         headline=SearchHeadline(

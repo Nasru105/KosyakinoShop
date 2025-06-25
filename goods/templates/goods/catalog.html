@@ -2,7 +2,9 @@
 {% load static %}
 {% load goods_tags %} 
 
-
+{% block modal_cart %}
+    {% include "includes/cart_button.html" %}
+{% endblock modal_cart %}
 
 {% block content %}
     <!-- Контент на странице -->
@@ -90,16 +92,16 @@
                         <p class="product_id">id: {{ product.display_id }}</p>
                         <div class="d-flex justify-content-between">
                             {% if product.discount %}
-                                <p><s>{{ product.price }}</s> $</p>
-                                <p><strong>{{ product.sell_price }} $</strong></p>
+                                <p><s>{{ product.price }}</s> ₽</p>
+                                <p><strong>{{ product.sell_price }} ₽</strong></p>
                                 <span class="badge bg-warning text-dark">Скидка {{ product.discount }} %</span>
                             {% else %}
-                                <p><strong>{{ product.sell_price }} $</strong></p>
+                                <p><strong>{{ product.sell_price }} ₽</strong></p>
                             {% endif %}
 
 
 
-                            <a href="#" class="btn add-to-cart">
+                            <a href="{% url "carts:cart_add" product.slug %}" class="btn add-to-cart">
                                 <img class="mx-1" src="{% static "deps/icons/cart-plus.svg" %}" alt="Catalog Icon"
                                     width="32" height="32">
                             </a>
