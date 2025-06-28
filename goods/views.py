@@ -21,8 +21,6 @@ def catalog(request, category_slug=None):
         goods = Products.objects.all()
     elif query:
         goods = q_search(query)
-        for good in goods:
-            print(good)
     else:
         goods = Products.objects.filter(category__slug=category_slug)
         if not goods.exists():

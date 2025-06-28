@@ -16,10 +16,7 @@ def q_search(query):
     vector = SearchVector("name") + SearchVector("description")
     query = SearchQuery(query, config="russian")  # Указываем язык для морфологии
 
-    goods = Products.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gt=0).order_by("-rank")
-
-    for good in goods:
-        print(f"q_search: {good},")
+    goods = Products.objects.annotate(rank=SearchRank(vector, query)).order_by("-rank")
 
     goods = goods.annotate(
         headline=SearchHeadline(
