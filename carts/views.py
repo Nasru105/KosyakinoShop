@@ -48,17 +48,17 @@ def cart_change(request):
 
     cart_id = request.POST.get("cart_id")
     quantity = request.POST.get("quantity")
+    order = request.POST.get("order")
     cart = Cart.objects.get(id=cart_id)
 
     cart.quantity = quantity
     cart.save()
 
     user_carts = get_user_carts(request)
-    cart_items_html = render_to_string("carts/includes/included_cart.html", {"carts": user_carts}, request=request)
-    response_data = {
-        "cart_items_html": cart_items_html,
-        "quantity": quantity,
-    }
+    cart_items_html = render_to_string(
+        "carts/includes/included_cart.html", {"carts": user_carts, "order": order}, request=request
+    )
+    response_data = {"cart_items_html": cart_items_html, "quantity": quantity, "order": order}
 
     return JsonResponse(response_data)
 
@@ -66,12 +66,16 @@ def cart_change(request):
 def cart_remove(request):
 
     cart_id = request.POST.get("cart_id")
+    order = request.POST.get("order")
     cart = Cart.objects.get(id=cart_id)
     quantity = cart.quantity
     cart.delete()
 
     user_carts = get_user_carts(request)
-    cart_items_html = render_to_string("carts/includes/included_cart.html", {"carts": user_carts}, request=request)
+    print(order)
+    cart_items_html = render_to_string(
+        "carts/includes/included_cart.html", {"carts": user_carts, "order": order}, request=request
+    )
     response_data = {
         "message": "Товар удален из корзины",
         "cart_items_html": cart_items_html,

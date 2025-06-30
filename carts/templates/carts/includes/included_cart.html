@@ -51,3 +51,14 @@
         <h4 class="float-left"><strong>{{ carts.total_price }} ₽</strong></h4>
     </div>
 </div>
+<script>
+    {% if order %}
+    var order = true
+    {% else %}
+    var order = false
+    {% endif %};
+</script>
+
+{% if carts and not order%}
+    <a class="btn btn-dark" href="{% url "orders:create_order" %}">Оформить заказ</a>
+{% endif %}
