@@ -1,12 +1,16 @@
 from email import message
 from django.contrib import auth, messages
+from django.db.models import Prefetch
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from carts.models import Cart
+import orders
+from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
+from django.db.models import Sum
 
 
 def login(request):
@@ -83,10 +87,16 @@ def profile(request):
     else:
         form = ProfileForm(instance=request.user)
 
-    context = {
-        "title": "Kosyakino - Кабинет",
-        "form": form,
-    }
+    # разобрать этот моментик
+
+    orders = (
+        Order.objects.filter(user=request.user)
+        .prefetch_related(Prefetch("orderitem_set", queryset=OrderItem.objects.select_related("product")))
+        .annotate(total_sum=Sum("orderitem__price"))
+        .order_by("-id")
+    )
+
+    context = {"title": "Kosyakino - Кабинет", "form": form, "orders": orders}
     return render(request, "users/profile.html", context)
 
 

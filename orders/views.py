@@ -7,8 +7,10 @@ from carts.models import Cart
 from orders.forms import CreateOrderForm
 from orders.models import Order, OrderItem
 
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+
+@login_required
 def create_order(request):
     if request.method == "POST":
         form = CreateOrderForm(data=request.POST)
@@ -51,8 +53,13 @@ def create_order(request):
                     messages.success(request, "Заказ оформлен!")
                     return redirect("user:profile")
             except ValidationError as e:
-                messages.success(request, str(e))
-                return redirect("orders:create_order")
+                form.add_error(None, e)  # добавляем ошибку в форму
+                context = {"title": "Оформление заказа", "form": form, "order": True}
+                return render(request, "orders/create_order.html", context=context)
+        else:
+            # форма невалидна (ошибки в requires_delivery и т.п.)
+            context = {"title": "Оформление заказа", "form": form, "order": True}
+            return render(request, "orders/create_order.html", context=context)
     else:
         initial = {
             "first_name": request.user.first_name,
@@ -61,6 +68,6 @@ def create_order(request):
 
         form = CreateOrderForm(initial=initial)
 
-    context = {"title": "Оформление заказа", "form": form}
+    context = {"title": "Оформление заказа", "form": form, "order": True}
 
     return render(request, "orders/create_order.html", context=context)

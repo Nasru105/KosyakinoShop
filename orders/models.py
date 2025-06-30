@@ -32,11 +32,13 @@ class Order(models.Model):
         db_table = "order"
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
+        ordering = ("id",)
 
     def __str__(self) -> str:
-        if self.user:
-            return f"Заказ №{self.id} | Покупатель: {self.user.first_name} {self.user.last_name} ({self.user.username})"
-        return f"Заказ №{self.id}"
+        return f"Заказ № {self.display_id()}"
+
+    def display_id(self):
+        return f"{self.id:05}"
 
 
 class OrderItem(models.Model):
@@ -53,6 +55,7 @@ class OrderItem(models.Model):
         db_table = "order_item"
         verbose_name = "Проданный товар"
         verbose_name_plural = "Проданные товары"
+        ordering = ("id",)
 
     objects = OrderitemQueryset.as_manager()
 
@@ -60,4 +63,4 @@ class OrderItem(models.Model):
         return round(self.price * self.quantity, 2)
 
     def __str__(self) -> str:
-        return f"Товар {self.name} | Заказ №{self.order.id}"
+        return f"Товар {self.name} | Заказ №{self.order.display_id()}"
