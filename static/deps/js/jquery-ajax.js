@@ -76,7 +76,6 @@ $(document).ready(function () {
             data: {
                 cart_id: cart_id,
                 csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
-                order: order
             },
             success: function (data) {
                 // Сообщение
@@ -152,7 +151,6 @@ $(document).ready(function () {
                 cart_id: cartID,
                 quantity: quantity,
                 csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
-                order: order
             },
 
             success: function (data) {

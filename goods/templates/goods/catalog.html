@@ -118,28 +118,28 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center my-4">
             <div class="custom-shadow d-flex">
-                <li class="page-item {% if not goods.has_previous %} disabled {% endif %}">
+                <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
                     <a class="page-link" 
-                    href="{% if goods.has_previous %}?{% change_params page=goods.previous_page_number %}
+                    href="{% if page_obj.has_previous %}?{% change_params page=page_obj.previous_page_number %}
                     {% else %} #
                     {% endif %} ">Назад</a>
                 </li>
 
-                {% for page in goods.paginator.page_range %}
-                    {% if page >= goods.number|add:-2 and page <= goods.number|add:2 or page == 1 or page == goods.paginator.num_pages %}
-                        <li class="page-item {% if goods.number == page %} disabled active {% endif %}" >
+                {% for page in page_obj.paginator.page_range %}
+                    {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 or page == 1 or page == page_obj.paginator.num_pages %}
+                        <li class="page-item {% if page_obj.number == page %} disabled active {% endif %}" >
                             <a class="page-link" href="?{% change_params page=page %}">{{ page }}</a>
                         </li>
-                    {% elif page == 2 or page == goods.paginator.num_pages|add:-1 %}
+                    {% elif page == 2 or page == page_obj.paginator.num_pages|add:-1 %}
                         <li class="page-item disabled" >
                             <a class="page-link">...</a>
                         </li>
                     {% endif %}
                 {% endfor %}
 
-                <li class="page-item {% if not goods.has_next %} disabled {% endif %}">
+                <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
                     <a class="page-link" href="
-                    {% if goods.has_next %}?{% change_params page=goods.next_page_number %}
+                    {% if page_obj.has_next %}?{% change_params page=page_obj.next_page_number %}
                     {% else %} #
                     {% endif %}">Следующая</a>
                 </li>

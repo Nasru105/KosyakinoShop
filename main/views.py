@@ -1,23 +1,26 @@
-from django.http import HttpRequest, HttpResponse
+from typing import Any
 from django.shortcuts import render
+from django.views.generic import TemplateView
 
 from goods.models import Categories
 
 
-def index(request):
+class IndexView(TemplateView):
+    template_name = "main/index.html"
 
-    context = {
-        "title": "Kosyakino",
-        "content": "Магазин Kosyakino",
-    }
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Kosyakino"
+        context["content"] = "Магазин Kosyakino"
+        return context
 
-    return render(request, "main/index.html", context)
 
+class AboutView(TemplateView):
+    template_name = "main/about.html"
 
-def about(request):
-    context = {
-        "title": "О нас",
-        "content": "О нас",
-        "text_on_page": "текст",
-    }
-    return render(request, "main/about.html", context)
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Kosyakino"
+        context["content"] = "Магазин Kosyakino"
+        context["text_on_page"] = "текст"
+        return context
