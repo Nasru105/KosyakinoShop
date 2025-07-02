@@ -1,5 +1,6 @@
 from email import message
 from typing import Any
+from urllib import request
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
@@ -11,6 +12,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView
 
 from carts.models import Cart
+from common.mixin import CacheMixin
 from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
 from django.db.models import Sum
@@ -77,7 +79,7 @@ class UserRegistrationView(CreateView):
         return context
 
 
-class UserProfileView(LoginRequiredMixin, UpdateView):
+class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
     form_class = ProfileForm
     template_name = "users/profile.html"
     success_url = reverse_lazy("user:profile")
@@ -92,12 +94,13 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["title"] = "Kosyakino - Профиль"
-        context["orders"] = (
+        orders = (
             Order.objects.filter(user=self.request.user)
             .prefetch_related(Prefetch("orderitem_set", queryset=OrderItem.objects.select_related("product")))
             .annotate(total_sum=Sum("orderitem__price"))
             .order_by("-id")
         )
+        context["orders"] = self.set_g(orders, f"orders_for_user_{self.request.user.id}", 60)
         return context
 
 

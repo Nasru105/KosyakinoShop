@@ -2,7 +2,6 @@
 {% load static %}
 {% load carts_tags %}
 
-
 <!-- Контент на странице -->
 {% block content %}
 <div class="row">
@@ -132,47 +131,3 @@
 </div>
 {% endblock content %}
 
-
-{% comment %} <div class="container">
-    <div class="accordion" id="accordionExample">
-        {% for order in orders %}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="heading1">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-                    Заказ №{{order.id}} - {{order.created_timestamp}} | Статус:"<strong class="mx-2">{{order.status}}</strong>
-                </button>
-            </h2>
-            <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <table class="table table-dark table-hover">
-                        <thead>
-                            <tr>
-                                <th>Товар</th>
-                                <th>Количество</th>
-                                <th>Цена</th>
-                                <th>Общая стоимость</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in order.orderitem_set.all %}
-                            <tr>
-                                <td><a class="text-white" href="{% url 'goods:product' item.product.slug %}">{{ item.product.name }}</a></td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.price }}</td>
-                                <td>{{ item.products_price }}</td>
-                                
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <div class="d-flex justify-content-between">
-                        <p><strong>Итого:</strong></p>
-                        <p><strong>2341 ₽</strong></p>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div> {% endcomment %}
