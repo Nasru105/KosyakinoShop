@@ -50,6 +50,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                         requires_delivery=form.cleaned_data["requires_delivery"],
                         delivery_address=form.cleaned_data["delivery_address"],
                         payment_on_get=form.cleaned_data["payment_on_get"],
+                        comment=form.cleaned_data["comment"],
                     )
 
                 for cart_item in cart_items:

@@ -9,6 +9,7 @@ class CreateOrderForm(forms.Form):
     requires_delivery = forms.ChoiceField(choices=[("0", "False"), ("1", "True")])
     delivery_address = forms.CharField(required=False)
     payment_on_get = forms.ChoiceField(choices=[("0", "False"), ("1", "True")])
+    comment = forms.CharField(required=False)
 
     def clean_phone_number(self):
         data = self.cleaned_data["phone_number"]

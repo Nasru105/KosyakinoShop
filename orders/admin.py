@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
 
 from orders.models import Order, OrderItem
 
@@ -18,10 +20,17 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 class OrderTabulareAdmin(admin.TabularInline):
     model = Order
-    fields = ["status", "requires_delivery", "payment_on_get", "is_paid", "created_timestamp"]
-    search_fields = ["requires_delivery", "status", "payment_on_get", "is_paid", "created_timestamp"]
-    readonly_fields = ["created_timestamp"]
+    fields = ["order_link", "status", "requires_delivery", "payment_on_get", "is_paid", "created_timestamp"]
+    readonly_fields = ["order_link", "created_timestamp"]
     extra = 0
+
+    def order_link(self, obj):
+        if obj.pk:
+            url = reverse("admin:%s_%s_change" % (obj._meta.app_label, obj._meta.model_name), args=[obj.pk])
+            return format_html('<a href="{}">Заказ № {}</a>', url, obj.display_id())
+        return "-"
+
+    order_link.short_description = "Ссылка на заказ"
 
 
 @admin.register(Order)
@@ -34,8 +43,9 @@ class OrderAdmin(admin.ModelAdmin):
         "payment_on_get",
         "is_paid",
         "created_timestamp",
+        "comment",
     ]
     search_fields = ["id", "user", "created_timestamp", "requires_delivery", "is_paid", "status"]
     readonly_fields = ["created_timestamp"]
-    list_filter = ["id", "user", "created_timestamp", "requires_delivery", "is_paid", "status"]
+    list_filter = ["user", "created_timestamp", "requires_delivery", "is_paid", "status"]
     inlines = [OrderltemTabulareAdmin]

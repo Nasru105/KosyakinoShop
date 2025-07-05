@@ -98,6 +98,14 @@
                                 <div class="alert alert-danger alert-dismissible fade show">{{form.payment_on_get.errors}}</div>
                             {% endif %}
                         </div>
+                        <div class="mb-3" id="deliveryAddressField">
+                            <label for="id_comment" class="form-label">Комментарий*:</label>
+                            <textarea class="form-control" id="id_comment"
+                                name="comment">{% if form.comment.value %}{{ form.comment.value }}{% endif %}</textarea>
+                            {% if form.comment.errors %}
+                                <div class="alert alert-danger alert-dismissible fade show">{{form.comment.errors}}</div>
+                            {% endif %}
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-dark">Оформить заказ</button>
                 </form>
