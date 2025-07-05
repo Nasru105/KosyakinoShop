@@ -1,56 +1,65 @@
 {% load static %}
 
-
-<div class="card mb-3 text-bg-light shadow-lg">
+{% if carts and carts|length > 0 %}
+<div>
     {% for cart in carts %}
-        <div class="card-header">
-            <h5 class="card-title">{{ cart.product.name }}</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <div class="row text-center">
-                    <div class="col p-0">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm decrement"
-                                    data-cart-id="{{cart.id}}" 
-                                    data-cart-change-url="{% url "carts:cart_change" %}" >
-                                    {% csrf_token %}
-                                    -</button>
-                            </span>
-                            <input type="text" class="form-control number" value="{{ cart.quantity }}"
-                                readonly>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm increment"
-                                    data-cart-id="{{cart.id}}" 
-                                    data-cart-change-url="{% url "carts:cart_change" %}">
-                                    {% csrf_token %}
-                                    +</button>
-                            </span>
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header">
+                <h5 class="card-title mb-0">{{ cart.product.name }}</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <div class="d-flex flex-nowrap align-items-center input-group">
+                            <button type="button" class="btn btn-dark btn-sm decrement me-1 input-group-btn"
+                                data-cart-id="{{ cart.id }}"
+                                data-cart-change-url="{% url 'carts:cart_change' %}"
+                                aria-label="Уменьшить количество">
+                                &minus;
+                            </button>
+                            <input type="text" class="form-control form-control-sm text-center number"
+                                id="cart-qty-{{ forloop.counter }}"
+                                style="width: 40px; flex: 0 0 40px; max-width: 40px;"
+                                value="{{ cart.quantity }}" readonly>
+                            <button type="button" class="btn btn-dark btn-sm increment ms-1 input-group-btn"
+                                data-cart-id="{{ cart.id }}"
+                                data-cart-change-url="{% url 'carts:cart_change' %}"
+                                aria-label="Увеличить количество">
+                                +
+                            </button>
+                        </div>
+                        <div>
+                            <span>{{ cart.product.sell_price }} ₽ × {{ cart.quantity }} =</span>
+                        </div>
+                        <div>
+                            <strong>{{ cart.products_price }} ₽</strong>
+                        </div>
+                        <div>
+                            <a href="{% url 'carts:cart_remove' %}"
+                               class="remove-from-cart"
+                               data-cart-id="{{ cart.id }}"
+                               aria-label="Удалить товар">
+                                <img class="mx-1"
+                                     src="{% static 'deps/icons/trash3-fill.svg' %}"
+                                     alt="Удалить"
+                                     width="20" height="20">
+                            </a>
                         </div>
                     </div>
-                    <div class="col p-0">
-                        <p>{{ cart.product.sell_price }} = </p>
-                    </div>
-                    <div class="col p-0"><strong>{{ cart.products_price }} ₽</strong></div>
-                    <div class="col p-0">
-                        <a href="{% url "carts:cart_remove" %}" class="remove-from-cart" data-cart-id="{{cart.id}}">
-                            {% csrf_token %}
-                            <img class="mx-1" src="{% static "deps/icons/trash3-fill.svg" %}"
-                                alt="Catalog Icon" width="16" height="16">
-                        </a>
-                    </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </div>
     {% endfor %}
 </div>
 <div class="card mb-3 shadow-lg">
-    <div class="card-footer">
-        <p class="float-left">Итого <strong>{{ carts.total_quantity }}</strong> товар(а) на сумму: </p>
-        <h4 class="float-left"><strong>{{ carts.total_price }} ₽</strong></h4>
+    <div class="card-footer d-flex justify-content-between flex-wrap">
+        <p class="mb-2 mb-md-0">Итого <strong>{{ carts.total_quantity }}</strong> товар(а) на сумму:</p>
+        <h4 class="mb-0"><strong>{{ carts.total_price }} ₽</strong></h4>
     </div>
 </div>
-{% if carts and not order%}
-    <a class="btn btn-dark" href="{% url "orders:create_order" %}">Оформить заказ</a>
+{% if not order %}
+    <a class="btn btn-dark w-100 mt-3" href="{% url 'orders:create_order' %}">Оформить заказ</a>
+{% endif %}
+{% else %}
+    <div class="alert alert-info">Ваша корзина пуста.</div>
 {% endif %}

@@ -1,20 +1,18 @@
-from turtle import update
 from typing import Any
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
 
 from carts.mixins import CartMixin
 from carts.models import Cart
-from carts.templatetags.carts_tags import user_carts
 from carts.utils import get_user_carts
 from goods.models import Products
 
 
 class CartAddView(CartMixin, View):
     def post(self, request):
+        print(type(request), request)
         product_id = request.POST.get("product_id")
         product = Products.objects.get(id=product_id)
 
@@ -26,7 +24,7 @@ class CartAddView(CartMixin, View):
         else:
             Cart.objects.create(
                 user=request.user if request.user.is_authenticated else None,
-                session_key=request.session_key if not request.user.is_authenticated else None,
+                session_key=request.session.session_key if not request.user.is_authenticated else None,
                 product=product,
                 quantity=1,
             )
@@ -45,10 +43,11 @@ class CartChangeView(CartMixin, View):
 
         cart = self.get_cart(request, cart_id=cart_id)
 
-        cart.quantity = request.POST.get("quantity")
-        cart.save()
+        if cart:
+            cart.quantity = request.POST.get("quantity")
+            cart.save()
 
-        quantity = cart.quantity
+            quantity = cart.quantity
 
         response_data = {
             "message": "Количество изменено",
@@ -64,8 +63,10 @@ class CartRemoveView(CartMixin, View):
         cart_id = request.POST.get("cart_id")
 
         cart = self.get_cart(request, cart_id=cart_id)
-        quantity = cart.quantity
-        cart.delete()
+
+        if cart:
+            quantity = cart.quantity
+            cart.delete()
 
         response_data = {
             "message": "Товар удален",

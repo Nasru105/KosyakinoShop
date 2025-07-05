@@ -24,10 +24,10 @@ class UserLoginView(LoginView):
     success_url = reverse_lazy("main:index")
 
     def get_success_url(self):
-        redirect_page = self.request.POST.get("next", None)
+        redirect_page = self.request.POST.get("next")
         if redirect_page and redirect_page != reverse("user:logout"):
-            return redirect_page
-        return self.success_url
+            return str(redirect_page)
+        return str(self.success_url)
 
     def form_valid(self, form):
         session_key = self.request.session.session_key
@@ -55,6 +55,12 @@ class UserRegistrationView(CreateView):
     template_name = "users/registration.html"
     success_url = reverse_lazy("user:profile")
 
+    def get_success_url(self):
+        redirect_page = self.request.POST.get("next")
+        if redirect_page and redirect_page != reverse("user:logout"):
+            return str(redirect_page)
+        return str(self.success_url)
+
     def form_valid(self, form):
         session_key = self.request.session.session_key
         user = form.instance
@@ -71,7 +77,7 @@ class UserRegistrationView(CreateView):
             f"{user.username}, Вы успешно зарегистрировались и вошли в аккаунт",
         )
 
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -94,13 +100,19 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["title"] = "Kosyakino - Профиль"
+        from django.db.models import F, ExpressionWrapper, FloatField
+
         orders = (
             Order.objects.filter(user=self.request.user)
             .prefetch_related(Prefetch("orderitem_set", queryset=OrderItem.objects.select_related("product")))
-            .annotate(total_sum=Sum("orderitem__price"))
+            .annotate(
+                total_sum=Sum(
+                    ExpressionWrapper(F("orderitem__price") * F("orderitem__quantity"), output_field=FloatField())
+                )
+            )
             .order_by("-id")
         )
-        context["orders"] = self.set_g(orders, f"orders_for_user_{self.request.user.id}", 60)
+        context["orders"] = self.set_g(orders, f"orders_for_user_{self.request.user.pk}", 60)
         return context
 
 

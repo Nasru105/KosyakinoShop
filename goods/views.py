@@ -39,11 +39,11 @@ class CatalogView(ListView):
         if order_by and order_by != "default":
             goods = goods.order_by(order_by)
 
-        return goods
+        return goods  # .filter(quantity__gt=0)
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["title"] = "self.objects.name"
+        context["title"] = "Каталог товаров"
         context["category_slug"] = self.kwargs.get("category_slug")
         return context
 
@@ -59,5 +59,5 @@ class ProductView(DetailView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["title"] = self.object.name
+        context["title"] = self.get_object().name
         return context
