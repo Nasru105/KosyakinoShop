@@ -1,20 +1,9 @@
-from django.contrib import messages
-from django.db import transaction
-from django.forms import ValidationError
-from django.http import HttpRequest
-from django.shortcuts import redirect, render
-
-from carts.models import Cart
-from orders.forms import CreateOrderForm
-from orders.models import Order, OrderItem
-
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 
 from typing import Any
 from django.contrib import messages
 from django.db import transaction
 from django.forms import ValidationError
-from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -22,8 +11,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from carts.models import Cart
 from orders.forms import CreateOrderForm
 from orders.models import Order, OrderItem
-
-from django.contrib.auth.decorators import login_required
 
 
 class CreateOrderView(LoginRequiredMixin, FormView):
@@ -47,9 +34,9 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                     order = Order.objects.create(
                         user=user,
                         phone_number=form.cleaned_data["phone_number"],
-                        requires_delivery=form.cleaned_data["requires_delivery"],
+                        requires_delivery=form.cleaned_data["requires_delivery"] == "1",
                         delivery_address=form.cleaned_data["delivery_address"],
-                        payment_on_get=form.cleaned_data["payment_on_get"],
+                        payment_on_get=form.cleaned_data["payment_on_get"] == "1",
                         comment=form.cleaned_data["comment"],
                     )
 
@@ -61,8 +48,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
 
                     if product.quantity < quantity:
                         raise ValidationError(
-                            f"Недостаточное количество товара {name} на складе.\
-                                                В наличии - {product.quantity}."
+                            f"Недостаточное количество товара {name} на складе. В наличии - {product.quantity}."
                         )
 
                     OrderItem.objects.create(order=order, product=product, name=name, price=price, quantity=quantity)
@@ -73,7 +59,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                 cart_items.delete()
 
                 messages.success(self.request, "Заказ оформлен!")
-                return redirect("user:profile")
+                return redirect("users:profile")
         except ValidationError as e:
             form.add_error(None, e)  # добавляем ошибку в форму
             return self.form_invalid(form)

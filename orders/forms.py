@@ -18,6 +18,7 @@ class CreateOrderForm(forms.Form):
             raise forms.ValidationError("Номер должен содержать только цифры")
 
         pattern = re.compile(r"^\d{11}$")
+
         if not pattern.match(data):
             raise forms.ValidationError("Неверный формат номера")
 

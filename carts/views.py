@@ -12,7 +12,6 @@ from goods.models import Products
 
 class CartAddView(CartMixin, View):
     def post(self, request):
-        print(type(request), request)
         product_id = request.POST.get("product_id")
         product = Products.objects.get(id=product_id)
 

@@ -1,12 +1,11 @@
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from email.mime import image
 from tabnanny import verbose
-from django.core.validators import MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 
 
-# Create your models here.
 class Categories(models.Model):
     name = models.CharField(max_length=150, unique=True, verbose_name="Название")
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name="URL")
@@ -39,7 +38,7 @@ class Products(models.Model):
         default=Decimal("0.00"),
         max_digits=4,
         decimal_places=2,
-        validators=[MinValueValidator(0)],  # Запрет отрицательных значений
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
         verbose_name="Скидка (%)",
     )
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name="URL")
@@ -61,6 +60,8 @@ class Products(models.Model):
 
     def sell_price(self):
         if self.discount:
-            return round(self.price - self.price * self.discount / 100, 2)
-
+            discount_amount = self.price * self.discount / Decimal("100")
+            discounted_price = self.price - discount_amount
+            # округлим до 2 знаков в сторону ближайшего
+            return discounted_price.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         return self.price

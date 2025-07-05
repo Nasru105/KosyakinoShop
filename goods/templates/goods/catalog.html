@@ -20,7 +20,7 @@
                     {% cache 300 catalog_categories  %}
                     {% tag_categories as categories%}
                     {% for category in categories %}
-                        <li><a class="dropdown-item text-white" href="{% url "catalog:index" category.slug %}">{{ category.name }}</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url "catalog:category" category.slug %}">{{ category.name }}</a></li>
                     {% endfor %}
                     {% endcache %}
                 </ul>
@@ -37,7 +37,7 @@
                     aria-expanded="false">
                     Фильтры
                 </button>
-                <form action="{% if request.GET.q %}{% url "catalog:search" %}{% else %}{% url "catalog:index" category_slug %}{% endif %}" method="get" class="dropdown-menu bg-dark p-3" data-bs-theme="dark" onclick="event.stopPropagation();">
+                <form action="{% if request.GET.q %}{% url "catalog:search" %}{% else %}{% url "catalog:category" category_slug %}{% endif %}" method="get" class="dropdown-menu bg-dark p-3" data-bs-theme="dark" onclick="event.stopPropagation();">
                     <div class="form-check text-white mx-1">
                         <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on" {% if request.GET.on_sale == "on" %}checked{% endif %}>
                         {% if request.GET.q %}
