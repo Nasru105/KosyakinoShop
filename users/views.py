@@ -11,12 +11,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView
+from django.db.models import F, ExpressionWrapper, FloatField
 
 from carts.models import Cart
 from common.mixin import CacheMixin
 from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
 from django.db.models import Sum
+
+from users.models import User
+from utils import get_fields
 
 
 class UserLoginView(LoginView):
@@ -101,7 +105,6 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["title"] = "Kosyakino - Профиль"
-        from django.db.models import F, ExpressionWrapper, FloatField
 
         orders = (
             Order.objects.filter(user=self.request.user)
