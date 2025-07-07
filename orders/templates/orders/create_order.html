@@ -45,7 +45,7 @@
                             <input type="text" class="form-control" id="id_phone_number"
                             value="{% if form.phone_number.value %}{{form.phone_number.value}}{% endif %}"
                             name="phone_number"
-                            placeholder="8 (000) 000-0000" 
+                            placeholder="+7 (000) 000-0000" 
                             required>
                                 {% if form.phone_number.errors %}
                                     <div class="alert alert-danger alert-dismissible fade show">{{form.phone_number.errors}}</div>

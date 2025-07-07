@@ -11,7 +11,7 @@
             <div class="col-md-5">
                 <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
                     <h3 class="text-center mb-4">Профиль пользователя</h3>
-                    <form action="{% url "user:profile" %}" method="post" enctype="multipart/form-data">
+                    <form action="{% url "user:profile" %}" method="post" enctype="multipart/form-data" id="profile_form">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-12 mb-3 text-center">
@@ -52,12 +52,31 @@
                                 {% endif %}    
                             </div>
                             <div class="col-md-12 mb-3">
+                                <label for="id_phone_number" class="form-label">Номер телефона*:</label>
+                                <input type="text" class="form-control" id="id_phone_number"
+                                value="{% if form.phone_number.value %}{{form.phone_number.value}}{% endif %}"
+                                name="phone_number"
+                                placeholder="+7 (000) 000-0000">
+                                {% if form.phone_number.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show">{{form.phone_number.errors}}</div>
+                                {% endif %}
+                                <div class="alert alert-danger alert-dismissible fade show" style="display: none" id="phone_number_error">Неверный формат номера</div>
+                            </div>
+                            <div class="col-md-12 mb-3">
                                 <label for="id_email" class="form-label">Email*</label>
                                 <input type="email" class="form-control" id="id_email" name="email"
                                     placeholder="Введите ваш email *youremail@example.com" value="{{form.email.value}}"
                                     required>
                                 {% if form.email.errors %}
                                 <div class="alert alert-danger alert-dismissible fade show">{{form.email.errors}}</div>
+                                {% endif %}    
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="id_address" class="form-label">Адрес*</label>
+                                <input type="text" class="form-control" id="id_address" name="address"
+                                    placeholder="Введите ваш адрес" value="{% if form.address.value %}{{form.address.value}}{% endif %}">
+                                {% if form.address.errors %}
+                                <div class="alert alert-danger alert-dismissible fade show">{{form.address.errors}}</div>
                                 {% endif %}    
                             </div>
                         </div>

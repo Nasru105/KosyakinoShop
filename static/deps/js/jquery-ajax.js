@@ -207,24 +207,28 @@ $(document).ready(function () {
     // Форматирования ввода номера телефона в форме 8(xxx) xxx-хххx
     document.getElementById('id_phone_number').addEventListener('input', function (e) {
         var x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[3] ? "8 " + x[2] : "8 " + '(' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '');
+        e.target.value = !x[3] ? "+7 " + x[2] : "+7 " + '(' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '');
     });
 
     // Проверяем на стороне клинта коррекность номера телефона в форме 8 xxx-xxx-хх-хx
-    $('#create_order_form').on('submit', function (event) {
+    function validatePhoneNumber(event) {
         var phoneNumber = $('#id_phone_number').val();
-        var regex = /^\d{1} \(\d{3}\) \d{3}-\d{4}$/;
-        var regex_norm = /^\d{11}$/;
+        var cleanedPhoneNumber = phoneNumber.replace(/[()\+-\s]/g, '');
 
-        if (!regex.test(phoneNumber) & !regex_norm.test(phoneNumber)) {
+        if (!/^\d{11}$/.test(cleanedPhoneNumber)) {
             $('#phone_number_error').show();
             event.preventDefault();
         } else {
             $('#phone_number_error').hide();
-
-            // Очистка номера телефона от скобок и тире перед отправкой формы
-            var cleanedPhoneNumber = phoneNumber.replace(/[()\-\s]/g, '');
             $('#id_phone_number').val(cleanedPhoneNumber);
         }
+    }
+
+    $('#create_order_form').on('submit', function (event) {
+        validatePhoneNumber(event);
+    });
+
+    $('#profile_form').on('submit', function (event) {
+        validatePhoneNumber(event);
     });
 });

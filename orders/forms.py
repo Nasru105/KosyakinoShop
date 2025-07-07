@@ -14,6 +14,9 @@ class CreateOrderForm(forms.Form):
     def clean_phone_number(self):
         data = self.cleaned_data["phone_number"]
 
+        if len(data) < 11:
+            raise forms.ValidationError("Номер должен содержать 11 цифр")
+
         if not data.isdigit():
             raise forms.ValidationError("Номер должен содержать только цифры")
 

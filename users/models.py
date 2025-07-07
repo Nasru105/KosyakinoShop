@@ -8,6 +8,7 @@ class User(AbstractUser):
     image = models.ImageField(upload_to="users_images", blank=True, null=True, verbose_name="Аватар")
     phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True, verbose_name="Номер телефона")
     email = models.EmailField(unique=True, verbose_name="Email")
+    address = models.CharField(max_length=200, blank=True, null=True, verbose_name="Адрес")
 
     class Meta:
         db_table = "user"

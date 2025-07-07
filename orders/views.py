@@ -22,6 +22,8 @@ class CreateOrderView(LoginRequiredMixin, FormView):
         initial = super().get_initial()
         initial["first_name"] = self.request.user.first_name
         initial["last_name"] = self.request.user.last_name
+        initial["phone_number"] = self.request.user.phone_number
+        initial["delivery_address"] = self.request.user.address
         return initial
 
     def form_valid(self, form):
