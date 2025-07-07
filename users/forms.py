@@ -58,17 +58,19 @@ class ProfileForm(UserChangeForm):
 
     def clean_phone_number(self):
         data = self.cleaned_data["phone_number"]
+        if not data:
+            return data
 
-        if len(data) < 11:
+        if len(data) < 10:
             raise forms.ValidationError("Номер должен содержать 11 цифр")
 
         if not data.isdigit():
             print(data)
             raise forms.ValidationError("Номер должен содержать только цифры")
 
-        pattern = re.compile(r"^\d{11}$")
+        pattern = re.compile(r"^\d{10}$")
 
         if not pattern.match(data):
             raise forms.ValidationError("Неверный формат номера")
 
-        return data
+        return "+7" + data

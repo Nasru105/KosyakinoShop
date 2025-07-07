@@ -20,7 +20,7 @@ from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
 from django.db.models import Sum
 
 from users.models import User
-from utils import get_fields
+from utils.utils import get_fields
 
 
 class UserLoginView(LoginView):

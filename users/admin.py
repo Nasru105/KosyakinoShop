@@ -2,7 +2,7 @@ from django.contrib import admin
 from carts.admin import CartTabAdmin
 from orders.admin import OrderTabulareAdmin
 from users.models import User
-from utils import get_fields
+from utils.utils import get_fields
 
 
 @admin.register(User)

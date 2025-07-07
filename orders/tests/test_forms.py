@@ -46,7 +46,7 @@ class CreateOrderFormTest(SimpleTestCase):
         form = CreateOrderForm(data=form_data)
         self.assertFalse(form.is_valid())
         self.assertIn("phone_number", form.errors)
-        self.assertIn("Неверный формат номера", form.errors["phone_number"])
+        self.assertIn("Номер должен содержать 11 цифр", form.errors["phone_number"])
 
     def test_optional_fields_empty(self):
         form_data = {

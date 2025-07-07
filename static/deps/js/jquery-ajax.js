@@ -204,23 +204,39 @@ $(document).ready(function () {
         }
     });
 
-    // Форматирования ввода номера телефона в форме 8(xxx) xxx-хххx
+    // Форматирование номера телефона при вводе
     document.getElementById('id_phone_number').addEventListener('input', function (e) {
-        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[3] ? "+7 " + x[2] : "+7 " + '(' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '');
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '') + (x[4] ? '-' + x[4] : '');
     });
 
-    // Проверяем на стороне клинта коррекность номера телефона в форме 8 xxx-xxx-хх-хx
+    // Форматирование номера при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function () {
+        var input = document.getElementById('id_phone_number');
+        if (!input) return;
+
+        var val = input.value.replace(/\D/g, ''); // убираем всё, кроме цифр
+
+        // Ожидаем, что вал содержит 10 цифр — без кода страны +7
+        if (val.length === 10) {
+            var formatted = '(' + val.substr(0,3) + ') ' + val.substr(3,3) + '-' + val.substr(6,4);
+            input.value = formatted;
+        }
+    });
+
+
+    // Проверяем на стороне клиента корректность номера телефона в форме 8 xxx-xxx-хх-хх
     function validatePhoneNumber(event) {
         var phoneNumber = $('#id_phone_number').val();
-        var cleanedPhoneNumber = phoneNumber.replace(/[()\+-\s]/g, '');
+        var cleanedPhoneNumber = phoneNumber.replace(/[()\+\-\s]/g, ''); // Убираем скобки, пробелы, + и -
 
-        if (!/^\d{11}$/.test(cleanedPhoneNumber)) {
-            $('#phone_number_error').show();
-            event.preventDefault();
-        } else {
+        // Проверяем, что номер либо пустой, либо ровно 11 цифр (формат 8xxxxxxxxxx)
+        if (cleanedPhoneNumber === '' || /^\d{10}$/.test(cleanedPhoneNumber)) {
             $('#phone_number_error').hide();
             $('#id_phone_number').val(cleanedPhoneNumber);
+        } else {
+            $('#phone_number_error').show();
+            event.preventDefault();
         }
     }
 
@@ -231,4 +247,5 @@ $(document).ready(function () {
     $('#profile_form').on('submit', function (event) {
         validatePhoneNumber(event);
     });
+
 });

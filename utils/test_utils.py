@@ -2,7 +2,7 @@ from django.test import TestCase
 import pytest
 from django.db import models
 
-from utils import get_fields
+from utils.utils import get_fields
 
 
 # Создаем временную тестовую модель для проверки
@@ -43,3 +43,15 @@ class TestGetFields(TestCase):
         # Все остальные поля должны остаться
         expected_fields = {"username", "email", "first_name", "last_name", "phone_number"}
         assert set(fields) == expected_fields
+
+
+class TestPhoneNumberFormat(TestCase):
+    def test_phone_number_format(self):
+        from utils.utils import phone_number_format
+
+        # Проверяем форматирование номера телефона
+        assert phone_number_format("89123456789") == "(912) 345-67-89"
+        assert phone_number_format("71234567890") == "(123) 456-78-90"
+        assert phone_number_format("1234567890") == "1234567890"  # Неверный формат
+        assert phone_number_format("") == ""  # Пустой номер
+        assert phone_number_format(None) == ""  # None значение
