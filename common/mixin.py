@@ -2,7 +2,7 @@ from django.core.cache import cache
 
 
 class CacheMixin:
-    def set_g(self, query, cache_name, cache_time):
+    def set_cache_g(self, query, cache_name, cache_time):
         data = cache.get(cache_name)
 
         if not data:

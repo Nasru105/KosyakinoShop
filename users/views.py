@@ -1,17 +1,15 @@
-from email import message
 from typing import Any
-from urllib import request
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import PasswordResetView
 from django.db.models import Prefetch
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView
 from django.db.models import F, ExpressionWrapper, FloatField
+from django.http import JsonResponse
 
 from carts.models import Cart
 from common.mixin import CacheMixin
@@ -19,8 +17,8 @@ from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
 from django.db.models import Sum
 
-from users.models import User
-from utils.utils import get_fields
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 
 class UserLoginView(LoginView):
@@ -116,12 +114,30 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
             )
             .order_by("-id")
         )
-        context["orders"] = self.set_g(orders, f"orders_for_user_{self.request.user.pk}", 60)
+        # context["orders"] = self.set_cache_g(orders, f"orders_for_user_{self.request.user.pk}", 60)
+        context["orders"] = orders
         return context
+
+    def update_order_comment(request, order_id):
+        order = get_object_or_404(Order, id=order_id)
+        if request.method == "POST":
+            order.comment = request.POST.get("comment", "")
+            order.save()
+        return redirect(request.META.get("HTTP_REFERER", "/"))
 
 
 class UserCartView(TemplateView):
     template_name = "users/users_cart.html"
+
+
+@login_required
+@require_POST
+def update_order_comment(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order.comment = request.POST.get("comment", "")
+    print(order.comment)
+    order.save()
+    return JsonResponse({"status": "success", "comment": order.comment})
 
 
 @login_required

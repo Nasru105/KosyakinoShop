@@ -51,9 +51,6 @@ $(document).ready(function () {
         });
     });
 
-
-
-
     // Ловим собыитие клика по кнопке удалить товар из корзины
     $(document).on("click", ".remove-from-cart", function (e) {
         // Блокируем его базовое действие
@@ -101,9 +98,6 @@ $(document).ready(function () {
             },
         });
     });
-
-
-
 
     // Теперь + - количества товара 
     // Обработчик события для уменьшения значения
@@ -248,4 +242,41 @@ $(document).ready(function () {
         validatePhoneNumber(event);
     });
 
+    $(document).on("click", ".edit-comment-btn, .add-comment-btn", function() {
+        let orderId = $(this).data("order-id");
+        console.log("Order ID:", orderId);
+        $("#comment-form-container-" + orderId).show();
+    });
+
+    $(document).on("click", ".cancel-comment-btn", function() {
+        let orderId = $(this).data("order-id");
+        $("#comment-form-container-" + orderId).hide();
+    });
+
+    $(document).on("click", ".save-comment-btn", function() {
+        let orderId = $(this).data("order-id");
+        let comment = $("#comment-text-" + orderId).val();
+
+        // Из атрибута href берем ссылку на контроллер django
+        var update_order_comment_url = $(this).attr("href");
+
+        $.ajax({
+            url: update_order_comment_url,
+            method: "POST",
+            data: {
+                comment: comment,
+                csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
+            },
+            success: function(data) {
+                $("#order-comment-" + orderId)
+                    .html("<strong>Комментарий:</strong> " + comment)
+                    .show();
+
+                $("#comment-form-container-" + orderId).hide();
+            },
+            error: function() {
+                alert("Ошибка при сохранении комментария.");
+            }
+        });
+    });
 });

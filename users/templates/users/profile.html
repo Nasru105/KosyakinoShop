@@ -113,11 +113,11 @@
                             {% for order in orders %}
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="heading{{ order.id }}">
-                                    <button class="accordion-button {% if order != orders.0 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
                                         Заказ № {{ order.display_id }} - {{ order.created_timestamp }} | Статус: <strong class="mx-2">{{order.status}}</strong>
                                     </button>
                                 </h2>
-                                <div id="collapse{{ order.id }}" class="accordion-collapse collapse {% if order == orders.0 %}show{% endif %}" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
+                                <div id="collapse{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <table class="table table-dark table-hover">
                                             <thead>
@@ -139,6 +139,44 @@
                                                 {% endfor %}
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-between">
+                                            {% if order.comment %}
+                                                <p id="order-comment-{{ order.id }}">
+                                                    <strong>Комментарий:</strong> {{ order.comment }}
+                                                </p>
+                                                <button id="edit-comment-btn-{{ order.id }}" 
+                                                    class="btn btn-sm btn-primary edit-comment-btn" 
+                                                    data-order-id="{{ order.id }}">
+                                                    Редактировать
+                                                </button>
+                                            {% else %}
+                                                <button id="add-comment-btn-{{ order.id }}"  
+                                                    class="btn btn-sm btn-success add-comment-btn" 
+                                                    data-order-id="{{ order.id }}">
+                                                    Добавить комментарий
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                        <!-- Поле ввода комментария (по умолчанию скрыто) -->
+                                        <div id="comment-form-container-{{ order.id }}" 
+                                            class="mt-2" data-order-id="{{ order.id }}" 
+                                            style="display:none;" >
+                                            <textarea id="comment-text-{{ order.id }}" 
+                                                class="form-control" rows="3" 
+                                                data-order-id="{{ order.id }}">{{ order.comment|default:"" }}</textarea>
+                                            <button id="save-comment-btn-{{ order.id }}"
+                                                class="btn btn-sm btn-success mt-2 save-comment-btn"
+                                                href = "{% url 'user:update_order_comment' order.id %}"
+                                                data-order-id="{{ order.id }}">
+                                                Сохранить
+                                            </button>
+                                            <button id="cancel-comment-btn-{{ order.id }}" 
+                                                class="btn btn-sm btn-secondary mt-2 cancel-comment-btn"
+                                                data-order-id="{{ order.id }}">
+                                                Отмена
+                                            </button>
+                                        </div>
+
                                         <div class="d-flex justify-content-between">
                                             <p><strong>Итого:</strong></p>
                                             <p><strong>{{order.total_sum}} ₽</strong></p>
