@@ -23,3 +23,9 @@ def phone_number_format(phone_number: str):
         if len(phone_number) == 10:
             return f"({phone_number[:3]}) {phone_number[3:6]}-{phone_number[6:8]}-{phone_number[8:]}"
     return phone_number
+
+
+def product_image_path(instance, filename):
+    if hasattr(instance, "name"):
+        instance = instance.name.replace(" ", "_").lower()
+    return f"goods_images/{instance}/{filename}"

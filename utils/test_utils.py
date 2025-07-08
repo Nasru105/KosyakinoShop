@@ -2,8 +2,6 @@ from django.test import TestCase
 import pytest
 from django.db import models
 
-from utils.utils import get_fields
-
 
 # Создаем временную тестовую модель для проверки
 class DummyModel(models.Model):
@@ -18,7 +16,10 @@ class DummyModel(models.Model):
 
 
 class TestGetFields(TestCase):
+
     def test_get_fields_ordered(self):
+        from utils.utils import get_fields
+
         # Указываем желаемый порядок некоторых полей
         ordered_fields = ["username", "email"]
         fields = get_fields(DummyModel, ordered_fields)
@@ -35,6 +36,8 @@ class TestGetFields(TestCase):
         assert "id" not in fields
 
     def test_get_fields_without_ordered_fields(self):
+        from utils.utils import get_fields
+
         fields = get_fields(DummyModel, [])
 
         # Поле id должно быть удалено
@@ -55,3 +58,18 @@ class TestPhoneNumberFormat(TestCase):
         assert phone_number_format("1234567890") == "1234567890"  # Неверный формат
         assert phone_number_format("") == ""  # Пустой номер
         assert phone_number_format(None) == ""  # None значение
+
+
+class TestProductImagePath(TestCase):
+    def test_product_image_path(self):
+        from utils.utils import product_image_path
+
+        class DummyProduct:
+            name = "test_product"
+
+        filename = "image.jpg"
+        path = product_image_path(DummyProduct(), filename)
+
+        # Проверяем, что путь сформирован правильно
+        print(path)
+        assert path == "goods_images/test_product/image.jpg"

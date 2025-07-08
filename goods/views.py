@@ -52,9 +52,10 @@ class ProductView(DetailView):
     template_name = "goods/product.html"
     slug_url_kwarg = "product_slug"
     context_object_name = "product"
+    model = Products
 
-    def get_object(self, queryset: QuerySet[Any] | None = None) -> Model:
-        product = Products.objects.get(slug=self.kwargs.get(self.slug_url_kwarg))
+    def get_object(self, queryset=None) -> Model:
+        product = self.model.objects.get(slug=self.kwargs.get(self.slug_url_kwarg))
         return product
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:

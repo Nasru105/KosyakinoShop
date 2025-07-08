@@ -124,7 +124,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "nasibov2005@gmail.com"  # ⚠️ ВАША почта
-EMAIL_HOST_PASSWORD = "qvfxwilvshmkyhdx"  # ⚠️ Пароль приложения
+EMAIL_HOST_PASSWORD = "qvfxwilvshmkyhdx"  # ⚠️ Пароль приложения  спрятать!
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
