@@ -77,15 +77,22 @@
     {% if request.GET.q %}
         <div class="row mb-4">
             <div class="col">
-                <h3 class="text-center">
-                    Результаты поиска по запросу: <span class="text-primary">{{ request.GET.q }}</span>
-                </h3>
-                {% if not goods %}
-                    <h4 class="text-center mt-3 text-danger">По запросу ничего не найдено</h4>
-                {% endif %}
+                <div class="p-4 bg-light rounded shadow-sm">
+                    <h3 class="text-center mb-3">
+                        Результаты поиска по запросу:
+                        <span class="text-primary fw-bold">{{ request.GET.q }}</span>
+                    </h3>
+                    {% if not goods %}
+                        <h4 class="text-center mt-3" >
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>
+                            По запросу ничего не найдено
+                        </h4>
+                    {% endif %}
+                </div>
             </div>
         </div>
     {% endif %}
+
 
     {% if goods %}
     <!-- Пагинация -->
@@ -147,8 +154,14 @@
                             {% endautoescape %}
                         </p>
                         <ul class="list-unstyled mb-3">
-                            <li><strong>Количество:</strong> {{ product.quantity }}</li>
                             <li><strong>Артикул:</strong> {{ product.display_id }}</li>
+                            <li><strong>Количество:</strong>
+                                {% if product.quantity > 0 %}
+                                    <span class="text">{{ product.quantity }}</span>
+                                {% else %}
+                                    <span class="text-danger">Нет в наличии</span>
+                                {% endif %}
+                            </li>
                         </ul>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
                             <div>
@@ -165,7 +178,7 @@
                                 {% endif %}
                             </div>
                             <a href="{% url 'carts:cart_add' %}" 
-                               class="btn btn-outline-primary add-to-cart"
+                               class="btn btn-outline-success add-to-cart border-success"
                                data-product-id="{{ product.id }}">
                                 {% csrf_token %}
                                 <img src="{% static 'deps/icons/cart-plus.svg' %}" alt="Add to cart" width="24" height="24">
@@ -213,6 +226,9 @@
 {% endblock content %}
 
 {% block footer %}
+{% if not goods %}
+    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+{% endif %}
 <footer class="bg-dark py-3 mt-auto">
     <div class="container text-center">
         <small class="text-white-50">&copy; Kosyakino 2025</small>

@@ -153,7 +153,8 @@
                                                 {% for item in order.orderitem_set.all %}
                                                 <tr>
                                                     <td>
-                                                        <a href="{% url 'goods:product' item.product.slug %}">
+                                                        <a href="{% url 'goods:product' item.product.slug %}"
+                                                        class="text-decoration-none text-dark">
                                                             {{ item.product.name }}
                                                         </a>
                                                     </td>

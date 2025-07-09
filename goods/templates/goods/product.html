@@ -26,18 +26,14 @@
                         <a href="{{ product.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
                             <img src="{{ product.image.url }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ product.name }}">
                         </a>
-                    {% else %}
-                        <a href="{% static 'deps/images/Not found image.png' %}" class="flex-shrink-0" data-lg-size="1400-933">
-                            <img src="{% static 'deps/images/Not found image.png' %}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ product.name }}">
-                        </a>
-                    {% endif %}
-
-                    {% for image in product.images.all %}
+                        
+                        {% for image in product.images.all %}
                         <a href="{{ image.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
                             <img src="{{ image.image.url }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ product.name }}">
                         </a>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    {% endif %}
+                    </div>
             </div>
 
             <!-- Информация -->
@@ -45,21 +41,43 @@
                 <div class="card-body">
                     <h2 class="card-title fw-bold mb-3">{{ product.name }}</h2>
                     <p class="card-text text-muted small mb-2">Артикул: {{ product.display_id }}</p>
-                    <p class="card-text h4 text-success mb-3">Цена: <strong>{{ product.sell_price }} ₽</strong></p>
-                    <p class="card-text mb-3"><span class="fw-semibold">В наличии:</span> {{ product.quantity }}</p>
+
+                    {% if product.discount and product.discount > 0 %}
+                        <p class="card-text h4 mb-3">
+                            <span class="text-success fw-bold me-2">{{ product.sell_price }} ₽</span>
+                            <span class="text-muted text-decoration-line-through">{{ product.price }} ₽</span>
+                            <span class="badge bg-warning ms-2">-{{ product.discount }}%</span>
+                        </p>
+                    {% else %}
+                        <p class="card-text h4 text mb-3">
+                            Цена: <strong>{{ product.sell_price }} ₽</strong>
+                        </p>
+                    {% endif %}
+
+                    <p class="card-text mb-3">
+                        <span class="fw-semibold">В наличии:</span>
+                        {% if product.quantity > 0 %}
+                            <span class="text">{{ product.quantity }}</span>
+                        {% else %}
+                            <span class="text-danger">Нет в наличии</span>
+                        {% endif %}
+                    </p>
+
                     {% if product.description %}
                         <p class="card-text mb-4">{{ product.description }}</p>
                     {% else %}
                         <p class="text-muted fst-italic mb-4">Описание отсутствует.</p>
                     {% endif %}
+
                     <a href="{% url 'carts:cart_add' %}"
-                       class="btn btn-dark btn-lg add-to-cart"
-                       data-product-id="{{ product.id }}">
+                    class="btn btn-dark btn-lg add-to-cart"
+                    data-product-id="{{ product.id }}">
                         {% csrf_token %}
                         <i class="bi bi-cart-plus me-2"></i> Добавить в корзину
                     </a>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

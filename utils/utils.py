@@ -18,10 +18,10 @@ def phone_number_format(phone_number: str):
     # Убираем плюс, пробелы, дефисы
     phone_number = phone_number.replace("+", "").replace(" ", "").replace("-", "")
     # Если начинается с 8 или 7, убираем первый символ (код страны)
-    if phone_number.startswith("8") or phone_number.startswith("7"):
+    if phone_number.startswith("8") or phone_number.startswith("7") or phone_number.startswith("+7"):
         phone_number = phone_number[1:]
-        if len(phone_number) == 10:
-            return f"({phone_number[:3]}) {phone_number[3:6]}-{phone_number[6:8]}-{phone_number[8:]}"
+    if len(phone_number) == 10:
+        return f"({phone_number[:3]}) {phone_number[3:6]}-{phone_number[6:8]}-{phone_number[8:]}"
     return phone_number
 
 
