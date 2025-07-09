@@ -68,15 +68,15 @@ WSGI_APPLICATION = "app.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "kosyakino",
-        "USER": "kosyakino",
-        "PASSWORD": "kosyakino",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
-    # "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": "kosyakino",
+    #     "USER": "kosyakino",
+    #     "PASSWORD": "kosyakino",
+    #     "HOST": "localhost",
+    #     "PORT": "5432",
+    # }
+    "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
 }
 
 CACHES = {
