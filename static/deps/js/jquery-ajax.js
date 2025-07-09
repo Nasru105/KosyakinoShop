@@ -244,7 +244,6 @@ $(document).ready(function () {
 
     $(document).on("click", ".edit-comment-btn, .add-comment-btn", function() {
         let orderId = $(this).data("order-id");
-        console.log("Order ID:", orderId);
         $("#comment-form-container-" + orderId).show();
     });
 
@@ -256,9 +255,7 @@ $(document).ready(function () {
     $(document).on("click", ".save-comment-btn", function() {
         let orderId = $(this).data("order-id");
         let comment = $("#comment-text-" + orderId).val();
-
-        // Из атрибута href берем ссылку на контроллер django
-        var update_order_comment_url = $(this).attr("href");
+        let update_order_comment_url = $(this).attr("href");
 
         $.ajax({
             url: update_order_comment_url,
@@ -268,9 +265,35 @@ $(document).ready(function () {
                 csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
             },
             success: function(data) {
-                $("#order-comment-" + orderId)
-                    .html("<strong>Комментарий:</strong> " + comment)
-                    .show();
+                // Найти контейнер кнопки или блока комментария
+                let commentContainer = $("#order-comment-" + orderId);
+
+                if (commentContainer.length > 0) {
+                    // Если блок уже есть, просто обновить текст
+                    commentContainer
+                        .html("<strong>Комментарий:</strong> " + comment)
+                        .show();
+                } else {
+                    // Иначе создать новый блок комментария перед кнопкой добавления
+                    let commentHtml = `
+                        <div class="mb-2">
+                            <p id="order-comment-${orderId}">
+                                <strong>Комментарий:</strong> ${comment}
+                            </p>
+                            <button id="edit-comment-btn-${orderId}"
+                                    class="btn btn-sm btn-primary edit-comment-btn"
+                                    data-order-id="${orderId}">
+                                Редактировать
+                            </button>
+                        </div>
+                    `;
+
+                    // Вставить новый блок перед кнопкой "Добавить комментарий"
+                    $("#add-comment-btn-" + orderId).before(commentHtml);
+
+                    // Удалить кнопку "Добавить комментарий"
+                    $("#add-comment-btn-" + orderId).remove();
+                }
 
                 $("#comment-form-container-" + orderId).hide();
             },
@@ -279,4 +302,5 @@ $(document).ready(function () {
             }
         });
     });
+
 });
