@@ -53,18 +53,7 @@
                                data-bs-toggle="dropdown" aria-expanded="false">
                                 Каталог
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                {% cache 300 catalog_categories %}
-                                    {% tag_categories as categories %}
-                                    {% for category in categories %}
-                                        <li>
-                                            <a class="dropdown-item" href="{% url 'catalog:category' category.slug %}">
-                                                {{ category.name }}
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                {% endcache %}
-                            </ul>
+                            {% include "includes/catalog_dropdown.html" %}
                         </li>
 
                         <li class="nav-item">

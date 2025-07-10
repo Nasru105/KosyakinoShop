@@ -14,18 +14,7 @@
                     <span>Каталог</span>
                     <img class="ms-2" src="{% static 'deps/icons/grid-fill.svg' %}" alt="Catalog Icon" width="16" height="16">
                 </button>
-                <ul class="dropdown-menu dropdown-menu-dark">
-                    {% cache 300 catalog_categories %}
-                        {% tag_categories as categories %}
-                        {% for category in categories %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'catalog:category' category.slug %}">
-                                    {{ category.name }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    {% endcache %}
-                </ul>
+                {% include "includes/catalog_dropdown.html" %}
             </div>
 
             <!-- Корзина -->
@@ -36,10 +25,17 @@
                 <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Фильтры
                 </button>
-                <form action="{% if request.GET.q %}{% url 'catalog:search' %}{% else %}{% url 'catalog:category' category_slug %}{% endif %}" 
-                      method="get" 
-                      class="dropdown-menu dropdown-menu-dark p-3" 
-                      onclick="event.stopPropagation();">
+                <form action="
+                    {% if request.GET.q %}
+                    {% url 'catalog:search' %}
+                    {% elif request.GET.category_slug %}
+                    {% url 'catalog:category' category_slug %}
+                    {% else %}
+                    {% url 'catalog:catalog' %}
+                    {% endif %}" 
+                    method="get" 
+                    class="dropdown-menu dropdown-menu-dark p-3" 
+                    onclick="event.stopPropagation();">
                     <div class="form-check text-white mb-2">
                         <input class="form-check-input" type="checkbox" name="on_sale" id="saleCheck" value="on"
                                {% if request.GET.on_sale == "on" %}checked{% endif %}>
@@ -93,40 +89,7 @@
         </div>
     {% endif %}
 
-
-    {% if goods %}
-    <!-- Пагинация -->
-    <nav aria-label="Pagination" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
-                <a class="page-link text-dark" href="{% if page_obj.has_previous %}?{% change_params page=page_obj.previous_page_number %}{% else %}#{% endif %}">
-                    Назад
-                </a>
-            </li>
-
-            {% for page in page_obj.paginator.page_range %}
-                {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 or page == 1 or page == page_obj.paginator.num_pages %}
-                    <li class="page-item {% if page_obj.number == page %}disabled active{% endif %}">
-                        <a class="page-link text-dark" href="?{% change_params page=page %}">
-                            {{ page }}
-                        </a>
-                    </li>
-                {% elif page == 2 or page == page_obj.paginator.num_pages|add:-1 %}
-                    <li class="page-item disabled">
-                        <span class="page-link text-dark">…</span>
-                    </li>
-                {% endif %}
-            {% endfor %}
-
-            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
-                <a class="page-link text-dark" href="{% if page_obj.has_next %}?{% change_params page=page_obj.next_page_number %}{% else %}#{% endif %}">
-                    Следующая
-                </a>
-            </li>
-        </ul>
-    </nav>
-    {% endif %}
-
+    {% include "goods/includes/goods_pagination.html" %}
 
     <!-- Карточки товаров -->
     <div class="row g-4">
@@ -189,39 +152,7 @@
             </div>
         {% endfor %}
     </div>
-
-    {% if goods %}
-    <!-- Пагинация -->
-    <nav aria-label="Pagination" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
-                <a class="page-link text-dark" href="{% if page_obj.has_previous %}?{% change_params page=page_obj.previous_page_number %}{% else %}#{% endif %}">
-                    Назад
-                </a>
-            </li>
-
-            {% for page in page_obj.paginator.page_range %}
-                {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 or page == 1 or page == page_obj.paginator.num_pages %}
-                    <li class="page-item {% if page_obj.number == page %}disabled active{% endif %}">
-                        <a class="page-link text-dark" href="?{% change_params page=page %}">
-                            {{ page }}
-                        </a>
-                    </li>
-                {% elif page == 2 or page == page_obj.paginator.num_pages|add:-1 %}
-                    <li class="page-item disabled">
-                        <span class="page-link text-dark">…</span>
-                    </li>
-                {% endif %}
-            {% endfor %}
-
-            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
-                <a class="page-link text-dark" href="{% if page_obj.has_next %}?{% change_params page=page_obj.next_page_number %}{% else %}#{% endif %}">
-                    Следующая
-                </a>
-            </li>
-        </ul>
-    </nav>
-    {% endif %}
+    {% include "goods/includes/goods_pagination.html" %}
 </div>
 {% endblock content %}
 

@@ -58,7 +58,7 @@ class CreateOrderViewTest(TestCase):
             data={
                 "first_name": "Иван",
                 "last_name": "Иванов",
-                "phone_number": "79991112233",
+                "phone_number": "9991112233",
                 "requires_delivery": "1",
                 "delivery_address": "Москва, ул. Пушкина",
                 "payment_on_get": "0",
@@ -69,7 +69,7 @@ class CreateOrderViewTest(TestCase):
         self.assertRedirects(response, reverse("users:profile"))
 
         order = Order.objects.get(user=self.user)
-        self.assertEqual(order.phone_number, "79991112233")
+        self.assertEqual(order.phone_number, "9991112233")
 
         order_items = OrderItem.objects.filter(order=order)
         self.assertEqual(order_items.count(), 2)
@@ -100,7 +100,7 @@ class CreateOrderViewTest(TestCase):
             data={
                 "first_name": "Иван",
                 "last_name": "Иванов",
-                "phone_number": "79991112233",
+                "phone_number": "9991112233",
                 "requires_delivery": "1",
                 "delivery_address": "Москва",
                 "payment_on_get": "1",

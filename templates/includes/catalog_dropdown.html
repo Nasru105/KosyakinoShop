@@ -1,0 +1,21 @@
+{% load goods_tags %}
+{% load cache %}
+
+
+<ul class="dropdown-menu dropdown-menu-dark">
+    {% cache 300 catalog_categories %}
+        <li>
+            <a class="dropdown-item" href="{% url 'catalog:catalog' %}">
+                Все товары
+            </a>
+        </li>
+    {% tag_categories as categories %}
+    {% for category in categories %}
+        <li>
+            <a class="dropdown-item" href="{% url 'catalog:category' category.slug %}">
+                {{ category.name }}
+            </a>
+        </li>
+    {% endfor %}
+    {% endcache %}
+</ul>

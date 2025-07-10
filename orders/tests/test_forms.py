@@ -10,7 +10,7 @@ class CreateOrderFormTest(SimpleTestCase):
         form_data = {
             "first_name": "Иван",
             "last_name": "Иванов",
-            "phone_number": "79991112233",
+            "phone_number": "9991112233",
             "requires_delivery": "1",
             "delivery_address": "Москва, ул. Пушкина",
             "payment_on_get": "0",
@@ -18,7 +18,7 @@ class CreateOrderFormTest(SimpleTestCase):
         }
         form = CreateOrderForm(data=form_data)
         self.assertTrue(form.is_valid())
-        self.assertEqual(form.cleaned_data["phone_number"], "79991112233")
+        self.assertEqual(form.cleaned_data["phone_number"], "9991112233")
 
     def test_phone_with_letters(self):
         form_data = {
@@ -46,13 +46,13 @@ class CreateOrderFormTest(SimpleTestCase):
         form = CreateOrderForm(data=form_data)
         self.assertFalse(form.is_valid())
         self.assertIn("phone_number", form.errors)
-        self.assertIn("Номер должен содержать 11 цифр", form.errors["phone_number"])
+        self.assertIn("Номер должен содержать 10 цифр", form.errors["phone_number"])
 
     def test_optional_fields_empty(self):
         form_data = {
             "first_name": "Иван",
             "last_name": "Иванов",
-            "phone_number": "79991112233",
+            "phone_number": "9991112233",
             "requires_delivery": "0",
             "payment_on_get": "1",
         }
@@ -65,7 +65,7 @@ class CreateOrderFormTest(SimpleTestCase):
         form_data = {
             "first_name": "Иван",
             "last_name": "Иванов",
-            "phone_number": "79991112233",
+            "phone_number": "9991112233",
         }
         form = CreateOrderForm(data=form_data)
         self.assertFalse(form.is_valid())
