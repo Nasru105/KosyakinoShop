@@ -76,8 +76,13 @@ DATABASES = {
         "HOST": "localhost",
         "PORT": "5432",
     }
-    # "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
 }
+
+# Override if DATABASE_URL exists
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES["default"] = dj_database_url.config(default=DATABASE_URL)
+
 
 CACHES = {
     "default": {
