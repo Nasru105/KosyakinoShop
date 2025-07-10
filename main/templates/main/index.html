@@ -1,20 +1,25 @@
 {% extends "base.html" %}
 {% load static %}
-    
-
-{% block modal_cart %}
-    {% include "includes/cart_button.html" %}
-{% endblock modal_cart %}
 
 {% block content %}
-    <h1 class="mt-5 pt-5"><strong>{{ content }}</strong></h1>
+<section class="hero-section py-5 mt-5" style="background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4 text-dark">
+                    {{ content }}
+                </h1>
+                <p class="lead mb-4 text-dark">
+                    Добро пожаловать на наш сайт! Здесь вы найдете лучшие товары, специальные предложения
+                    и новинки. Исследуйте каталог и выбирайте то, что нравится именно вам!
+                </p>
+                <a href="{% url 'catalog:catalog' %}" class="btn btn-lg px-4 shadow" 
+                   style="background-color: orange; color: #fff; border: none;">
+                    Перейти в каталог
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock content %}
 
-{% block footer %}
-    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
-    <footer class="bg-dark py-3 mt-auto">
-        <div class="container text-center">
-            <small class="text-white-50">&copy; Kosyakino 2025</small>
-        </div>
-    </footer>
-{% endblock footer %}
