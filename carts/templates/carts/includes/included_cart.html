@@ -1,5 +1,6 @@
 {% load static %}
 
+{% csrf_token %}
 {% if carts and carts|length > 0 %}
 <div>
     {% for cart in carts %}

@@ -129,6 +129,11 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
 class UserCartView(TemplateView):
     template_name = "users/users_cart.html"
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Kosyakino - Корзина пользователя"
+        return context
+
 
 @login_required
 @require_POST
