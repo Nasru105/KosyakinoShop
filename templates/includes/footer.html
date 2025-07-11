@@ -3,9 +3,12 @@
     <div class="container text-center">
         <p class="mb-2">
             <a href="{% url 'catalog:catalog' %}" class="text-white text-decoration-none me-3">Каталог</a>
-            <a href="#" class="text-white text-decoration-none me-3">О нас</a>
-            <a href="#" class="text-white text-decoration-none">Контакты</a>
+            <a href="{% url 'main:about' %}" class="text-white text-decoration-none me-3">О нас</a>
+            <a href="{% url 'main:contacts' %}" class="text-white text-decoration-none">Контакты</a>
         </p>
+        <small class="d-block mb-2 text-white-50">
+            <a href="{% url 'main:privacy_policy' %}" class="text-white-50">Политика конфиденциальности</a>
+        </small>
         <small class="text-white-50">&copy; Kosyakino 2025</small>
     </div>
 </footer>

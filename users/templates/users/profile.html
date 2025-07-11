@@ -82,7 +82,7 @@
                         <div class="mb-3">
                             <label for="id_address" class="form-label">Адрес*</label>
                             <input type="text" class="form-control" id="id_address" name="address" 
-                                   value="{{ form.address.value }}" placeholder="Введите ваш адрес">
+                                   value="{% if form.address.value %}{{ form.address.value }}{% endif %}" placeholder="Введите ваш адрес">
                             {% if form.address.errors %}
                                 <div class="alert alert-danger mt-2">{{ form.address.errors }}</div>
                             {% endif %}

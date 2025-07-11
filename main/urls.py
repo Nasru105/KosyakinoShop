@@ -24,4 +24,7 @@ app_name = "main"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("about/", cache_page(60 * 5)(views.AboutView.as_view()), name="about"),
+    path("contacts/", cache_page(60 * 5)(views.ContactsView.as_view()), name="contacts"),
+    path("delivery/", cache_page(60 * 5)(views.DeliveryView.as_view()), name="delivery"),
+    path("privacy-policy/", cache_page(60 * 5)(views.PrivacyPolicyView.as_view()), name="privacy_policy"),
 ]

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="card shadow border-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Контакты</h5>
+                    <ul class="list-unstyled">
+                        <li>Телефон: <a href="tel:+79001234567">+7 (900) 123-45-67</a></li>
+                        <li>Telegram: <a href="https://t.me/yourusername">@yourusername</a></li>
+                        <li>Email: <a href="mailto:info@yourshop.ru">info@yourshop.ru</a></li>
+                        <li>WhatsApp: <a href="https://wa.me/79001234567">Написать в WhatsApp</a></li>
+                    </ul>
+                    <hr>
+                    <h5 class="card-title">Реквизиты</h5>
+                    <ul class="list-unstyled">
+                        <li>Самозанятый Иванов Иван Иванович</li>
+                        <li>ИНН: 123456789012</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

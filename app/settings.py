@@ -1,6 +1,7 @@
 import dj_database_url
 import os
 
+from yookassa import Configuration
 from pathlib import Path
 
 from django.conf.global_settings import AUTH_USER_MODEL, CACHES, LOGIN_URL, MEDIA_ROOT
@@ -118,7 +119,7 @@ EMAIL_HOST_USER = "nasibov2005@gmail.com"  # ⚠️ ВАША почта
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-ADMIN_EMAILS = ["nasibov2005@yandex.ru"]  # ⚠️ Админские почты для получения уведомлений
+ADMINS_EMAILS = ["nasibov2005@yandex.ru"]  # ⚠️ Админские почты для получения уведомлений
 
 
 # Internationalization
@@ -156,3 +157,9 @@ INTERNAL_IPS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 LOGIN_URL = "/user/login/"
+
+
+# YooKassa
+
+Configuration.account_id = os.getenv("account_id")
+Configuration.secret_key = os.getenv("secret_key")

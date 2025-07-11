@@ -1,6 +1,7 @@
-from django.shortcuts import redirect
-
 from typing import Any
+import uuid
+
+from django.shortcuts import redirect
 from django.contrib import messages
 from django.db import transaction
 from django.forms import ValidationError
@@ -8,6 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
+from yookassa import Payment
 
 from app import settings
 from carts.models import Cart
@@ -70,6 +72,16 @@ class CreateOrderView(LoginRequiredMixin, FormView):
 
                     order_items_details.append(f"{name} (x{quantity}) - {price} руб.")
 
+                payment = Payment.create(
+                    {
+                        "amount": {"value": "100.00", "currency": "RUB"},
+                        "confirmation": {"type": "redirect", "return_url": "https://www.example.com/return_url"},
+                        "capture": True,
+                        "description": "Заказ №1",
+                    },
+                    uuid.uuid4(),
+                )
+
                 cart_items.delete()
 
                 # Формируем текст письма
@@ -88,7 +100,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                     subject=subject,
                     message=message,
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=settings.ADMIN_EMAILS,
+                    recipient_list=settings.ADMINS_EMAILS,
                     fail_silently=False,
                 )
 
