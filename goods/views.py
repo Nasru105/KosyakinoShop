@@ -1,3 +1,4 @@
+from math import e
 from typing import Any
 from django.db.models import QuerySet
 from django.db.models.base import Model as Model
@@ -38,6 +39,8 @@ class CatalogView(ListView):
         # Сортировка
         if order_by and order_by != "default":
             goods = goods.order_by(order_by)
+        else:
+            goods = goods.order_by("-id")
 
         return goods  # .filter(quantity__gt=0)
 

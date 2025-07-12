@@ -23,9 +23,7 @@ class Products(models.Model):
     id: int
     name = models.CharField(max_length=150, unique=True, verbose_name="Название")
     category = models.ForeignKey(to=Categories, on_delete=models.CASCADE, verbose_name="Категория")
-    description = models.TextField(blank=True, null=True, verbose_name="Описание")
     quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
-    image = models.ImageField(upload_to=product_image_path, blank=True, null=True, verbose_name="Изображение")
     price = models.DecimalField(
         default=Decimal("0.00"),
         max_digits=7,
@@ -40,6 +38,13 @@ class Products(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         verbose_name="Скидка (%)",
     )
+    firm = models.CharField(max_length=150, blank=True, null=True, verbose_name="Фирма")
+    model = models.CharField(max_length=150, blank=True, null=True, verbose_name="Модель")
+    sizes = models.CharField(max_length=150, blank=True, null=True, verbose_name="Размеры")
+    composition = models.CharField(max_length=150, blank=True, null=True, verbose_name="Состав")
+    country = models.CharField(max_length=150, blank=True, null=True, verbose_name="Страна")
+    description = models.TextField(blank=True, null=True, verbose_name="Описание")
+    image = models.ImageField(upload_to=product_image_path, blank=True, null=True, verbose_name="Изображение")
     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name="URL")
 
     class Meta:

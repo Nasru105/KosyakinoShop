@@ -18,11 +18,11 @@ class DummyModel(models.Model):
 class TestGetFields(TestCase):
 
     def test_get_fields_ordered(self):
-        from utils.utils import get_fields
+        from utils.utils import get_all_fields
 
         # Указываем желаемый порядок некоторых полей
         ordered_fields = ["username", "email"]
-        fields = get_fields(DummyModel, ordered_fields)
+        fields = get_all_fields(DummyModel, ordered_fields)
 
         # Проверяем, что сначала идут поля из ordered_fields
         assert fields[0:2] == ["username", "email"]
@@ -36,9 +36,9 @@ class TestGetFields(TestCase):
         assert "id" not in fields
 
     def test_get_fields_without_ordered_fields(self):
-        from utils.utils import get_fields
+        from utils.utils import get_all_fields
 
-        fields = get_fields(DummyModel, [])
+        fields = get_all_fields(DummyModel, [])
 
         # Поле id должно быть удалено
         assert "id" not in fields

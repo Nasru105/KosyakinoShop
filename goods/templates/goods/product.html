@@ -1,50 +1,62 @@
 {% extends "base.html" %}
 {% load static %}
 
-
-
 {% block content %}
 <link href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css" rel="stylesheet">
 
 <div class="container py-5">
     <div class="card shadow border-0 mb-5">
-        <div class="row g-4 p-4">
+        <div class="row g-4 p-4 align-items-start">
+
             <!-- Галерея -->
             <div class="col-lg-6">
                 <!-- Большое фото -->
                 <div class="mb-3">
-                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'deps/images/Not found image.png' %}{% endif %}"
+                    <img
+                        src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'deps/images/Not found image.png' %}{% endif %}"
                         class="img-fluid rounded w-100"
                         alt="{{ product.name }}">
                 </div>
 
                 <!-- Миниатюры -->
+                {% if product.image or product.images.all %}
                 <div class="d-flex flex-wrap gap-2" id="lightgallery">
                     {% if product.image %}
                         <a href="{{ product.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
-                            <img src="{{ product.image.url }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ product.name }}">
+                            <img src="{{ product.image.url }}"
+                                 class="img-thumbnail"
+                                 style="width: 80px; height: 80px; object-fit: cover;"
+                                 alt="{{ product.name }}">
                         </a>
-                        
-                        {% for image in product.images.all %}
-                        <a href="{{ image.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
-                            <img src="{{ image.image.url }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ product.name }}">
-                        </a>
-                        {% endfor %}
                     {% endif %}
-                    </div>
+
+                    {% for image in product.images.all %}
+                        <a href="{{ image.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
+                            <img src="{{ image.image.url }}"
+                                 class="img-thumbnail"
+                                 style="width: 80px; height: 80px; object-fit: cover;"
+                                 alt="{{ product.name }}">
+                        </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
 
-            <!-- Информация -->
+            <!-- Информация о товаре -->
             <div class="col-lg-6">
                 <div class="card-body">
+
                     <h2 class="card-title fw-bold mb-3">{{ product.name }}</h2>
-                    <p class="card-text text-muted small mb-2">Артикул: {{ product.display_id }}</p>
+
+                    <p class="card-text text-muted small mb-2">
+                        Артикул: {{ product.display_id }}
+                    </p>
 
                     {% if product.discount and product.discount > 0 %}
                         <p class="card-text h4 mb-3">
                             <span class="text-success fw-bold me-2">{{ product.sell_price }} ₽</span>
                             <span class="text-muted text-decoration-line-through">{{ product.price }} ₽</span>
-                            <span class="badge bg-warning ms-2">-{{ product.discount }}%</span>
+                            <span class="badge bg-warning text-dark ms-2">-{{ product.discount }}%</span>
                         </p>
                     {% else %}
                         <p class="card-text h4 text mb-3">
@@ -55,9 +67,9 @@
                     <p class="card-text mb-3">
                         <span class="fw-semibold">В наличии:</span>
                         {% if product.quantity > 0 %}
-                            <span class="text">{{ product.quantity }}</span>
+                            <span class="text-success fw-bold ms-2">{{ product.quantity }}</span>
                         {% else %}
-                            <span class="text-danger">Нет в наличии</span>
+                            <span class="text-danger fw-bold ms-2">Нет в наличии</span>
                         {% endif %}
                     </p>
 
@@ -67,15 +79,35 @@
                         <p class="text-muted fst-italic mb-4">Описание отсутствует.</p>
                     {% endif %}
 
+                    {% if product.firm %}
+                        <p class="card-text mb-2"><strong>Фирма:</strong> {{ product.firm }}</p>
+                    {% endif %}
+
+                    {% if product.composition %}
+                        <p class="card-text mb-2"><strong>Состав:</strong> {{ product.composition }}</p>
+                    {% endif %}
+
+                    {% if product.model %}
+                        <p class="card-text mb-2"><strong>Модель:</strong> {{ product.model }}</p>
+                    {% endif %}
+
+                    {% if product.country %}
+                        <p class="card-text mb-2"><strong>Страна:</strong> {{ product.country }}</p>
+                    {% endif %}
+
+                    {% if product.sizes %}
+                        <p class="card-text mb-4"><strong>Размеры:</strong> {{ product.sizes }}</p>
+                    {% endif %}
+
                     <a href="{% url 'carts:cart_add' %}"
-                    class="btn btn-dark btn-lg add-to-cart"
-                    data-product-id="{{ product.id }}">
+                       class="btn btn-success btn-lg add-to-cart mt-3"
+                       data-product-id="{{ product.id }}">
                         {% csrf_token %}
-                        <i class="bi bi-cart-plus me-2"></i> Добавить в корзину
+                        <i class="bi bi-cart-plus me-2"></i>
+                        Добавить в корзину
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -85,12 +117,15 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        lightGallery(document.getElementById("lightgallery"), {
-            plugins: [lgZoom],
-            speed: 400,
-            zoom: true,
-            thumbnail: false
-        });
+        const galleryElem = document.getElementById("lightgallery");
+        if (galleryElem) {
+            lightGallery(galleryElem, {
+                plugins: [lgZoom],
+                speed: 400,
+                zoom: true,
+                thumbnail: false
+            });
+        }
     });
 </script>
-{% endblock content %}
+{% endblock %}
