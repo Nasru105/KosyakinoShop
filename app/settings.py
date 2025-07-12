@@ -15,7 +15,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.loca.lt",
+    "https://*.trycloudflare.com",
+    # или твой конкретный домен
+]
 # Application definition
 
 INSTALLED_APPS = [

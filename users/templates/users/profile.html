@@ -131,7 +131,7 @@
                                     <span class="fw-bold">Заказ № {{ order.display_id }}</span>
                                     <span class="text-muted small">{{ order.created_timestamp }}</span>
                                     <span class="mt-1">
-                                        Статус: <strong>{{ order.status }}</strong>
+                                        Статус: <strong>{{ order.get_status_display }}</strong>
                                     </span>
                                 </button>
                             </h2>

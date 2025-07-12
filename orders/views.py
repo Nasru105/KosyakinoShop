@@ -1,21 +1,27 @@
 from decimal import Decimal
+import json
 from typing import Any
 import uuid
 
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.forms import ValidationError
 from django.urls import reverse_lazy, reverse
+from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.generic import FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
+from django.http import HttpResponse
 from yookassa import Payment
+from yookassa.domain.notification import WebhookNotificationFactory
 
 from app import settings
 from carts.models import Cart
-from orders.forms import CreateOrderForm
 from orders.models import Order, OrderItem
+from orders.forms import CreateOrderForm
 from utils.utils import phone_number_format
 
 
@@ -44,11 +50,11 @@ class CreateOrderView(LoginRequiredMixin, FormView):
             form.add_error(None, "Ваша корзина пуста.")
             return self.form_invalid(form)
 
-        # Подготовка данных для заказа
         requires_delivery = form.cleaned_data["requires_delivery"] == "1"
         payment_on_get = form.cleaned_data["payment_on_get"] == "1"
 
         try:
+            # Создаём заказ и order_items в транзакции
             with transaction.atomic():
                 order = Order.objects.create(
                     user=user,
@@ -59,23 +65,26 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                     comment=form.cleaned_data["comment"],
                 )
 
-                order_items_details, total_price = self.create_order_items(order, cart_items)
-
-                # Удаляем корзину
-                cart_items.delete()
-
-            # вне транзакции: почта и платёж
-
-            self.send_order_email(order, user, order_items_details, total_price)
+                self.create_order_items(order, cart_items)
 
             if payment_on_get:
+                # Оплата при получении → корзину можно удалить
+                cart_items.delete()
                 messages.success(self.request, "Заказ успешно оформлен. Оплата при получении.")
                 return redirect(self.success_url)
 
-            confirmation_url = self.create_payment(order, total_price)
+            try:
+                confirmation_url = self.create_payment(order, order.total_price())
 
-            messages.success(self.request, "Заказ оформлен. Перенаправляем на страницу оплаты.")
-            return redirect(confirmation_url)
+                messages.success(self.request, "Заказ оформлен. Перенаправляем на страницу оплаты.")
+                return redirect(confirmation_url)
+
+            except Exception as e:
+                # Ошибка при создании платежа
+                # Удаляем заказ, чтобы не висел в базе
+                order.delete()
+                form.add_error(None, f"Ошибка при создании платежа: {e}")
+                return self.form_invalid(form)
 
         except ValidationError as e:
             form.add_error(None, e)
@@ -84,13 +93,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
     def create_order_items(self, order, cart_items):
         """
         Создаёт OrderItem и обновляет остатки товаров.
-        Возвращает:
-            - order_items_details (список строк)
-            - total_price (Decimal)
         """
-        order_items_details = []
-        total_price = Decimal(0)
-
         products_to_update = []
 
         for item in cart_items:
@@ -114,22 +117,9 @@ class CreateOrderView(LoginRequiredMixin, FormView):
             product.quantity -= quantity
             products_to_update.append(product)
 
-            total_price += price * quantity
-            order_items_details.append(f"{product.name}: {price} x {quantity} = {price * quantity}₽")
-
-        # bulk_update для оптимизации
+        # bulk_update
         if products_to_update:
-
-            for product in products_to_update:
-                if product.quantity < 0:
-                    product.quantity = 0
-            from django.db import transaction
-
-            transaction.on_commit(
-                lambda: type(products_to_update[0]).objects.bulk_update(products_to_update, ["quantity"])
-            )
-
-        return order_items_details, total_price
+            type(products_to_update[0]).objects.bulk_update(products_to_update, ["quantity"])
 
     def create_payment(self, order, total_price: Decimal):
         """
@@ -150,19 +140,67 @@ class CreateOrderView(LoginRequiredMixin, FormView):
         )
         return payment.confirmation.confirmation_url
 
-    def send_order_email(self, order, user, order_items_details, total_price):
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Оформление заказа"
+        context["order"] = True
+        return context
+
+
+@method_decorator(csrf_exempt, name="dispatch")  # Отключает CSRF-проверку для всех HTTP-методов этого класса
+class YooKassaWebhookView(View):
+    def post(self, request, *args, **kwargs):
+        payload = request.body
+        data = json.loads(payload.decode())
+        notification = WebhookNotificationFactory().create(data)
+
+        if notification.event == "payment.succeeded":
+            payment = notification.object
+            order_id = payment.metadata.get("order_id")
+
+            try:
+                order = Order.objects.get(id=order_id)
+                order.status = Order.STATUS_PAID
+                order.save()
+
+                # удаляем корзину пользователя
+                Cart.objects.filter(user=order.user).delete()
+
+                self.send_order_email(order)
+
+            except Order.DoesNotExist:
+                pass
+
+        elif notification.event == "payment.canceled":
+            # пользователь отказался платить
+            payment = notification.object
+            order_id = payment.metadata.get("order_id")
+
+            try:
+                order = Order.objects.get(id=order_id)
+                order.status = Order.STATUS_FAILED
+                order.save()
+
+            except Order.DoesNotExist:
+                pass
+
+        return HttpResponse(status=200)
+
+    def send_order_email(self, order):
         """
         Отправляет email админу о новом заказе.
         """
         subject = f"Новый заказ №{order.display_id()}"
         message = (
-            f"Пользователь: {user.get_full_name()} ({user.username})\n"
-            f"Email: {user.email}\n"
+            f"Пользователь: {order.user.get_full_name()} ({order.user.username})\n"
+            f"Email: {order.user.email}\n"
             f"Телефон: +7 {phone_number_format(order.phone_number)}\n"
             f"Адрес доставки: {order.delivery_address}\n"
             f"Комментарий: {order.comment}\n"
-            f"Товары:\n" + "\n".join(order_items_details) + "\n"
-            f"Итого: {total_price}"
+            f"Товары:\n" + "\n".join(order.order_items_details()) + f"\n\nИтого: {order.total_price()} ₽"
         )
 
         send_mail(
@@ -172,12 +210,3 @@ class CreateOrderView(LoginRequiredMixin, FormView):
             recipient_list=settings.ADMINS_EMAILS,
             fail_silently=False,
         )
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Оформление заказа"
-        context["order"] = True
-        return context

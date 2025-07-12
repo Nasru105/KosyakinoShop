@@ -15,17 +15,35 @@ class OrderitemQueryset(models.QuerySet):
 
 
 class Order(models.Model):
-    id: int
+    STATUS_PENDING = "pending"
+    STATUS_PAID = "paid"
+    STATUS_FAILED = "failed"
+
+    STATUS_CHOICES = [
+        (STATUS_PENDING, "Ожидает оплату"),
+        (STATUS_PAID, "Оплачено"),
+        (STATUS_FAILED, "Ошибка оплаты"),
+    ]
+
     user = models.ForeignKey(
-        to=User, on_delete=models.SET_DEFAULT, null=True, blank=True, default=None, verbose_name="Пользователь"
+        to=User,
+        on_delete=models.SET_DEFAULT,
+        null=True,
+        blank=True,
+        default=None,
+        verbose_name="Пользователь",
     )
     created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания заказа")
     phone_number = models.CharField(max_length=20, verbose_name="Номер телефона")
-    requires_delivery = models.BooleanField(default=False, verbose_name="требуется доставка")
+    requires_delivery = models.BooleanField(default=False, verbose_name="Требуется доставка")
     delivery_address = models.TextField(null=True, blank=True, verbose_name="Адрес доставки")
     payment_on_get = models.BooleanField(default=False, verbose_name="Оплата при получении")
-    is_paid = models.BooleanField(default=False, verbose_name="Оплачено")
-    status = models.CharField(max_length=50, default="В обработке", verbose_name="Статус заказа")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_PENDING,
+        verbose_name="Статус заказа",
+    )
     comment = models.TextField(null=True, blank=True, verbose_name="Комментарий")
 
     class Meta:
@@ -33,6 +51,21 @@ class Order(models.Model):
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
         ordering = ("id",)
+
+    def total_price(self):
+        """
+        Суммарная цена всех товаров в заказе.
+        """
+        return sum(item.products_price() for item in self.orderitem_set.all())
+
+    def order_items_details(self):
+        """
+        Возвращает список строк с деталями товаров в заказе.
+        """
+        return [
+            f"{item.name}: {item.quantity} * {item.price} ₽ = {item.products_price()} ₽"
+            for item in self.orderitem_set.all()
+        ]
 
     def __str__(self) -> str:
         return f"Заказ № {self.display_id()}"

@@ -20,7 +20,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 class OrderTabulareAdmin(admin.TabularInline):
     model = Order
-    fields = ["order_link", "status", "requires_delivery", "payment_on_get", "is_paid", "created_timestamp"]
+    fields = ["order_link", "status", "requires_delivery", "payment_on_get", "created_timestamp"]
     readonly_fields = ["order_link", "created_timestamp"]
     extra = 0
 
@@ -41,11 +41,11 @@ class OrderAdmin(admin.ModelAdmin):
         "requires_delivery",
         "status",
         "payment_on_get",
-        "is_paid",
         "created_timestamp",
         "comment",
     ]
-    search_fields = ["id", "user", "created_timestamp", "requires_delivery", "is_paid", "status"]
+    search_fields = ["id", "user", "created_timestamp", "requires_delivery", "status"]
     readonly_fields = ["created_timestamp"]
-    list_filter = ["user", "created_timestamp", "requires_delivery", "is_paid", "status"]
+    list_filter = ["user", "created_timestamp", "requires_delivery", "status"]
     inlines = [OrderltemTabulareAdmin]
+    ordering = ("-created_timestamp",)
