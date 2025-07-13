@@ -1,5 +1,5 @@
 from re import search
-from goods.models import Products
+from goods.models import Product
 from django.db.models import Q
 from django.contrib.postgres.search import (
     SearchHeadline,  # type: ignore
@@ -11,12 +11,12 @@ from django.contrib.postgres.search import (
 
 def q_search(query):
     if query.isdigit() and len(query) <= 5:
-        return Products.objects.filter(id=int(query))
+        return Product.objects.filter(id=int(query))
 
     vector = SearchVector("name") + SearchVector("description")
     query = SearchQuery(query, config="russian")  # Указываем язык для морфологии
 
-    goods = Products.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gt=0.00001).order_by("-rank")
+    goods = Product.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gt=0.00001).order_by("-rank")
 
     goods = goods.annotate(
         headline=SearchHeadline(
@@ -44,4 +44,4 @@ def q_search(query):
     #     q_objects |= Q(description__icontains=token)
     #     q_objects |= Q(name__icontains=token)
 
-    # return Products.objects.filter(q_objects)
+    # return Product.objects.filter(q_objects)

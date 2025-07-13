@@ -1,15 +1,15 @@
 from django.test import TestCase
 from django.urls import reverse
-from goods.models import Categories, Products
+from goods.models import Category, Product
 
 
 class CatalogViewTests(TestCase):
 
     def setUp(self):
-        self.cat1 = Categories.objects.create(name="Категория1", slug="category-1")
-        self.cat2 = Categories.objects.create(name="Категория2", slug="category-2")
+        self.cat1 = Category.objects.create(name="Категория1", slug="category-1")
+        self.cat2 = Category.objects.create(name="Категория2", slug="category-2")
 
-        self.prod1 = Products.objects.create(
+        self.prod1 = Product.objects.create(
             name="Товар 1",
             category=self.cat1,
             price=100,
@@ -18,7 +18,7 @@ class CatalogViewTests(TestCase):
             slug="product-1",
         )
 
-        self.prod2 = Products.objects.create(
+        self.prod2 = Product.objects.create(
             name="Товар 2",
             category=self.cat2,
             price=200,
@@ -67,7 +67,7 @@ class CatalogViewTests(TestCase):
 
     # def test_catalog_search(self):
 
-    #     self.prod2 = Products.objects.create(
+    #     self.prod2 = Product.objects.create(
     #         name="test product",
     #         category=self.cat2,
     #         price=200,

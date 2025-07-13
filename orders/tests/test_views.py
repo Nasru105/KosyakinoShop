@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from carts.models import Cart
-from goods.models import Categories, Products
+from goods.models import Category, Product
 from orders.models import Order, OrderItem
 
 User = get_user_model()
@@ -14,8 +14,8 @@ class CreateOrderViewTest(TestCase):
             username="testuser", password="testpass", first_name="Иван", last_name="Иванов"
         )
 
-        self.category1 = Categories.objects.create(name="Категория1")
-        self.product1 = Products.objects.create(
+        self.category1 = Category.objects.create(name="Категория1")
+        self.product1 = Product.objects.create(
             name="Товар1",
             price=100.50,
             category=self.category1,
@@ -25,8 +25,8 @@ class CreateOrderViewTest(TestCase):
             image="test.jpg",
         )
 
-        self.category2 = Categories.objects.create(name="Категория2")
-        self.product2 = Products.objects.create(
+        self.category2 = Category.objects.create(name="Категория2")
+        self.product2 = Product.objects.create(
             name="Товар2",
             price=200.75,
             category=self.category2,

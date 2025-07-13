@@ -1,16 +1,18 @@
+import json
 from typing import Any
 from django.db.models import QuerySet
 from django.db.models.base import Model as Model
 from django.http import Http404
 from django.shortcuts import get_list_or_404, render
 from django.views.generic import DetailView, ListView
+from django.core.serializers.json import DjangoJSONEncoder
 
-from goods.models import Categories, Products
+from goods.models import Category, Product
 from goods.utils import q_search
 
 
 class CatalogView(ListView):
-    model = Products
+    model = Product
     template_name = "goods/catalog.html"
     context_object_name = "goods"
     paginate_by = 6
@@ -38,6 +40,8 @@ class CatalogView(ListView):
         # Сортировка
         if order_by and order_by != "default":
             goods = goods.order_by(order_by)
+        else:
+            goods = goods.order_by("-id")
 
         return goods  # .filter(quantity__gt=0)
 
@@ -48,11 +52,15 @@ class CatalogView(ListView):
         return context
 
 
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+
+
 class ProductView(DetailView):
     template_name = "goods/product.html"
     slug_url_kwarg = "product_slug"
     context_object_name = "product"
-    model = Products
+    model = Product
 
     def get_object(self, queryset=None) -> Model:
         product = self.model.objects.get(slug=self.kwargs.get(self.slug_url_kwarg))
@@ -60,5 +68,37 @@ class ProductView(DetailView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["title"] = self.get_object().name
+        product = self.get_object()
+
+        # сериализуем варианты в JSON
+        variants = product.variants.all()
+        variants_json = [
+            {
+                "id": v.id,
+                "color": v.color,
+                "size": v.size,
+                "sku": v.sku,
+                "sell_price": str(v.sell_price()),
+                "price": str(v.price),
+                "discount": str(v.discount),
+                "quantity": v.quantity,
+            }
+            for v in variants
+        ]
+
+        # уникальные цвета
+        unique_colors = product.variants.values_list("color", flat=True).distinct()
+
+        # уникальные размеры
+        unique_sizes = product.variants.values_list("size", flat=True).distinct()
+
+        context.update(
+            {
+                "variants_json": json.dumps(variants_json, cls=DjangoJSONEncoder),
+                "colors": unique_colors,
+                "sizes": unique_sizes,
+                "title": product.name,
+            }
+        )
+
         return context

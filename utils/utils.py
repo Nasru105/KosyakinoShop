@@ -1,9 +1,19 @@
-def get_fields(model, ordered_fields):
+def get_all_fields(model, ordered_fields):
+
+    def flatten(items):
+        result = []
+        for item in items:
+            if isinstance(item, (list, tuple)):
+                result.extend(flatten(item))
+            else:
+                result.append(item)
+        return result
+
     # Получаем список всех полей модели User
     fields = [field.name for field in model._meta.get_fields() if not field.many_to_many and not field.one_to_many]
     fields.remove("id")  # Удаляем поле id, если оно есть
-    # Если хочешь поля в конкретном порядке, например username и email впереди:
-    for f in ordered_fields:
+
+    for f in flatten(ordered_fields):
         if f in fields:
             fields.remove(f)
     fields = ordered_fields + fields
@@ -26,6 +36,23 @@ def phone_number_format(phone_number: str):
 
 
 def product_image_path(instance, filename):
-    if hasattr(instance, "name"):
-        instance = instance.name.replace(" ", "_").lower()
-    return f"goods_images/{instance}/{filename}"
+    """
+    Генерирует путь для загрузки изображений продуктов.
+    Подходит для Products и ProductImage.
+    """
+    product_name = "unknown"
+
+    if hasattr(instance, "name") and instance.name:
+        product_name = instance.name.replace(" ", "_").lower()
+    elif hasattr(instance, "product") and instance.product and hasattr(instance.product, "name"):
+        product_name = instance.product.name.replace(" ", "_").lower()
+
+    return f"goods_images/{product_name}/{filename}"
+
+
+def user_image_path(instance, filename):
+    """
+    Генерирует путь для загрузки изображений пользователей.
+    """
+    username = instance.username.replace(" ", "_").lower() if instance.username else "unknown_user"
+    return f"users_images/{username}/{filename}"

@@ -2,7 +2,7 @@ from typing import Any
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-from goods.models import Categories
+from goods.models import Category
 
 
 class IndexView(TemplateView):

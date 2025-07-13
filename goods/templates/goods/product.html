@@ -1,81 +1,129 @@
 {% extends "base.html" %}
 {% load static %}
 
-
-
 {% block content %}
 <link href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css" rel="stylesheet">
 
 <div class="container py-5">
     <div class="card shadow border-0 mb-5">
-        <div class="row g-4 p-4">
+        <div class="row g-4 p-4 align-items-start">
+
             <!-- Галерея -->
             <div class="col-lg-6">
-                <!-- Большое фото -->
                 <div class="mb-3">
-                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'deps/images/Not found image.png' %}{% endif %}"
+                    <img
+                        src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'deps/images/Not found image.png' %}{% endif %}"
                         class="img-fluid rounded w-100"
                         alt="{{ product.name }}">
                 </div>
 
-                <!-- Миниатюры -->
+                {% if product.image or product.images.all %}
                 <div class="d-flex flex-wrap gap-2" id="lightgallery">
                     {% if product.image %}
                         <a href="{{ product.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
-                            <img src="{{ product.image.url }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ product.name }}">
+                            <img src="{{ product.image.url }}"
+                                 class="img-thumbnail"
+                                 style="width: 80px; height: 80px; object-fit: cover;"
+                                 alt="{{ product.name }}">
                         </a>
-                        
-                        {% for image in product.images.all %}
-                        <a href="{{ image.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
-                            <img src="{{ image.image.url }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ product.name }}">
-                        </a>
-                        {% endfor %}
                     {% endif %}
-                    </div>
+
+                    {% for image in product.images.all %}
+                        <a href="{{ image.image.url }}" class="flex-shrink-0" data-lg-size="1400-933">
+                            <img src="{{ image.image.url }}"
+                                 class="img-thumbnail"
+                                 style="width: 80px; height: 80px; object-fit: cover;"
+                                 alt="{{ product.name }}">
+                        </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
 
-            <!-- Информация -->
+            <!-- Информация о товаре -->
             <div class="col-lg-6">
                 <div class="card-body">
+
                     <h2 class="card-title fw-bold mb-3">{{ product.name }}</h2>
-                    <p class="card-text text-muted small mb-2">Артикул: {{ product.display_id }}</p>
 
-                    {% if product.discount and product.discount > 0 %}
-                        <p class="card-text h4 mb-3">
-                            <span class="text-success fw-bold me-2">{{ product.sell_price }} ₽</span>
-                            <span class="text-muted text-decoration-line-through">{{ product.price }} ₽</span>
-                            <span class="badge bg-warning ms-2">-{{ product.discount }}%</span>
-                        </p>
-                    {% else %}
-                        <p class="card-text h4 text mb-3">
-                            Цена: <strong>{{ product.sell_price }} ₽</strong>
-                        </p>
-                    {% endif %}
-
-                    <p class="card-text mb-3">
-                        <span class="fw-semibold">В наличии:</span>
-                        {% if product.quantity > 0 %}
-                            <span class="text">{{ product.quantity }}</span>
-                        {% else %}
-                            <span class="text-danger">Нет в наличии</span>
-                        {% endif %}
+                    <p class="card-text text-muted small mb-2">
+                        Артикул: {{ product.display_id }}
                     </p>
+
+                    {% comment %}
+                    Выводим информацию о первом варианте продукта
+                    {% endcomment %}
+                    {% with first_variant=product.variants.all.first %}
+                        {% if first_variant %}
+                            <div id="variant-info">
+                                <p class="mb-2"><strong>Цвет:</strong> <span id="variant-color">{{ first_variant.color }}</span></p>
+                                <p class="mb-2"><strong>Размер:</strong> <span id="variant-size">{{ first_variant.size }}</span></p>
+                                <p class="mb-2"><strong>Артикул:</strong> <span id="variant-sku">{{ first_variant.sku }}</span></p>
+                                <p class="mb-2">
+                                    <strong>Цена:</strong>
+                                    {% if first_variant.discount and first_variant.discount > 0 %}
+                                        <span class="text-success fw-bold" id="variant-price">{{ first_variant.sell_price }} ₽</span>
+                                        <span class="text-muted text-decoration-line-through ms-2">{{ first_variant.price }} ₽</span>
+                                        <span class="badge bg-warning text-dark ms-2">-{{ first_variant.discount }}%</span>
+                                    {% else %}
+                                        <span id="variant-price">{{ first_variant.sell_price }} ₽</span>
+                                    {% endif %}
+                                </p>
+                                <p class="mb-4">
+                                    <strong>В наличии:</strong>
+                                    {% if first_variant.quantity > 0 %}
+                                        <span class="text-success fw-bold" id="variant-quantity">{{ first_variant.quantity }}</span>
+                                    {% else %}
+                                        <span class="text-danger fw-bold" id="variant-quantity">Нет в наличии</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <!-- Выбор цвета и размера -->
+                            <select class="form-select" id="color-select" name="color">
+                                {% for color in colors %}
+                                    <option value="{{ color }}" {% if color == first_variant.color %}selected{% endif %}>{{ color }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <select class="form-select" id="size-select" name="size">
+                                {% for size in sizes %}
+                                    <option value="{{ size }}" {% if size == first_variant.size %}selected{% endif %}>{{ size }}</option>
+                                {% endfor %}
+                            </select>
+
+                        {% endif %}
+                    {% endwith %}
 
                     {% if product.description %}
                         <p class="card-text mb-4">{{ product.description }}</p>
-                    {% else %}
-                        <p class="text-muted fst-italic mb-4">Описание отсутствует.</p>
+                    {% endif %}
+
+                    {% if product.firm %}
+                        <p class="card-text mb-2"><strong>Фирма:</strong> {{ product.firm }}</p>
+                    {% endif %}
+
+                    {% if product.composition %}
+                        <p class="card-text mb-2"><strong>Состав:</strong> {{ product.composition }}</p>
+                    {% endif %}
+
+                    {% if product.model %}
+                        <p class="card-text mb-2"><strong>Модель:</strong> {{ product.model }}</p>
+                    {% endif %}
+
+                    {% if product.country %}
+                        <p class="card-text mb-2"><strong>Страна:</strong> {{ product.country }}</p>
                     {% endif %}
 
                     <a href="{% url 'carts:cart_add' %}"
-                    class="btn btn-dark btn-lg add-to-cart"
-                    data-product-id="{{ product.id }}">
+                       class="btn btn-success btn-lg add-to-cart mt-3"
+                       data-product-id="{{ product.id }}">
                         {% csrf_token %}
-                        <i class="bi bi-cart-plus me-2"></i> Добавить в корзину
+                        <i class="bi bi-cart-plus me-2"></i>
+                        Добавить в корзину
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -83,14 +131,55 @@
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script>
 
-<script>
+<script id="variants-json" type="application/json">
     document.addEventListener("DOMContentLoaded", function () {
-        lightGallery(document.getElementById("lightgallery"), {
-            plugins: [lgZoom],
-            speed: 400,
-            zoom: true,
-            thumbnail: false
-        });
+        const galleryElem = document.getElementById("lightgallery");
+        if (galleryElem) {
+            lightGallery(galleryElem, {
+                plugins: [lgZoom],
+                speed: 400,
+                zoom: true,
+                thumbnail: false
+            });
+        }
+
+        // Логика смены варианта
+        const colorSelect = document.getElementById("color-select");
+        const sizeSelect = document.getElementById("size-select");
+        const variants = JSON.parse(
+            document.getElementById("variants-json").textContent
+        );
+        if (colorSelect && sizeSelect) {
+            colorSelect.addEventListener("change", updateVariant);
+            sizeSelect.addEventListener("change", updateVariant);
+        }
+
+        function updateVariant() {
+            const selectedColor = colorSelect.value;
+            const selectedSize = sizeSelect.value;
+
+            const variant = variants.find(v =>
+                v.color === selectedColor && v.size === selectedSize
+            );
+
+            if (variant) {
+                document.getElementById("variant-color").textContent = variant.color;
+                document.getElementById("variant-size").textContent = variant.size;
+                document.getElementById("variant-sku").textContent = variant.sku;
+                document.getElementById("variant-price").textContent = variant.sell_price + " ₽";
+
+                const quantityElem = document.getElementById("variant-quantity");
+                if (variant.quantity > 0) {
+                    quantityElem.textContent = variant.quantity;
+                    quantityElem.classList.remove("text-danger");
+                    quantityElem.classList.add("text-success");
+                } else {
+                    quantityElem.textContent = "Нет в наличии";
+                    quantityElem.classList.add("text-danger");
+                    quantityElem.classList.remove("text-success");
+                }
+            }
+        }
     });
 </script>
-{% endblock content %}
+{% endblock %}

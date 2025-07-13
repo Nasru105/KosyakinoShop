@@ -1,6 +1,6 @@
 from django.test import TestCase
 from users.models import User
-from goods.models import Categories, Products
+from goods.models import Category, Product
 from orders.models import Order, OrderItem
 
 
@@ -27,8 +27,8 @@ class OrderItemModelTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create(username="testuser")
-        self.category = Categories.objects.create(name="Категория1")
-        self.product = Products.objects.create(
+        self.category = Category.objects.create(name="Категория1")
+        self.product = Product.objects.create(
             name="Товар1",
             price=100.50,
             category=self.category,

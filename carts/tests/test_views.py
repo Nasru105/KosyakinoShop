@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from carts.models import Cart
-from goods.models import Categories, Products
+from goods.models import Category, Product
 
 User = get_user_model()
 
@@ -12,13 +12,13 @@ class CartViewsTests(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.category = Categories.objects.create(name="Test Category", slug="test-category")
+        self.category = Category.objects.create(name="Test Category", slug="test-category")
 
         self.user = User.objects.create_user(
             username="testuser",
             password="testpass",
         )
-        self.product = Products.objects.create(
+        self.product = Product.objects.create(
             name="Test Product",
             price=100,
             category=self.category,

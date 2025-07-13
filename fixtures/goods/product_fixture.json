@@ -1,0 +1,359 @@
+[
+    {
+        "model": "goods.product",
+        "pk": 1,
+        "fields": {
+            "name": "╫рщэ√щ ёЄюышъ ш ЄЁш ёЄєыр",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "\"╩юьяыхъЄ шч ЄЁ╕ї ёЄєы№хт ш фшчрщэхЁёъшщ ёЄюышъ фы  уюёЄшээющ ъюьэрЄ√. 2",
+            "quantity": 32,
+            "image": "goods_images/╫рщэ√щ ёЄюышъ ш ЄЁш ёЄєыр/set_of_tea_table_and_three_chairs.jpg",
+            "price": "150.00",
+            "discount": "10.23",
+            "slug": "chajnyj-stolik-i-tri-stula"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 2,
+        "fields": {
+            "name": "─тєїёяры№эр  ъЁютрЄ№",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "╩ЁютрЄ№ фтєїёяры№эр  ё эрфуюыютэшъюь ш тююс∙х юўхэ№ юЁЄюяхфшўэр .",
+            "quantity": 2192,
+            "image": "goods_images/double_bed.jpg",
+            "price": "670.00",
+            "discount": "14.00",
+            "slug": "dvuhspalnaya-krovat"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 3,
+        "fields": {
+            "name": "╩єїюээ√щ ёЄюы ё Ёръютшэющ",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "╩єїюээ√щ ёЄюы фы  юсхфр ё тёЄЁюхээющ Ёръютшэющ ш ёЄєы№ ьш.",
+            "quantity": 51,
+            "image": "goods_images/kitchen_table_2.jpg",
+            "price": "365.00",
+            "discount": "45.00",
+            "slug": "kuhonnyj-stol-s-rakovinoj"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 4,
+        "fields": {
+            "name": "╙уыютющ фштрэ фы  уюёЄшээющ",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "╙уыютющ фштрэ, Ёрёъырф√трхЄё  т фтєїёяры№эє■ ъЁютрЄ№, фы  уюёЄшээющ ш яЁшхьр уюёЄхщ ёрьюх Єю!",
+            "quantity": 288,
+            "image": "",
+            "price": "610.00",
+            "discount": "54.23",
+            "slug": "uglovoj-divan-dlya-gostinnoj"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 5,
+        "fields": {
+            "name": "123",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "goods_images/123/1-127132146_p0.png",
+            "price": "2.00",
+            "discount": "1.00",
+            "slug": "123"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 6,
+        "fields": {
+            "name": "234",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "",
+            "price": "0.00",
+            "discount": "0.00",
+            "slug": "234"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 7,
+        "fields": {
+            "name": "345",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "",
+            "price": "0.00",
+            "discount": "0.00",
+            "slug": "345"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 8,
+        "fields": {
+            "name": "456",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "",
+            "price": "0.00",
+            "discount": "0.00",
+            "slug": "456"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 9,
+        "fields": {
+            "name": "678",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "",
+            "price": "0.00",
+            "discount": "0.00",
+            "slug": "678"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 10,
+        "fields": {
+            "name": "100",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 1122,
+            "image": "",
+            "price": "12312.00",
+            "discount": "99.99",
+            "slug": "100"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 12,
+        "fields": {
+            "name": "421",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "21",
+            "quantity": 0,
+            "image": "",
+            "price": "23.01",
+            "discount": "32.00",
+            "slug": "421"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 13,
+        "fields": {
+            "name": "qwe",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 1122,
+            "image": "",
+            "price": "12312.00",
+            "discount": "2.00",
+            "slug": "qwe"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 14,
+        "fields": {
+            "name": "2133",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "",
+            "price": "213.00",
+            "discount": "3.00",
+            "slug": "2133"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 15,
+        "fields": {
+            "name": "рєЎ3324р",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "",
+            "price": "213.00",
+            "discount": "32.00",
+            "slug": "auc3324a"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 16,
+        "fields": {
+            "name": "щЎєрЎщє",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 0,
+            "image": "",
+            "price": "3234.00",
+            "discount": "23.00",
+            "slug": "jcuacju"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 17,
+        "fields": {
+            "name": "ъ324ът32",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 41,
+            "image": "",
+            "price": "34.00",
+            "discount": "42.00",
+            "slug": "k324kv32"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 18,
+        "fields": {
+            "name": "33323",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "3123",
+            "quantity": 121,
+            "image": "",
+            "price": "3.00",
+            "discount": "23.00",
+            "slug": "33323"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 19,
+        "fields": {
+            "name": "332133",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "",
+            "quantity": 120,
+            "image": "",
+            "price": "13123.00",
+            "discount": "32.00",
+            "slug": "332133"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 20,
+        "fields": {
+            "name": "╫рщэ√щ ёЄюышъ ш ЄЁш ёЄєыр 2",
+            "category": 1,
+            "country": null,
+            "composition": null,
+            "firm": null,
+            "description": "ёЄюы",
+            "quantity": 213,
+            "image": "",
+            "price": "23212.99",
+            "discount": "0.00",
+            "slug": "chajnyj-stolik-i-tri-stula-2"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 21,
+        "fields": {
+            "name": "COCOON S20458 ╧ырЄ№х",
+            "category": 1,
+            "country": "╥єЁЎш ",
+            "composition": "100% тшёъючр",
+            "firm": "COCOON",
+            "description": "",
+            "quantity": 98,
+            "image": "goods_images/cocoon_s20458_яырЄ№х/COCOON_S20458_╧ырЄ№х.jpg",
+            "price": "2800.00",
+            "discount": "19.99",
+            "slug": "cocoon-s20458-plate"
+        }
+    },
+    {
+        "model": "goods.product",
+        "pk": 22,
+        "fields": {
+            "name": "╩юьяыхъЄ цхэёъшщ ё сЁшфцрьш",
+            "category": 1,
+            "country": "╥єЁЎш ",
+            "composition": "100% тшёъючр",
+            "firm": "COCOON",
+            "description": "",
+            "quantity": 98,
+            "image": "goods_images/ъюьяыхъЄ_цхэёъшщ_ё_сЁшфцрьш/COCOON_S50349_╩юьяыхъЄ_цхэёъшщ_ё_сЁшфцрьш.jpg",
+            "price": "2600.00",
+            "discount": "19.99",
+            "slug": "komplekt-zhenskij-s-bridzhami"
+        }
+    }
+]

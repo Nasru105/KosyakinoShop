@@ -1,6 +1,6 @@
 from django.test import TestCase
 from carts.models import Cart
-from goods.models import Categories, Products
+from goods.models import Category, Product
 from users.models import User
 
 
@@ -8,8 +8,8 @@ class CartModelTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="testpass", email="testuser@example.com")
-        self.category = Categories.objects.create(name="Test Category", slug="test-category")
-        self.product = Products.objects.create(
+        self.category = Category.objects.create(name="Test Category", slug="test-category")
+        self.product = Product.objects.create(
             name="Test Product",
             category=self.category,
             price=100,

@@ -1,16 +1,16 @@
 from django.test import TestCase
 from decimal import Decimal
-from goods.models import Products, Categories
+from goods.models import Product, Category
 from django.core.exceptions import ValidationError
 
 
 class ProductsModelTest(TestCase):
 
     def setUp(self):
-        self.category = Categories.objects.create(name="Категория тест", slug="test-category")
+        self.category = Category.objects.create(name="Категория тест", slug="test-category")
 
     def test_str_method(self):
-        product = Products.objects.create(
+        product = Product.objects.create(
             name="Тестовый продукт",
             category=self.category,
             price=Decimal("100.00"),
@@ -21,7 +21,7 @@ class ProductsModelTest(TestCase):
         self.assertEqual(str(product), "Тестовый продукт")
 
     def test_sell_price_no_discount(self):
-        product = Products.objects.create(
+        product = Product.objects.create(
             name="Товар без скидки",
             category=self.category,
             price=Decimal("150.00"),
@@ -32,7 +32,7 @@ class ProductsModelTest(TestCase):
         self.assertEqual(product.sell_price(), Decimal("150.00"))
 
     def test_sell_price_with_discount(self):
-        product = Products.objects.create(
+        product = Product.objects.create(
             name="Товар со скидкой",
             category=self.category,
             price=Decimal("200.00"),
@@ -44,7 +44,7 @@ class ProductsModelTest(TestCase):
         self.assertEqual(product.sell_price(), expected_price)
 
     def test_sell_price_rounding(self):
-        product = Products.objects.create(
+        product = Product.objects.create(
             name="Товар с округлением",
             category=self.category,
             price=Decimal("99.99"),
@@ -56,13 +56,13 @@ class ProductsModelTest(TestCase):
         self.assertEqual(product.sell_price(), expected_price)
 
     def test_display_id_format(self):
-        product = Products.objects.create(
+        product = Product.objects.create(
             name="Новый товар", category=self.category, price=Decimal("50.00"), quantity=10, slug="new-product"
         )
         self.assertRegex(product.display_id(), r"^\d{5}$")
 
     def test_discount_cannot_exceed_100(self):
-        product = Products(
+        product = Product(
             name="Слишком большая скидка",
             category=self.category,
             price=Decimal("100.00"),
@@ -74,7 +74,7 @@ class ProductsModelTest(TestCase):
             product.full_clean()
 
     def test_negative_discount_not_allowed(self):
-        product = Products(
+        product = Product(
             name="Отрицательная скидка",
             category=self.category,
             price=Decimal("100.00"),
