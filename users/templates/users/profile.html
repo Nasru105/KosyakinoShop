@@ -157,6 +157,16 @@
                                                         class="text-decoration-none text-dark">
                                                             {{ item.product.name }}
                                                         </a>
+                                                        {% if item.product.size %}
+                                                        <div class="col-md-auto">
+                                                                <span class="badge bg-secondary">Размер: {{ item.product.size }}</span>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if item.product.color %}
+                                                            <div class="col-md-auto">
+                                                                <span class="badge bg-secondary">Цвет: {{ item.product.color }}</span>
+                                                            </div>
+                                                        {% endif %}
                                                     </td>
                                                     <td>{{ item.quantity }}</td>
                                                     <td>{{ item.price }} ₽</td>

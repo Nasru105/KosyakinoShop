@@ -11,39 +11,48 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
-                        <div class="d-flex flex-nowrap align-items-center input-group">
-                            <button type="button" class="btn btn-dark btn-sm decrement me-1 input-group-btn"
-                                data-cart-id="{{ cart.id }}"
-                                data-cart-change-url="{% url 'carts:cart_change' %}"
-                                aria-label="Уменьшить количество">
-                                &minus;
-                            </button>
-                            <input type="text" class="form-control form-control-sm text-center number"
-                                id="cart-qty-{{ forloop.counter }}"
-                                style="width: 40px; flex: 0 0 40px; max-width: 40px;"
-                                value="{{ cart.quantity }}" readonly>
-                            <button type="button" class="btn btn-dark btn-sm increment ms-1 input-group-btn"
-                                data-cart-id="{{ cart.id }}"
-                                data-cart-change-url="{% url 'carts:cart_change' %}"
-                                aria-label="Увеличить количество">
-                                +
-                            </button>
+                        <div class="col-md-auto">
+                            <div class="input-group input-group-sm">
+                                <button type="button" class="btn btn-dark decrement"
+                                        data-cart-id="{{ cart.id }}"
+                                        data-cart-change-url="{% url 'carts:cart_change' %}"
+                                        aria-label="Уменьшить количество">
+                                    &minus;
+                                </button>
+                                <input type="text"class="form-control form-control-sm text-center number"
+                                    id="cart-qty-{{ forloop.counter }}"
+                                    style="width: 50px;"
+                                    value="{{ cart.quantity }}" readonly>
+                                <button type="button" class="btn btn-dark increment"
+                                        data-cart-id="{{ cart.id }}"
+                                        data-cart-change-url="{% url 'carts:cart_change' %}"
+                                        aria-label="Увеличить количество">
+                                    +
+                                </button>
+                            </div>
+                            {% if cart.product.size %}
+                            <div class="col-md-auto">
+                                <span class="badge bg-secondary">Размер: {{ cart.product.size }}</span>
+                            </div>
+                            {% endif %}
+                            {% if cart.product.color %}
+                            <div class="col-md-auto">
+                                <span class="badge bg-secondary">Цвет: {{ cart.product.color }}</span>
+                            </div>
+                            {% endif %}
                         </div>
-                        <div>
-                            <span>{{ cart.product.sell_price }} ₽ × {{ cart.quantity }} =</span>
+                        <div class="col-md-auto">
+                            <span class="fs-6 text-muted">{{ cart.product.sell_price }} ₽ × {{ cart.quantity }} =</span>
                         </div>
-                        <div>
-                            <strong>{{ cart.products_price }} ₽</strong>
+                        <div class="col-md-auto">
+                            <span class="fs-5 fw-bold">{{ cart.products_price }} ₽</span>
                         </div>
-                        <div>
+                        <div class="col-md-auto">
                             <a href="{% url 'carts:cart_remove' %}"
-                               class="remove-from-cart"
-                               data-cart-id="{{ cart.id }}"
-                               aria-label="Удалить товар">
-                                <img class="mx-1"
-                                     src="{% static 'deps/icons/trash3-fill.svg' %}"
-                                     alt="Удалить"
-                                     width="20" height="20">
+                            class="remove-from-cart btn btn-outline-danger btn-sm"
+                            data-cart-id="{{ cart.id }}"
+                            aria-label="Удалить товар">
+                                <img src="{% static 'deps/icons/trash3-fill.svg' %}" alt="Удалить" width="20" height="20">
                             </a>
                         </div>
                     </div>

@@ -119,30 +119,30 @@
                         <ul class="list-unstyled mb-3">
                             <li><strong>Артикул:</strong> {{ product.display_id }}</li>
                             <li><strong>Количество:</strong>
-                                {% if product.quantity > 0 %}
-                                    <span class="text">{{ product.quantity }}</span>
-                                {% else %}
-                                    <span class="text-danger">Нет в наличии</span>
-                                {% endif %}
+                            {% if product.get_quantity > 0 %}
+                                <span class="text">{{ product.get_quantity }}</span>
+                            {% else %}
+                                <span class="text-danger">Нет в наличии</span>
+                            {% endif %}
                             </li>
                         </ul>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
                             <div>
-                                {% if product.discount %}
-                                    <p class="mb-1">
-                                        <s class="text-muted">{{ product.price }} ₽</s>
-                                    </p>
-                                    <p class="fw-bold text-success mb-1">
-                                        {{ product.sell_price }} ₽
-                                    </p>
-                                    <span class="badge bg-warning text-dark">Скидка {{ product.discount }}%</span>
-                                {% else %}
-                                    <p class="fw-bold mb-0">{{ product.sell_price }} ₽</p>
-                                {% endif %}
+                            {% if product.discount %}
+                                <span class="mb-1">
+                                    <s class="text-muted">{{ product.price }}</s>
+                                </span>
+                                <span class="fw-bold text-success mb-1">
+                                    {{ product.sell_price }} ₽
+                                </span>
+                                <span class="badge bg-warning text-dark">Скидка {{ product.discount }}%</span>
+                            {% else %}
+                                <p class="fw-bold mb-0">{{ product.sell_price }} ₽</p>
+                            {% endif %}
                             </div>
                             <a href="{% url 'carts:cart_add' %}" 
                                class="btn btn-outline-success add-to-cart border-success"
-                               data-product-id="{{ product.id }}">
+                               data-product-id="{{ product.variants.first.id }}">
                                 {% csrf_token %}
                                 <img src="{% static 'deps/icons/cart-plus.svg' %}" alt="Add to cart" width="24" height="24">
                             </a>

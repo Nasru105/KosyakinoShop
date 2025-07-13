@@ -75,6 +75,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
 
             try:
                 confirmation_url = self.create_payment(order, order.total_price())
+                cart_items.delete()  # удалить потом
 
                 messages.success(self.request, "Заказ оформлен. Перенаправляем на страницу оплаты.")
                 return redirect(confirmation_url)
@@ -102,9 +103,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
             price = product.sell_price()
 
             if product.quantity < quantity:
-                raise ValidationError(
-                    f"Недостаточное количество товара '{product.name}'. В наличии: {product.quantity}."
-                )
+                raise ValidationError(f"Недостаточное количество товара '{product}'. В наличии: {product.quantity}.")
 
             OrderItem.objects.create(
                 order=order,

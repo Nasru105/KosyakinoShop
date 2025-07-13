@@ -54,6 +54,9 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def get_quantity(self):
+        return self.variants.aggregate(models.Sum("quantity"))["quantity__sum"] or 0
+
     def get_absolute_url(self):
         return reverse("catalog:product", kwargs={"product_slug": self.slug})
 
@@ -98,6 +101,12 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({self.sku})"
+
+    def name(self):
+        return f"{self.product.name}"
+
+    def slug(self):
+        return f"{self.product.slug}"
 
     def save(self, *args, **kwargs):
         if self.price == Decimal("0.00"):

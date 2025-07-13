@@ -1,6 +1,6 @@
 from django.db import models
 
-from goods.models import Product
+from goods.models import Product, ProductVariant
 from users.models import User
 
 
@@ -77,7 +77,7 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE, verbose_name="Заказ")
     product = models.ForeignKey(
-        to=Product, on_delete=models.SET_DEFAULT, default=None, null=True, blank=True, verbose_name="Продукт"
+        to=ProductVariant, on_delete=models.SET_DEFAULT, default=None, null=True, blank=True, verbose_name="Продукт"
     )
     name = models.CharField(max_length=150, verbose_name="Название")
     price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Цена")
