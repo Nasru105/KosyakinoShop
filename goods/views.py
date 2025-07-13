@@ -66,12 +66,12 @@ class ProductView(DetailView):
         product = self.model.objects.get(slug=self.kwargs.get(self.slug_url_kwarg))
         return product
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
 
-        # сериализуем варианты в JSON
         variants = product.variants.all()
+
         variants_json = [
             {
                 "id": v.id,
@@ -86,11 +86,8 @@ class ProductView(DetailView):
             for v in variants
         ]
 
-        # уникальные цвета
-        unique_colors = product.variants.values_list("color", flat=True).distinct()
-
-        # уникальные размеры
-        unique_sizes = product.variants.values_list("size", flat=True).distinct()
+        unique_colors = sorted(set(v.color for v in variants if v.color))
+        unique_sizes = sorted(set(v.size for v in variants if v.size))
 
         context.update(
             {
@@ -98,6 +95,7 @@ class ProductView(DetailView):
                 "colors": unique_colors,
                 "sizes": unique_sizes,
                 "title": product.name,
+                "variant": variants.first(),
             }
         )
 

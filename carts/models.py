@@ -1,6 +1,6 @@
 from django.db import models
 
-from goods.models import Product
+from goods.models import Product, ProductVariant
 from users.models import User
 
 
@@ -23,7 +23,7 @@ class Cart(models.Model):
         null=True,
         verbose_name="Пользователь",
     )
-    product = models.ForeignKey(to=Product, on_delete=models.CASCADE, verbose_name="Товар")
+    product = models.ForeignKey(to=ProductVariant, on_delete=models.CASCADE, verbose_name="Товар")
     quantity = models.PositiveSmallIntegerField(default=0, verbose_name="Количество")
     session_key = models.CharField(max_length=32, null=True, blank=True)
     created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
