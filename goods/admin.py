@@ -22,7 +22,7 @@ class ProductVariantInline(admin.TabularInline):
     ordering = ("-sku",)
     readonly_fields = ("link_to_change",)
 
-    fields = ("link_to_change", "color", "size", "price", "discount", "quantity", "sku")
+    fields = ("link_to_change", "quantity", "color", "size", "price", "discount", "sku")
 
     def link_to_change(self, obj):
         if obj.id:

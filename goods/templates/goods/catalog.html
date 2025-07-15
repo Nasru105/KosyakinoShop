@@ -117,7 +117,6 @@
                             {% endautoescape %}
                         </p>
                         <ul class="list-unstyled mb-3">
-                            <li><strong>Артикул:</strong> {{ product.display_id }}</li>
                             <li><strong>Количество:</strong>
                             {% if product.get_quantity > 0 %}
                                 <span class="text">{{ product.get_quantity }}</span>

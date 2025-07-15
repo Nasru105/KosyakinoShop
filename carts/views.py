@@ -15,7 +15,7 @@ class CartAddView(CartMixin, View):
         product_id = request.POST.get("product_id")
         product = ProductVariant.objects.get(id=product_id)
 
-        cart = self.get_cart(request, product=product)
+        cart = self.get_cart(request, product_variant=product)
 
         if cart:
             cart.quantity += 1
@@ -24,7 +24,7 @@ class CartAddView(CartMixin, View):
             Cart.objects.create(
                 user=request.user if request.user.is_authenticated else None,
                 session_key=request.session.session_key if not request.user.is_authenticated else None,
-                product=product,
+                product_variant=product,
                 quantity=1,
             )
 

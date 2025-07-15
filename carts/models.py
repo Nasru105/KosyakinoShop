@@ -23,7 +23,7 @@ class Cart(models.Model):
         null=True,
         verbose_name="Пользователь",
     )
-    product = models.ForeignKey(to=ProductVariant, on_delete=models.CASCADE, verbose_name="Товар")
+    product_variant = models.ForeignKey(to=ProductVariant, on_delete=models.CASCADE, verbose_name="Товар")
     quantity = models.PositiveSmallIntegerField(default=0, verbose_name="Количество")
     session_key = models.CharField(max_length=32, null=True, blank=True)
     created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
@@ -37,10 +37,10 @@ class Cart(models.Model):
     objects = CartQueryset().as_manager()
 
     def products_price(self):
-        return round(self.product.sell_price() * self.quantity, 2)
+        return round(self.product_variant.sell_price() * self.quantity, 2)
 
     def __str__(self) -> str:
         if self.user:
-            return f"Корзина: {self.user.username} | Товар: {self.product.name} | Количество: {self.quantity}"
+            return f"Корзина: {self.user.username} | Товар: {self.product_variant.name} | Количество: {self.quantity}"
 
-        return f"Корзина: Анонимная | Товар: {self.product.name} | Количество: {self.quantity}"
+        return f"Корзина: Анонимная | Товар: {self.product_variant.name} | Количество: {self.quantity}"

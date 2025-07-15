@@ -7,15 +7,15 @@ from orders.models import Order, OrderItem
 
 class OrderltemTabulareAdmin(admin.TabularInline):
     model = OrderItem
-    fields = ["product", "name", "price", "quantity"]
-    search_fields = ["product", "name"]
+    fields = ["product_variant", "name", "price", "quantity"]
+    search_fields = ["product_variant", "name"]
     extra = 0
 
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ["order", "name", "price", "quantity"]
-    search_fields = ["order", "product", "name"]
+    search_fields = ["order", "product_variant", "name"]
 
 
 class OrderTabulareAdmin(admin.TabularInline):

@@ -38,13 +38,15 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                 "last_name": self.request.user.last_name,
                 "phone_number": self.request.user.phone_number,
                 "delivery_address": self.request.user.address,
+                "requires_delivery": "0",  # Самовывоз
+                "payment_on_get": "1",  # Наличными/картой при получении
             }
         )
         return initial
 
     def form_valid(self, form):
         user = self.request.user
-        cart_items = Cart.objects.select_related("product").filter(user=user)
+        cart_items = Cart.objects.select_related("product_variant").filter(user=user)
 
         if not cart_items.exists():
             form.add_error(None, "Ваша корзина пуста.")
@@ -98,23 +100,25 @@ class CreateOrderView(LoginRequiredMixin, FormView):
         products_to_update = []
 
         for item in cart_items:
-            product = item.product
+            product_variant = item.product_variant
             quantity = item.quantity
-            price = product.sell_price()
+            price = product_variant.sell_price()
 
-            if product.quantity < quantity:
-                raise ValidationError(f"Недостаточное количество товара '{product}'. В наличии: {product.quantity}.")
+            if product_variant.quantity < quantity:
+                raise ValidationError(
+                    f"Недостаточное количество товара '{product_variant}'. В наличии: {product_variant.quantity}."
+                )
 
             OrderItem.objects.create(
                 order=order,
-                product=product,
-                name=product.name,
+                product_variant=product_variant,
+                name=product_variant,
                 price=price,
                 quantity=quantity,
             )
 
-            product.quantity -= quantity
-            products_to_update.append(product)
+            product_variant.quantity -= quantity
+            products_to_update.append(product_variant)
 
         # bulk_update
         if products_to_update:

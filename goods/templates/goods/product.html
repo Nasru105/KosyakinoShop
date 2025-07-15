@@ -63,7 +63,6 @@
 
                     <h2 class="card-title fw-bold mb-3">{{ product.name }}</h2>
 
-                    <p class="text-muted small mb-2">Артикул: {{ product.display_id }}</p>
 
                     {% if product.firm %}
                         <p class="mb-2"><strong>Производитель:</strong> {{ product.firm }}</p>
@@ -193,8 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedSize = sizeSelect ? sizeSelect.value : null;
 
         const variant = variants.find(v =>
-            (selectedColor === null || v.color === selectedColor) &&
-            (selectedSize === null || v.size === selectedSize)
+            (v.color === selectedColor) && ( v.size === selectedSize)
         );
 
         const priceElem = document.getElementById("variant-price");
@@ -231,14 +229,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 quantityElem.textContent = variant.quantity;
                 quantityElem.classList.remove("text-danger");
                 quantityElem.classList.add("text-success");
+                button.classList.remove("disabled");
+                button.setAttribute("data-product-id", variant.id);
+
             } else {
                 quantityElem.textContent = "Нет в наличии";
                 quantityElem.classList.remove("text-success");
                 quantityElem.classList.add("text-danger");
+                button.classList.add("disabled");
+                button.removeAttribute("data-product-id");
             }
 
-            button.classList.remove("disabled");
-            button.setAttribute("data-product-id", variant.id);
         } else {
             priceElem.textContent = "Нет в наличии";
             priceElem.classList.add("text-danger");

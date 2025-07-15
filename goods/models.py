@@ -113,8 +113,8 @@ class ProductVariant(models.Model):
             self.price = self.product.price
         if self.discount == Decimal("0.00"):
             self.discount = self.product.discount
-        if self.quantity == 0:
-            self.quantity = self.product.quantity
+        if not self.color:
+            self.color = "Стандартный"
         if self.sku and self.sku[0] == "-":
             self.sku = self.sku[1:]
         else:

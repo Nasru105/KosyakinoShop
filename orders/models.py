@@ -76,7 +76,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE, verbose_name="Заказ")
-    product = models.ForeignKey(
+    product_variant = models.ForeignKey(
         to=ProductVariant, on_delete=models.SET_DEFAULT, default=None, null=True, blank=True, verbose_name="Продукт"
     )
     name = models.CharField(max_length=150, verbose_name="Название")

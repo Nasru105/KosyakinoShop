@@ -23,7 +23,7 @@ class CartModelTest(TestCase):
             quantity=3,
         )
         self.assertEqual(cart.user, self.user)
-        self.assertEqual(cart.product, self.product)
+        self.assertEqual(cart.product_variant, self.product)
         self.assertEqual(cart.quantity, 3)
 
     def test_cart_creation_without_user(self):

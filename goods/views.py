@@ -30,8 +30,6 @@ class CatalogView(ListView):
             goods = q_search(query)
         else:
             goods = super().get_queryset().filter(category__slug=category_slug)
-            if not goods.exists():
-                raise Http404()  # Вызовет 404 если нет товаров
 
         # Применяем дополнительные фильтры
         if on_sale:
@@ -87,7 +85,15 @@ class ProductView(DetailView):
         ]
 
         unique_colors = sorted(set(v.color for v in variants if v.color))
-        unique_sizes = sorted(set(v.size for v in variants if v.size))
+
+        # собрать уникальные размеры
+        sizes_set = set(v.size for v in variants if v.size)
+        SIZE_ORDER = ["xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl", "5xl"]
+
+        # сортировка по индексу в SIZE_ORDER
+        unique_sizes = sorted(
+            sizes_set, key=lambda x: SIZE_ORDER.index(x.lower()) if x.lower() in SIZE_ORDER else float("inf")
+        )
 
         context.update(
             {

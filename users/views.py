@@ -106,7 +106,7 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
 
         orders = (
             Order.objects.filter(user=self.request.user)
-            .prefetch_related(Prefetch("orderitem_set", queryset=OrderItem.objects.select_related("product")))
+            .prefetch_related(Prefetch("orderitem_set", queryset=OrderItem.objects.select_related("product_variant")))
             .annotate(
                 total_sum=Sum(
                     ExpressionWrapper(F("orderitem__price") * F("orderitem__quantity"), output_field=FloatField())
