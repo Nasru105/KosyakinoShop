@@ -113,7 +113,7 @@
                         </a>
                         <p class="card-text small text-muted mb-2">
                             {% autoescape off %}
-                                {{ product.bodyline|default:product.description|truncatechars:60 }}
+                                {{ product.bodyline|default:product.description|truncatechars:100 }}
                             {% endautoescape %}
                         </p>
                         {% if product.sku %}

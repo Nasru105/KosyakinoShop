@@ -141,6 +141,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # папка для собранных статических файлов
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_DIRS = [str(BASE_DIR / "static")]
 
 # storage
 
@@ -174,6 +175,5 @@ LOGIN_URL = "/user/login/"
 
 
 # YooKassa
-
-Configuration.account_id = os.getenv("account_id")
-Configuration.secret_key = os.getenv("secret_key")
+Configuration.account_id = os.getenv("YOO_KASSA_ACCOUNT_ID")
+Configuration.secret_key = os.getenv("YOO_KASSA_SECRET_KEY")
