@@ -1,3 +1,6 @@
+import re
+
+
 def get_all_fields(model, ordered_fields):
 
     def flatten(items):
@@ -33,26 +36,3 @@ def phone_number_format(phone_number: str):
     if len(phone_number) == 10:
         return f"({phone_number[:3]}) {phone_number[3:6]}-{phone_number[6:8]}-{phone_number[8:]}"
     return phone_number
-
-
-def product_image_path(instance, filename):
-    """
-    Генерирует путь для загрузки изображений продуктов.
-    Подходит для Products и ProductImage.
-    """
-    product_name = "unknown"
-
-    if hasattr(instance, "name") and instance.name:
-        product_name = instance.name.replace(" ", "_").lower()
-    elif hasattr(instance, "product") and instance.product and hasattr(instance.product, "name"):
-        product_name = instance.product.name.replace(" ", "_").lower()
-
-    return f"goods_images/{product_name}/{filename}"
-
-
-def user_image_path(instance, filename):
-    """
-    Генерирует путь для загрузки изображений пользователей.
-    """
-    username = instance.username.replace(" ", "_").lower() if instance.username else "unknown_user"
-    return f"users_images/{username}/{filename}"

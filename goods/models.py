@@ -1,8 +1,9 @@
 from decimal import ROUND_HALF_UP, Decimal
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
-from utils.utils import product_image_path
+from goods.storages_backends import ProductImageStorage
 
 
 class Category(models.Model):
@@ -23,12 +24,19 @@ class Product(models.Model):
     id: int
     name = models.CharField(max_length=150, unique=True, verbose_name="Название")
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, verbose_name="Категория")
+    sku = models.CharField(max_length=100, verbose_name="Артикул")
     country = models.CharField(max_length=50, blank=True, null=True, verbose_name="Страна")
     composition = models.CharField(max_length=50, blank=True, null=True, verbose_name="Состав")
     firm = models.CharField(max_length=50, blank=True, null=True, verbose_name="Производитель")
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
 
-    image = models.ImageField(upload_to=product_image_path, blank=True, null=True, verbose_name="Изображение")
+    image = models.ImageField(
+        upload_to=ProductImageStorage.image_path,
+        storage=ProductImageStorage(),
+        blank=True,
+        null=True,
+        verbose_name="Изображение",
+    )
     price = models.DecimalField(
         default=Decimal("0.00"),
         max_digits=7,
@@ -61,7 +69,7 @@ class Product(models.Model):
         return reverse("catalog:product", kwargs={"product_slug": self.slug})
 
     def display_id(self):
-        return f"{self.id:05}"
+        return f"{self.id:05}" if self.id is not None else "-"
 
     def sell_price(self):
         if self.discount:
@@ -118,7 +126,9 @@ class ProductVariant(models.Model):
         if self.sku and self.sku[0] == "-":
             self.sku = self.sku[1:]
         else:
-            self.sku = f"{self.product.display_id()}-{self.color[0].upper() if self.color else 'X'}-{self.size if self.size else 'X'}"
+            self.sku = (
+                f"{self.product.sku}-{self.color[0].upper() if self.color else 'X'}-{self.size if self.size else 'X'}"
+            )
         super().save(*args, **kwargs)
 
     def sell_price(self):
@@ -132,7 +142,11 @@ class ProductVariant(models.Model):
 class ProductImage(models.Model):
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to=product_image_path, verbose_name="Изображение")
+    image = models.ImageField(
+        upload_to=ProductImageStorage.image_path,
+        storage=ProductImageStorage(),
+        verbose_name="Изображение",
+    )
 
     class Meta:
         db_table = "product_image"

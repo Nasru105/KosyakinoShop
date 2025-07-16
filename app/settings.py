@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "users",
     "carts",
     "orders",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -139,11 +140,23 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # папка для собранных статических файлов
-STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# storage
 
-MEDIA_URL = "/media/"
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "kosyakino-media"
+AWS_S3_ENDPOINT_URL = "https://storage.yandexcloud.net"
+AWS_S3_REGION_NAME = "ru-central1"
+AWS_QUERYSTRING_AUTH = False  # отключает подписи в URL, для прямого доступа
+AWS_DEFAULT_ACL = None
+
+MEDIA_URL = f"https://storage.yandexcloud.net/{AWS_STORAGE_BUCKET_NAME}/"
+
+# MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 

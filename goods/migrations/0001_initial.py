@@ -2,6 +2,7 @@
 
 import django.core.validators
 import django.db.models.deletion
+import goods
 import utils.utils
 from decimal import Decimal
 from django.db import migrations, models
@@ -11,78 +12,150 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=150, unique=True, verbose_name='Название')),
-                ('slug', models.SlugField(blank=True, max_length=200, null=True, unique=True, verbose_name='URL')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=150, unique=True, verbose_name="Название")),
+                ("slug", models.SlugField(blank=True, max_length=200, null=True, unique=True, verbose_name="URL")),
             ],
             options={
-                'verbose_name': 'Категория',
-                'verbose_name_plural': 'Категории',
-                'db_table': 'category',
-                'ordering': ('-id',),
+                "verbose_name": "Категория",
+                "verbose_name_plural": "Категории",
+                "db_table": "category",
+                "ordering": ("-id",),
             },
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=150, unique=True, verbose_name='Название')),
-                ('country', models.CharField(blank=True, max_length=50, null=True, verbose_name='Страна')),
-                ('composition', models.CharField(blank=True, max_length=50, null=True, verbose_name='Состав')),
-                ('firm', models.CharField(blank=True, max_length=50, null=True, verbose_name='Производитель')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='Описание')),
-                ('quantity', models.PositiveIntegerField(default=0, verbose_name='Количество')),
-                ('image', models.ImageField(blank=True, null=True, upload_to=utils.utils.product_image_path, verbose_name='Изображение')),
-                ('price', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=7, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Цена')),
-                ('discount', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=4, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)], verbose_name='Скидка (%)')),
-                ('slug', models.SlugField(blank=True, max_length=200, null=True, unique=True, verbose_name='URL')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.category', verbose_name='Категория')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=150, unique=True, verbose_name="Название")),
+                ("country", models.CharField(blank=True, max_length=50, null=True, verbose_name="Страна")),
+                ("composition", models.CharField(blank=True, max_length=50, null=True, verbose_name="Состав")),
+                ("firm", models.CharField(blank=True, max_length=50, null=True, verbose_name="Производитель")),
+                ("description", models.TextField(blank=True, null=True, verbose_name="Описание")),
+                ("quantity", models.PositiveIntegerField(default=0, verbose_name="Количество")),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=goods.storages_backends.ProductImageStorage.image_path,
+                        verbose_name="Изображение",
+                    ),
+                ),
+                (
+                    "price",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=Decimal("0.00"),
+                        max_digits=7,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                        verbose_name="Цена",
+                    ),
+                ),
+                (
+                    "discount",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=Decimal("0.00"),
+                        max_digits=4,
+                        validators=[
+                            django.core.validators.MinValueValidator(0),
+                            django.core.validators.MaxValueValidator(100),
+                        ],
+                        verbose_name="Скидка (%)",
+                    ),
+                ),
+                ("slug", models.SlugField(blank=True, max_length=200, null=True, unique=True, verbose_name="URL")),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="goods.category", verbose_name="Категория"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Продукт',
-                'verbose_name_plural': 'Продукты',
-                'db_table': 'product',
-                'ordering': ('-id',),
+                "verbose_name": "Продукт",
+                "verbose_name_plural": "Продукты",
+                "db_table": "product",
+                "ordering": ("-id",),
             },
         ),
         migrations.CreateModel(
-            name='ProductImage',
+            name="ProductImage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to=utils.utils.product_image_path, verbose_name='Изображение')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='goods.product')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "image",
+                    models.ImageField(
+                        upload_to=goods.storages_backends.ProductImageStorage.image_path, verbose_name="Изображение"
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="images", to="goods.product"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Изображение продукта',
-                'verbose_name_plural': 'Изображения продуктов',
-                'db_table': 'product_image',
-                'ordering': ('id',),
+                "verbose_name": "Изображение продукта",
+                "verbose_name_plural": "Изображения продуктов",
+                "db_table": "product_image",
+                "ordering": ("id",),
             },
         ),
         migrations.CreateModel(
-            name='ProductVariant',
+            name="ProductVariant",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('color', models.CharField(blank=True, max_length=50, null=True, verbose_name='Цвет')),
-                ('size', models.CharField(blank=True, max_length=50, null=True, verbose_name='Размер')),
-                ('price', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=7, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Цена')),
-                ('discount', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=4, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)], verbose_name='Скидка (%)')),
-                ('quantity', models.PositiveIntegerField(default=0, verbose_name='Количество')),
-                ('sku', models.CharField(blank=True, max_length=100, null=True, verbose_name='Артикул')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='variants', to='goods.product', verbose_name='Товар')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("color", models.CharField(blank=True, max_length=50, null=True, verbose_name="Цвет")),
+                ("size", models.CharField(blank=True, max_length=50, null=True, verbose_name="Размер")),
+                (
+                    "price",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=Decimal("0.00"),
+                        max_digits=7,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                        verbose_name="Цена",
+                    ),
+                ),
+                (
+                    "discount",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=Decimal("0.00"),
+                        max_digits=4,
+                        validators=[
+                            django.core.validators.MinValueValidator(0),
+                            django.core.validators.MaxValueValidator(100),
+                        ],
+                        verbose_name="Скидка (%)",
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField(default=0, verbose_name="Количество")),
+                ("sku", models.CharField(blank=True, max_length=100, null=True, verbose_name="Артикул")),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="variants",
+                        to="goods.product",
+                        verbose_name="Товар",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Вариант продукта',
-                'verbose_name_plural': 'Варианты продукта',
-                'db_table': 'product_variant',
-                'ordering': ('-id',),
+                "verbose_name": "Вариант продукта",
+                "verbose_name_plural": "Варианты продукта",
+                "db_table": "product_variant",
+                "ordering": ("-id",),
             },
         ),
     ]

@@ -116,6 +116,13 @@
                                 {{ product.bodyline|default:product.description|truncatechars:60 }}
                             {% endautoescape %}
                         </p>
+                        {% if product.sku %}
+                        <ul class="list-unstyled mb-3">
+                            <li><strong>Артикул:</strong>
+                                <span class="text">{{ product.sku }}</span>
+                            </li>
+                        </ul>
+                        {% endif %}
                         <ul class="list-unstyled mb-3">
                             <li><strong>Количество:</strong>
                             {% if product.get_quantity > 0 %}
