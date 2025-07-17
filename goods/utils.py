@@ -10,11 +10,9 @@ from django.contrib.postgres.search import (
 
 
 def q_search(query):
-    if query.isdigit() and len(query) <= 5:
-        return Product.objects.filter(id=int(query))
 
-    vector = SearchVector("name") + SearchVector("description")
-    query = SearchQuery(query, config="russian")  # Указываем язык для морфологии
+    vector = SearchVector("name") + SearchVector("description") + SearchVector("sku") + SearchVector("firm")
+    # query = SearchQuery(query, config="russian")  # Указываем язык для морфологии
 
     goods = Product.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gt=0.00001).order_by("-rank")
 

@@ -22,6 +22,7 @@ from app import settings
 from carts.models import Cart
 from orders.models import Order, OrderItem
 from orders.forms import CreateOrderForm
+from orders.utils import send_order_email
 from utils.utils import phone_number_format
 
 
@@ -69,6 +70,8 @@ class CreateOrderView(LoginRequiredMixin, FormView):
 
                 self.create_order_items(order, cart_items)
 
+            send_order_email(order)
+
             if payment_on_get:
                 # Оплата при получении → корзину можно удалить
                 cart_items.delete()
@@ -77,7 +80,6 @@ class CreateOrderView(LoginRequiredMixin, FormView):
 
             try:
                 confirmation_url = self.create_payment(order, order.total_price())
-                cart_items.delete()  # удалить потом
 
                 messages.success(self.request, "Заказ оформлен. Перенаправляем на страницу оплаты.")
                 return redirect(confirmation_url)
@@ -172,8 +174,6 @@ class YooKassaWebhookView(View):
                 # удаляем корзину пользователя
                 Cart.objects.filter(user=order.user).delete()
 
-                self.send_order_email(order)
-
             except Order.DoesNotExist:
                 pass
 
@@ -191,25 +191,3 @@ class YooKassaWebhookView(View):
                 pass
 
         return HttpResponse(status=200)
-
-    def send_order_email(self, order):
-        """
-        Отправляет email админу о новом заказе.
-        """
-        subject = f"Новый заказ №{order.display_id()}"
-        message = (
-            f"Пользователь: {order.user.get_full_name()} ({order.user.username})\n"
-            f"Email: {order.user.email}\n"
-            f"Телефон: +7 {phone_number_format(order.phone_number)}\n"
-            f"Адрес доставки: {order.delivery_address}\n"
-            f"Комментарий: {order.comment}\n"
-            f"Товары:\n" + "\n".join(order.order_items_details()) + f"\n\nИтого: {order.total_price()} ₽"
-        )
-
-        send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=settings.ADMINS_EMAILS,
-            fail_silently=False,
-        )

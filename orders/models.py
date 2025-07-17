@@ -97,3 +97,6 @@ class OrderItem(models.Model):
 
     def __str__(self) -> str:
         return f"Товар {self.name} | Заказ №{self.order.display_id()}"
+
+    def product_link(self):
+        return f"https:///kosyakino.up.railway.app/goods/{self.product_variant.slug()}"

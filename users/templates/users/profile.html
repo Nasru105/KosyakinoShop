@@ -212,17 +212,19 @@
 
                                     {% if order.comment %}
                                     <div class="mb-3">
-                                        <p class="mb-2">
+                                        <p class="mb-2" id="order-comment-{{ order.id }}">
                                             <strong>Комментарий:</strong> {{ order.comment }}
                                         </p>
                                         <button class="btn btn-sm btn-outline-primary edit-comment-btn" 
-                                                data-order-id="{{ order.id }}">
+                                        id="edit-comment-btn-{{ order.id }}"
+                                        data-order-id="{{ order.id }}">
                                             Редактировать
                                         </button>
                                     </div>
                                     {% else %}
                                     <button class="btn btn-sm btn-outline-success add-comment-btn" 
-                                            data-order-id="{{ order.id }}">
+                                    id="add-comment-btn-{{ order.id }}"
+                                    data-order-id="{{ order.id }}">
                                         Добавить комментарий
                                     </button>
                                     {% endif %}
@@ -233,7 +235,7 @@
                                         <div class="mt-2 d-flex gap-2">
                                             <button id="save-comment-btn-{{ order.id }}"
                                                     class="btn btn-success btn-sm save-comment-btn"
-                                                    href="{% url 'user:update_order_comment' order.id %}"
+                                                    data-url="{% url 'user:update_order_comment' order.id %}"
                                                     data-order-id="{{ order.id }}">
                                                 Сохранить
                                             </button>
@@ -259,4 +261,6 @@
 
     </div>
 </div>
+
+
 {% endblock content %}

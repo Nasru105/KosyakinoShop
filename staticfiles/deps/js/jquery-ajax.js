@@ -266,18 +266,18 @@ $(document).ready(function () {
 
     $(document).on("click", ".edit-comment-btn, .add-comment-btn", function() {
         let orderId = $(this).data("order-id");
-        $("#comment-form-container-" + orderId).show();
+        $("#comment-form-container-" + orderId).removeClass("d-none");
     });
 
     $(document).on("click", ".cancel-comment-btn", function() {
         let orderId = $(this).data("order-id");
-        $("#comment-form-container-" + orderId).hide();
+        $("#comment-form-container-" + orderId).addClass("d-none");
     });
 
     $(document).on("click", ".save-comment-btn", function() {
         let orderId = $(this).data("order-id");
         let comment = $("#comment-text-" + orderId).val();
-        let update_order_comment_url = $(this).attr("href");
+        let update_order_comment_url = $(this).data("url");
 
         $.ajax({
             url: update_order_comment_url,
