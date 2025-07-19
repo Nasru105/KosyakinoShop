@@ -3,13 +3,13 @@ from app import settings
 from utils.utils import phone_number_format
 
 
-def send_order_email(order):
+def send_order_email(order, order_items):
     subject = f"Новый заказ №{order.display_id()}"
 
     # Товары в HTML
     html_items = ""
-    for item in order.items.all():
-        html_items += f'<li><a href="{item.product_link()}">{item.product_variant.name}</a> — {item.quantity} шт.</li>'
+    for item in order_items:
+        html_items += f'<li><a href="{item.product_link()} class="text-dark"">{item.name} {item.product_variant.sku}</a> — {item.quantity} шт. * {item.price} ₽</li>'
 
     html_message = f"""
         <p><strong>Пользователь:</strong> {order.user.get_full_name()} ({order.user.username})</p>
@@ -33,8 +33,8 @@ def send_order_email(order):
         f"Комментарий: {order.comment}\n"
         f"Товары:\n"
     )
-    for item in order.items.all():
-        text_message += f"- {item.product_variant.name} ({item.product_link()}) — {item.quantity} шт.\n"
+    for item in order_items:
+        text_message += f"- {item.name} ({item.product_link()}) — {item.quantity} шт.\n"
 
     text_message += f"\nИтого: {order.total_price()} ₽"
 

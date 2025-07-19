@@ -176,6 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
+
+
+    
 document.addEventListener("DOMContentLoaded", function () {
     const colorSelect = document.getElementById("color-select");
     const sizeSelect = document.getElementById("size-select");
@@ -183,9 +186,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!colorSelect && !sizeSelect) return;
 
     const variants = JSON.parse(document.getElementById("variants-json").textContent);
-
+    
     if (colorSelect) colorSelect.addEventListener("change", updateVariant);
     if (sizeSelect) sizeSelect.addEventListener("change", updateVariant);
+    updateVariant();
 
     function updateVariant() {
         const selectedColor = colorSelect ? colorSelect.value : null;

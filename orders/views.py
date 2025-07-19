@@ -3,6 +3,7 @@ import json
 from typing import Any
 import uuid
 
+from django.db.models import QuerySet
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,7 +21,7 @@ from yookassa.domain.notification import WebhookNotificationFactory
 
 from app import settings
 from carts.models import Cart
-from orders.models import Order, OrderItem
+from orders.models import Order, OrderItem, OrderitemQuerySet
 from orders.forms import CreateOrderForm
 from orders.utils import send_order_email
 from utils.utils import phone_number_format
@@ -68,9 +69,9 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                     comment=form.cleaned_data["comment"],
                 )
 
-                self.create_order_items(order, cart_items)
+                order_items = self.create_order_items(order, cart_items)
 
-            send_order_email(order)
+            send_order_email(order, order_items)
 
             if payment_on_get:
                 # Оплата при получении → корзину можно удалить
@@ -100,6 +101,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
         Создаёт OrderItem и обновляет остатки товаров.
         """
         products_to_update = []
+        order_items = []  # Используем обычный список вместо QuerySet
 
         for item in cart_items:
             product_variant = item.product_variant
@@ -111,20 +113,24 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                     f"Недостаточное количество товара '{product_variant}'. В наличии: {product_variant.quantity}."
                 )
 
-            OrderItem.objects.create(
+            # Создаем OrderItem и добавляем в список
+            order_item = OrderItem.objects.create(
                 order=order,
                 product_variant=product_variant,
-                name=product_variant,
+                name=product_variant.name(),  # Используем явно name вместо всего объекта
                 price=price,
                 quantity=quantity,
             )
+            order_items.append(order_item)
 
             product_variant.quantity -= quantity
             products_to_update.append(product_variant)
 
-        # bulk_update
+        # Обновляем остатки товаров
         if products_to_update:
             type(products_to_update[0]).objects.bulk_update(products_to_update, ["quantity"])
+
+        return order_items
 
     def create_payment(self, order, total_price: Decimal):
         """

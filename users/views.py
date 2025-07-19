@@ -20,6 +20,8 @@ from django.db.models import Sum
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
+from users.utils import get_user_orders
+
 
 class UserLoginView(LoginView):
     form_class = UserLoginForm
@@ -104,16 +106,7 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Kosyakino - Профиль"
 
-        orders = (
-            Order.objects.filter(user=self.request.user)
-            .prefetch_related(Prefetch("orderitem_set", queryset=OrderItem.objects.select_related("product_variant")))
-            .annotate(
-                total_sum=Sum(
-                    ExpressionWrapper(F("orderitem__price") * F("orderitem__quantity"), output_field=FloatField())
-                )
-            )
-            .order_by("-id")
-        )
+        orders = get_user_orders(self.request)[:5]
         # context["orders"] = self.set_cache_g(orders, f"orders_for_user_{self.request.user.pk}", 60)
         context["orders"] = orders
         return context
@@ -127,11 +120,20 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
 
 
 class UserCartView(TemplateView):
-    template_name = "users/users_cart.html"
+    template_name = "users/user_cart.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["title"] = "Kosyakino - Корзина пользователя"
+        return context
+
+
+class UserOrdersView(TemplateView):
+    template_name = "users/user_orders.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Kosyakino - Заказы пользователя"
         return context
 
 

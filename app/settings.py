@@ -4,7 +4,6 @@ import os
 from yookassa import Configuration
 from pathlib import Path
 
-from django.conf.global_settings import AUTH_USER_MODEL, CACHES, LOGIN_URL, MEDIA_ROOT
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

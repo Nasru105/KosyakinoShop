@@ -4,7 +4,7 @@ from goods.models import Product, ProductVariant
 from users.models import User
 
 
-class OrderitemQueryset(models.QuerySet):
+class OrderitemQuerySet(models.QuerySet):
     def total_price(self):
         return sum(cart.products_price() for cart in self)
 
@@ -90,7 +90,7 @@ class OrderItem(models.Model):
         verbose_name_plural = "Проданные товары"
         ordering = ("-id",)
 
-    objects = OrderitemQueryset.as_manager()
+    objects = OrderitemQuerySet.as_manager()
 
     def products_price(self):
         return round(self.price * self.quantity, 2)
@@ -99,4 +99,4 @@ class OrderItem(models.Model):
         return f"Товар {self.name} | Заказ №{self.order.display_id()}"
 
     def product_link(self):
-        return f"https:///kosyakino.up.railway.app/goods/{self.product_variant.slug()}"
+        return f"https:///kosyakino.up.railway.app/catalog/product/{self.product_variant.slug()}/"

@@ -51,7 +51,7 @@ class Product(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         verbose_name="Скидка (%)",
     )
-    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name="URL")
+    slug = models.SlugField(max_length=200, unique=True, verbose_name="URL")
 
     class Meta:
         db_table = "product"
@@ -122,7 +122,7 @@ class ProductVariant(models.Model):
         if self.discount == Decimal("0.00"):
             self.discount = self.product.discount
         if not self.color:
-            self.color = "Стандартный"
+            self.color = "Оригинал"
         if self.sku and self.sku[0] == "-":
             self.sku = self.sku[1:]
         else:

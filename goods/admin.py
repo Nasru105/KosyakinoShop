@@ -38,8 +38,8 @@ class ProductsAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     list_display = ["name", "price", "discount", "sell_price"]
     list_editable = ["discount"]
-    search_fields = ["name", "description"]
-    list_filter = ["category", "price", "discount"]
+    search_fields = ["name", "sku", "description", "firm"]
+    list_filter = ["category", "firm", "price", "discount"]
     fields = get_all_fields(Product, ["name", "category", ("price", "discount"), "description", "image", "slug"])
     inlines = [ProductImageInline, ProductVariantInline]
 
@@ -47,6 +47,8 @@ class ProductsAdmin(admin.ModelAdmin):
 @admin.register(ProductVariant)
 class ProductVariantAdmin(admin.ModelAdmin):
     list_display = ["sku", "link_to_change", "color", "size", "price", "discount", "quantity"]
+    search_fields = ["product", "sku"]
+    list_filter = ["product", "price", "discount"]
 
     save_as = True
 

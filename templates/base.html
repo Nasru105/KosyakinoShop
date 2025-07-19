@@ -57,7 +57,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'users:users_cart' %}">Корзина</a>
+                            <a class="nav-link text-white" href="{% url 'users:cart' %}">Корзина</a>
                         </li>
 
                         {% if user.is_authenticated %}
@@ -68,7 +68,10 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark">
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'users:users_cart' %}">Корзина</a>
+                                        <a class="dropdown-item" href="{% url 'users:cart' %}">Корзина</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'users:orders' %}">Заказы</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="{% url 'users:profile' %}">Личный кабинет</a>

@@ -6,7 +6,7 @@ from django.views import View
 
 from carts.mixins import CartMixin
 from carts.models import Cart
-from carts.utils import get_user_carts
+from users.utils import get_user_carts
 from goods.models import Product, ProductVariant
 
 
