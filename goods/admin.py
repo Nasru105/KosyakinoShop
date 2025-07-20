@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
-from goods.models import Category, ProductImage, Product, ProductVariant
+from goods.models import Category, Firm, ProductImage, Product, ProductVariant, Tag
 from utils.utils import get_all_fields
 
 
@@ -40,7 +40,6 @@ class ProductsAdmin(admin.ModelAdmin):
     list_editable = ["discount"]
     search_fields = ["name", "sku", "description", "firm"]
     list_filter = ["category", "firm", "price", "discount"]
-    fields = get_all_fields(Product, ["name", "category", ("price", "discount"), "description", "image", "slug"])
     inlines = [ProductImageInline, ProductVariantInline]
 
 
@@ -62,3 +61,11 @@ class ProductVariantAdmin(admin.ModelAdmin):
         return "-"
 
     link_to_change.short_description = "Товар"
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin): ...
+
+
+@admin.register(Firm)
+class FirmAdmin(admin.ModelAdmin): ...

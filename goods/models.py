@@ -1,4 +1,6 @@
 from decimal import ROUND_HALF_UP, Decimal
+from os import name
+from pyclbr import Class
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.files.base import ContentFile
 from django.db import models
@@ -20,14 +22,39 @@ class Category(models.Model):
         return self.name
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True, verbose_name="Ярлык")
+
+    class Meta:
+        db_table = "tag"
+        verbose_name = "Ярлык"
+        verbose_name_plural = "Ярлыки"
+
+    def __str__(self):
+        return self.name
+
+
+class Firm(models.Model):
+    name = models.CharField(max_length=50, unique=True, verbose_name="Производитель")
+
+    class Meta:
+        db_table = "firm"
+        verbose_name = "Производитель"
+        verbose_name_plural = "Производители"
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     id: int
     name = models.CharField(max_length=150, unique=True, verbose_name="Название")
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, verbose_name="Категория")
+    tags = models.ManyToManyField(to=Tag, blank=True, related_name="products", verbose_name="Ярлыки")
     sku = models.CharField(max_length=100, verbose_name="Артикул")
     country = models.CharField(max_length=50, blank=True, null=True, verbose_name="Страна")
     composition = models.CharField(max_length=50, blank=True, null=True, verbose_name="Состав")
-    firm = models.CharField(max_length=50, blank=True, null=True, verbose_name="Производитель")
+    firm = models.ForeignKey(to=Firm, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Производитель")
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
 
     image = models.ImageField(
@@ -81,6 +108,7 @@ class Product(models.Model):
 
 
 class ProductVariant(models.Model):
+
     product = models.ForeignKey(Product, related_name="variants", on_delete=models.CASCADE, verbose_name="Товар")
     color = models.CharField(max_length=50, blank=True, null=True, verbose_name="Цвет")
     size = models.CharField(max_length=50, blank=True, null=True, verbose_name="Размер")

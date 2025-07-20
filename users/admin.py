@@ -7,7 +7,6 @@ from utils.utils import get_all_fields
 
 @admin.register(User)
 class UsersAdmin(admin.ModelAdmin):
-    fields = get_all_fields(User, ["username", "first_name", "last_name", "email", "phone_number"])
     list_display = ["username", "first_name", "last_name", "email", "phone_number"]
     search_fields = ["username", "first_name", "last_name", "email", "phone_number"]
 

@@ -6,65 +6,166 @@
 {% block content %}
 <div class="container py-4">
     <!-- Фильтры и кнопки -->
-    <div class="row align-items-center mb-4">
-        <div class="col d-flex flex-wrap gap-3">
+    <div class="container-fluid mb-4 px-3">
+        <div class="row align-items-center g-3">
             <!-- Каталог -->
-            <div class="dropdown">
-                <button class="btn btn-dark dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span>Каталог</span>
-                    <img class="ms-2" src="{% static 'deps/icons/grid-fill.svg' %}" alt="Catalog Icon" width="16" height="16">
-                </button>
-                {% include "includes/catalog_dropdown.html" %}
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle d-flex align-items-center w-100 w-sm-auto" 
+                            type="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        <span class="me-2">Каталог</span>
+                        <img src="{% static 'deps/icons/grid-fill.svg' %}" alt="Catalog Icon" width="16" height="16">
+                    </button>
+                    {% include "includes/catalog_dropdown.html" %}
+                </div>
             </div>
 
             <!-- Корзина -->
-            {% include "includes/cart_button.html" %}
+            <div class="col-auto">
+                {% include "includes/cart_button.html" %}
+            </div>
 
             <!-- Фильтры -->
-            <div class="dropdown">
-                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Фильтры
-                </button>
-                <form action="
-                    {% if request.GET.q %}
+            <div class="col-auto flex-grow-1">
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle " 
+                            type="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        <span>Фильтры</span>
+                        <svg class="ms-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <form action="{% if request.GET.q %}
                     {% url 'catalog:search' %}
-                    {% elif request.GET.category_slug %}
+                    {% elif category_slug %}
                     {% url 'catalog:category' category_slug %}
                     {% else %}
                     {% url 'catalog:catalog' %}
                     {% endif %}" 
-                    method="get" 
-                    class="dropdown-menu dropdown-menu-dark p-3" 
-                    onclick="event.stopPropagation();">
-                    <div class="form-check text-white mb-2">
-                        <input class="form-check-input" type="checkbox" name="on_sale" id="saleCheck" value="on"
-                               {% if request.GET.on_sale == "on" %}checked{% endif %}>
+                        method="get" 
+                        class="dropdown-menu dropdown-menu-dark p-3 w-100 w-sm-auto mt-2" 
+                        style="max-width: 350px; max-height: 70vh; overflow-y: auto;" 
+                        onclick="event.stopPropagation();">
+                        <!-- Скрытое поле для поиска -->
                         {% if request.GET.q %}
                             <input type="hidden" name="q" value="{{ request.GET.q }}">
                         {% endif %}
-                        <label class="form-check-label" for="saleCheck">
-                            Товары по акции
-                        </label>
-                    </div>
 
-                    <p class="text-white mt-2 mb-1">Сортировать:</p>
-                    <div class="form-check text-white mb-1">
-                        <input class="form-check-input" type="radio" name="order_by" id="sortDefault" value="default"
-                               {% if not request.GET.order_by or request.GET.order_by == "default" %}checked{% endif %}>
-                        <label class="form-check-label" for="sortDefault">По умолчанию</label>
-                    </div>
-                    <div class="form-check text-white mb-1">
-                        <input class="form-check-input" type="radio" name="order_by" id="sortAsc" value="price"
-                               {% if request.GET.order_by == "price" %}checked{% endif %}>
-                        <label class="form-check-label" for="sortAsc">От дешевых к дорогим</label>
-                    </div>
-                    <div class="form-check text-white mb-3">
-                        <input class="form-check-input" type="radio" name="order_by" id="sortDesc" value="-price"
-                               {% if request.GET.order_by == "-price" %}checked{% endif %}>
-                        <label class="form-check-label" for="sortDesc">От дорогих к дешевым</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Применить</button>
-                </form>
+                        <!-- Товары по акции -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                    type="checkbox" 
+                                    name="on_sale" 
+                                    id="saleCheck" 
+                                    value="on"
+                                    {% if request.GET.on_sale == "on" %}checked{% endif %}>
+                                <label class="form-check-label text-white" for="saleCheck">
+                                    Товары по акции
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Сортировка -->
+                        <div class="mb-3">
+                            <p class="text-white mb-2">Сортировать:</p>
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="order_by" 
+                                    id="sortDefault" 
+                                    value="default"
+                                    {% if not request.GET.order_by or request.GET.order_by == "default" %}checked{% endif %}>
+                                <label class="form-check-label text-white" for="sortDefault">
+                                    По умолчанию
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="order_by" 
+                                    id="sortAsc" 
+                                    value="price"
+                                    {% if request.GET.order_by == "price" %}checked{% endif %}>
+                                <label class="form-check-label text-white" for="sortAsc">
+                                    От дешевых к дорогим
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="order_by" 
+                                    id="sortDesc" 
+                                    value="-price"
+                                    {% if request.GET.order_by == "-price" %}checked{% endif %}>
+                                <label class="form-check-label text-white" for="sortDesc">
+                                    От дорогих к дешевым
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Теги -->
+                        <div class="mb-3">
+                            <p class="text-white mb-2">Теги:</p>
+                            {% for tag in tags %}
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                        type="checkbox" 
+                                        name="tags" 
+                                        value="{{ tag }}"
+                                        {% if tag in request.GET.tags %}checked{% endif %}>
+                                    <label class="form-check-label text-white">
+                                        {{ tag }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Производитель -->
+                        <div class="mb-3">
+                            <p class="text-white mb-2">Производитель:</p>
+                            {% for firm in firms %}
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                        type="checkbox" 
+                                        name="firm" 
+                                        value="{{ firm }}"
+                                        {% if firm in request.GET.firm %}checked{% endif %}>
+                                    <label class="form-check-label text-white">
+                                        {{ firm }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Размер -->
+                        <div class="mb-3">
+                            <p class="text-white mb-2">Размер:</p>
+                            {% for size in sizes %}
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                        type="checkbox" 
+                                        name="size" 
+                                        value="{{ size }}"
+                                        {% if size in request.GET.size %}checked{% endif %}>
+                                    <label class="form-check-label text-white">
+                                        {{ size }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Кнопка применения -->
+                        <button type="submit" 
+                                class="btn btn-primary w-100 mt-2">
+                            Применить
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -87,10 +188,25 @@
                 </div>
             </div>
         </div>
+    {% else %}
+        {% if not goods %}
+        <div class="row mb-4">
+            <div class="col">
+                <div class="p-4 bg-light rounded shadow-sm">
+                    <h4 class="text-center mt-3" >
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        По запросу ничего не найдено
+                    </h4>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     {% endif %}
 
-    {% include "goods/includes/goods_pagination.html" %}
 
+
+    {% include "goods/includes/goods_pagination.html" %}
+    
     <!-- Карточки товаров -->
     <div class="row g-4">
         {% for product in goods %}
