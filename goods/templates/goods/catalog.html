@@ -117,7 +117,7 @@
                                         type="checkbox" 
                                         name="tags" 
                                         value="{{ tag }}"
-                                        {% if tag in request.GET.tags %}checked{% endif %}>
+                                        {% if tag in tags_query %}checked{% endif %}>
                                     <label class="form-check-label text-white">
                                         {{ tag }}
                                     </label>
@@ -134,7 +134,7 @@
                                         type="checkbox" 
                                         name="firm" 
                                         value="{{ firm }}"
-                                        {% if firm in request.GET.firm %}checked{% endif %}>
+                                        {% if firm in firms_query %}checked{% endif %}>
                                     <label class="form-check-label text-white">
                                         {{ firm }}
                                     </label>
@@ -151,7 +151,7 @@
                                         type="checkbox" 
                                         name="size" 
                                         value="{{ size }}"
-                                        {% if size in request.GET.size %}checked{% endif %}>
+                                        {% if size in sizes_query %}checked{% endif %}>
                                     <label class="form-check-label text-white">
                                         {{ size }}
                                     </label>

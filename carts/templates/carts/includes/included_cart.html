@@ -10,11 +10,15 @@
 
                 <!-- Фото -->
                 <div class="col-3 col-sm-2 col-md-1">
+                    {% if cart.product_variant.product.image %}
                     <a href="{{ cart.product_variant.product.image.url }}" data-lg-size="1400-933">
                         <img src="{{ cart.product_variant.product.image.url }}"
-                             class="img-fluid rounded border"
-                             alt="{{ cart.product_variant.product.name }}">
+                        class="img-fluid rounded border"
+                        alt="{{ cart.product_variant.product.name }}">
                     </a>
+                    {% else %}
+                        <img src="{% static 'deps/images/Not found image 800x800.png' %}" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
                 </div>
 
                 <!-- Инфо -->

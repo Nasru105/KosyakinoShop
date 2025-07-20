@@ -56,8 +56,9 @@ class CatalogView(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Каталог товаров"
         context["category_slug"] = self.kwargs.get("category_slug")
-
-        # Для фильтрации
+        context["tags_query"] = self.request.GET.getlist("tags")  # список тегов
+        context["firms_query"] = self.request.GET.getlist("firm")  # список производителей
+        context["sizes_query"] = self.request.GET.getlist("size")  # список размеров
 
         # Фильтрация фирм по уникальным значениям и выбранной категории
         category_slug = self.kwargs.get("category_slug")
