@@ -137,14 +137,16 @@ class UserOrdersView(TemplateView):
         return context
 
 
-@login_required
 @require_POST
+@login_required
 def update_order_comment(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    order.comment = request.POST.get("comment", "")
-    print(order.comment)
+    comment = request.POST.get("comment", "").strip()
+
+    order.comment = comment
     order.save()
-    return JsonResponse({"status": "success", "comment": order.comment})
+
+    return JsonResponse({"status": "ok", "comment": comment})
 
 
 @login_required
