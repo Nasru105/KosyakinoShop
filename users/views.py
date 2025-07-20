@@ -3,7 +3,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Prefetch
+from django.db.models import Q, Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -106,9 +106,12 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Kosyakino - Профиль"
 
-        orders = get_user_orders(self.request)[:5]
+        orders = get_user_orders(self.request)
+        last_orders = orders.filter(
+            Q(pk__in=[o.pk for o in orders[:5]]) | Q(delivery_status__in=["waiting_pickup", "processing"])
+        ).distinct()
         # context["orders"] = self.set_cache_g(orders, f"orders_for_user_{self.request.user.pk}", 60)
-        context["orders"] = orders
+        context["orders"] = last_orders
         return context
 
     def update_order_comment(request, order_id):

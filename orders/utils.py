@@ -9,7 +9,7 @@ def send_order_email(order, order_items):
     # Товары в HTML
     html_items = ""
     for item in order_items:
-        html_items += f'<li><a href="{item.product_link()} class="text-dark"">{item.name} {item.product_variant.sku}</a> — {item.quantity} шт. * {item.price} ₽</li>'
+        html_items += f'<li><a href="{item.product_link()}" class="text-dark">{item.name} {item.product_variant.sku}</a> — {item.quantity} шт. * {item.price} ₽</li>'
 
     html_message = f"""
         <p><strong>Пользователь:</strong> {order.user.get_full_name()} ({order.user.username})</p>

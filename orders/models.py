@@ -15,15 +15,15 @@ class OrderitemQuerySet(models.QuerySet):
 
 
 class Order(models.Model):
-    STATUS_PENDING = "pending"
-    STATUS_PAID = "paid"
-    STATUS_FAILED = "failed"
+    class Status(models.TextChoices):
+        PENDING = "pending", "Ожидает оплату"
+        PAID = "paid", "Оплачено"
+        FAILED = "failed", "Ошибка оплаты"
 
-    STATUS_CHOICES = [
-        (STATUS_PENDING, "Ожидает оплату"),
-        (STATUS_PAID, "Оплачено"),
-        (STATUS_FAILED, "Ошибка оплаты"),
-    ]
+    class DeliveryStatus(models.TextChoices):
+        PROCESSING = "processing", "В обработке"
+        WAITING_PICKUP = "waiting_pickup", "Ожидает в пункте выдачи"
+        DELIVERED = "delivered", "Товар доставлен"
 
     user = models.ForeignKey(
         to=User,
@@ -40,9 +40,15 @@ class Order(models.Model):
     payment_on_get = models.BooleanField(default=False, verbose_name="Оплата при получении")
     status = models.CharField(
         max_length=20,
-        choices=STATUS_CHOICES,
-        default=STATUS_PENDING,
+        choices=Status.choices,
+        default=Status.PENDING,
         verbose_name="Статус заказа",
+    )
+    delivery_status = models.CharField(
+        max_length=20,
+        choices=DeliveryStatus.choices,
+        default=DeliveryStatus.PROCESSING,
+        verbose_name="Статус доставки",
     )
     comment = models.TextField(null=True, blank=True, verbose_name="Комментарий")
 

@@ -38,14 +38,16 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = [
         "display_id",
         "user",
-        "requires_delivery",
+        # "requires_delivery",
         "status",
+        "delivery_status",
         "payment_on_get",
         "created_timestamp",
         "comment",
     ]
+    list_editable = ["status", "delivery_status"]
     search_fields = ["id", "user", "created_timestamp", "requires_delivery", "status"]
+    list_filter = ["user", "created_timestamp", "requires_delivery", "delivery_status", "status"]
     readonly_fields = ["created_timestamp"]
-    list_filter = ["user", "created_timestamp", "requires_delivery", "status"]
     inlines = [OrderltemTabulareAdmin]
     ordering = ("-created_timestamp",)
