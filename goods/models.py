@@ -128,6 +128,7 @@ class ProductVariant(models.Model):
     )
     quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
     sku = models.CharField(max_length=100, blank=True, null=True, verbose_name="Артикул")
+    description = models.TextField(blank=True, null=True, verbose_name="Описание")
 
     class Meta:
         db_table = "product_variant"
@@ -141,6 +142,9 @@ class ProductVariant(models.Model):
     def name(self):
         return f"{self.product.name}"
 
+    def get_absolute_url(self):
+        return reverse("catalog:product", kwargs={"product_slug": self.slug()})
+
     def slug(self):
         return f"{self.product.slug}"
 
@@ -149,6 +153,8 @@ class ProductVariant(models.Model):
             self.price = self.product.price
         if self.discount == Decimal("0.00"):
             self.discount = self.product.discount
+        elif self.discount == Decimal("0.01"):
+            self.discount = Decimal("0.00")
         if not self.color:
             self.color = "Оригинал"
         if self.sku and self.sku[0] == "-":

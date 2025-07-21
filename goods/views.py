@@ -82,10 +82,6 @@ class CatalogView(ListView):
         return context
 
 
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-
-
 class ProductView(DetailView):
     template_name = "goods/product.html"
     slug_url_kwarg = "product_slug"
@@ -102,38 +98,31 @@ class ProductView(DetailView):
 
         variants = product.variants.all()
 
-        variants_json = [
-            {
-                "id": v.id,
-                "color": v.color,
-                "size": v.size,
-                "sku": v.sku,
-                "sell_price": str(v.sell_price()),
-                "price": str(v.price),
-                "discount": str(v.discount),
-                "quantity": v.quantity,
-            }
-            for v in variants
-        ]
+        variants_color_json = {}
+        for v in variants:
+            if v.color not in variants_color_json:
+                variants_color_json[v.color] = []
+            variants_color_json[v.color].append(
+                {
+                    "id": v.id,
+                    "color": v.color,
+                    "size": v.size,
+                    "sku": v.sku,
+                    "sell_price": str(v.sell_price()),
+                    "price": str(v.price),
+                    "discount": str(v.discount),
+                    "quantity": v.quantity,
+                    "description": v.description,
+                }
+            )
 
-        unique_colors = sorted(set(v.color for v in variants if v.color))
-
-        # собрать уникальные размеры
-        sizes_set = set(v.size for v in variants if v.size)
         SIZE_ORDER = ["xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl", "5xl"]
-
-        # сортировка по индексу в SIZE_ORDER
-        unique_sizes = sorted(
-            sizes_set, key=lambda x: SIZE_ORDER.index(x.lower()) if x.lower() in SIZE_ORDER else float("inf")
-        )
-
         context.update(
             {
-                "variants_json": json.dumps(variants_json, cls=DjangoJSONEncoder),
-                "colors": unique_colors,
-                "sizes": unique_sizes,
+                "variants_color_json": variants_color_json,
+                "variants_color_json_str": json.dumps(variants_color_json, cls=DjangoJSONEncoder),
                 "title": product.name,
-                "variant": variants.first(),
+                "variant": variants.last(),
             }
         )
 

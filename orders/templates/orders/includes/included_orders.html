@@ -60,10 +60,14 @@
                                 <td class="d-flex gap-2 align-items-start flex-column flex-sm-row">
                                     {% if order_item.product_variant %}
                                         <a href="{% url 'goods:product' order_item.product_variant.slug %}">
+                                            {% if order_item.product_variant.product.image %}
                                             <img src="{{ order_item.product_variant.product.image.url }}" 
-                                                 alt="{{ order_item.product_variant.name }}" 
-                                                 class="rounded border" 
-                                                 style="width: 60px; height: 60px; object-fit: cover;">
+                                            alt="{{ order_item.product_variant.name }}" 
+                                            class="rounded border" 
+                                            style="width: 60px; height: 60px; object-fit: cover;">
+                                            {% else %}
+                                            <img src="{% static 'deps/images/Not found image 800x800.png' %}" class="card-img-top" alt="{{ product.name }}" style="width: 60px; height: 60px; object-fit: cover;">
+                                            {% endif %}
                                         </a>
                                         <div>
                                             <a href="{% url 'goods:product' order_item.product_variant.slug %}" 

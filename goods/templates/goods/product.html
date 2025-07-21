@@ -19,6 +19,17 @@
 
             <!-- Корзина -->
             {% include "includes/cart_button.html" %}
+
+            {% if user.is_admin or user.is_staff %}
+            <div class="row mb-4">
+                <div class="col">
+                    <a href="{% url 'admin:goods_product_change' variant.product.id %}" 
+                    class="btn btn-dark d-inline-flex align-items-center">
+                        Редактировать в админке
+                    </a>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 
@@ -82,12 +93,6 @@
 
                     {% if variant %}
                         <div id="variant-info">
-                            {% if variant.color %}
-                            <p class="mb-2"><strong>Цвет:</strong> <span id="variant-color">{{ variant.color }}</span></p>
-                            {% endif %}
-                            {% if variant.size %}
-                            {% endif %}
-                            <p class="mb-2"><strong>Размер:</strong> <span id="variant-size">{{ variant.size }}</span></p>
                             <p class="mb-2"><strong>Артикул:</strong> <span id="variant-sku">{{ variant.sku }}</span></p>
                             <p class="mb-2">
                                 <strong>Цена:</strong>
@@ -96,7 +101,9 @@
                                     <span class="text-muted text-decoration-line-through ms-2" id="variant-old-price">{{ variant.price }} ₽</span>
                                     <span class="badge bg-warning ms-2" id="variant-discount">-{{ variant.discount }}%</span>
                                 {% else %}
-                                    <span class="fs-4 fw-bold" id="variant-price">{{ variant.sell_price }} ₽</span>
+                                    <span  id="variant-price" class="fs-4 fw-bold">{{ variant.sell_price }} ₽</span>
+                                    <span id="variant-old-price" class="text-muted text-decoration-line-through ms-2" style="display: none;">{{ variant.price }} ₽</span>
+                                    <span id="variant-discount" class="badge bg-warning ms-2" style="display: none;">-{{ variant.discount }}%</span>
                                 {% endif %}
                             </p>
                             <p class="mb-4">
@@ -109,36 +116,32 @@
                             </p>
                         </div>
 
-                        {% if colors %}
+                        {% if variants_color_json %}
                         <div class="mb-3">
                             <label for="color-select" class="form-label">Выберите цвет:</label>
                             <select class="form-select" id="color-select" name="color">
-                                {% for color in colors %}
-                                    <option value="{{ color }}" {% if color == variant.color %}selected{% endif %}>
-                                        {{ color }}
-                                    </option>
+                                {% for color in variants_color_json %}
+                                    <option value="{{ color }}" {% if color == variant.color %}selected{% endif %}>{{ color }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        {% endif %}
 
-                        {% if sizes %}
                         <div class="mb-3">
                             <label for="size-select" class="form-label">Выберите размер:</label>
                             <select class="form-select" id="size-select" name="size">
-                                {% for size in sizes %}
-                                    <option value="{{ size }}" {% if size == variant.size %}selected{% endif %}>
-                                        {{ size }}
-                                    </option>
-                                {% endfor %}
+                                <!-- Здесь будут размеры подставляться через JS -->
                             </select>
                         </div>
                         {% endif %}
-
                     {% endif %}
 
                     {% if product.description %}
                         <p class="mt-3">{{ product.description }}</p>
+                    {% endif %}
+                    {% if variant.description %}
+                        <p class="mt-3" id="variant-description">{{ variant.description }}</p>
+                    {% else %}
+                        <p class="mt-3" id="variant-description" style="display: none;"></p>
                     {% endif %}
 
                     <a href="{% url 'carts:cart_add' %}"
@@ -147,10 +150,8 @@
                        data-product-id="{{ variant.id }}">
                         <i class="bi bi-cart-plus me-2"></i> Добавить в корзину
                     </a>
-
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -176,90 +177,93 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
-
-
-    
-document.addEventListener("DOMContentLoaded", function () {
+    const variantsData = {{ variants_color_json_str|safe }};
     const colorSelect = document.getElementById("color-select");
     const sizeSelect = document.getElementById("size-select");
 
-    if (!colorSelect && !sizeSelect) return;
+    const skuEl = document.getElementById("variant-sku");
+    const priceEl = document.getElementById("variant-price");
+    const oldPriceEl = document.getElementById("variant-old-price");
+    const discountEl = document.getElementById("variant-discount");
+    const quantityEl = document.getElementById("variant-quantity");
+    const descriptionEl = document.getElementById("variant-description");
+    const addToCartButton = document.getElementById("add-to-cart-button");
 
-    const variants = JSON.parse(document.getElementById("variants-json").textContent);
-    
-    if (colorSelect) colorSelect.addEventListener("change", updateVariant);
-    if (sizeSelect) sizeSelect.addEventListener("change", updateVariant);
-    updateVariant();
+    function findVariant(color, size) {
+        const variants = variantsData[color] || [];
+        return variants.find(v => v.size === size);
+    }
 
-    function updateVariant() {
-        const selectedColor = colorSelect ? colorSelect.value : null;
-        const selectedSize = sizeSelect ? sizeSelect.value : null;
+    function updateSizes(selectedColor) {
+        const sizes = variantsData[selectedColor] || [];
+        sizeSelect.innerHTML = "";
 
-        const variant = variants.find(v =>
-            (v.color === selectedColor) && ( v.size === selectedSize)
-        );
+        sizes.forEach(variant => {
+            const option = document.createElement("option");
+            option.value = variant.size;
+            option.textContent = variant.size;
+            sizeSelect.appendChild(option);
+        });
 
-        const priceElem = document.getElementById("variant-price");
-        const oldPriceElem = document.getElementById("variant-old-price");
-        const discountBadge = document.getElementById("variant-discount");
-        const quantityElem = document.getElementById("variant-quantity");
-        const variantColorElem = document.getElementById("variant-color");
-        const variantSizeElem = document.getElementById("variant-size");
-        const variantSkuElem = document.getElementById("variant-sku");
-        const button = document.getElementById("add-to-cart-button");
-
-        variantColorElem.textContent = selectedColor || "-";
-        variantSizeElem.textContent = selectedSize || "-";
-
-        if (variant) {
-            variantSkuElem.textContent = variant.sku;
-            priceElem.textContent = variant.sell_price + " ₽";
-            if (variant.discount && parseFloat(variant.discount) > 0) {
-                oldPriceElem.textContent = variant.price + " ₽";
-                oldPriceElem.style.display = "";
-                discountBadge.textContent = "-" + variant.discount + "%";
-                discountBadge.style.display = "";
-                priceElem.classList.remove("text-danger");
-                priceElem.classList.add("text-success");
-            } else {
-                oldPriceElem.style.display = "none";
-                discountBadge.style.display = "none";
-                priceElem.classList.remove("text-success");
-                priceElem.classList.add("text-danger");
-
-            }
-
-            if (variant.quantity > 0) {
-                quantityElem.textContent = variant.quantity;
-                quantityElem.classList.remove("text-danger");
-                quantityElem.classList.add("text-success");
-                button.classList.remove("disabled");
-                button.setAttribute("data-product-id", variant.id);
-
-            } else {
-                quantityElem.textContent = "Нет в наличии";
-                quantityElem.classList.remove("text-success");
-                quantityElem.classList.add("text-danger");
-                button.classList.add("disabled");
-                button.removeAttribute("data-product-id");
-            }
-
-        } else {
-            priceElem.textContent = "Нет в наличии";
-            priceElem.classList.add("text-danger");
-            oldPriceElem.style.display = "none";
-            discountBadge.style.display = "none";
-
-            quantityElem.textContent = "Нет в наличии";
-            quantityElem.classList.remove("text-success");
-            quantityElem.classList.add("text-danger");
-
-            variantSkuElem.textContent = "Нет в наличии";
-
-            button.classList.add("disabled");
-            button.removeAttribute("data-product-id");
+        // Обновить данные на основе первого размера
+        if (sizes.length > 0) {
+            sizeSelect.value = sizes[0].size;
+            updateVariantInfo(selectedColor, sizes[0].size);
         }
     }
-});
+
+    function updateVariantInfo(color, size) {
+        const variant = findVariant(color, size);
+        if (!variant) return;
+
+        skuEl.textContent = variant.sku;
+        priceEl.textContent = `${variant.sell_price} ₽`;
+
+        if (variant.discount && parseFloat(variant.discount) > 0) {
+            oldPriceEl.textContent = `${variant.price} ₽`;
+            oldPriceEl.style.display = "";
+            discountEl.textContent = `-${variant.discount}%`;
+            discountEl.style.display = "";
+        } else {
+            oldPriceEl.style.display = "none";
+            discountEl.style.display = "none";
+        }
+
+        if (parseInt(variant.quantity) > 0) {
+            quantityEl.textContent = variant.quantity;
+            quantityEl.classList.remove("text-danger");
+            quantityEl.classList.add("text-success");
+            quantityEl.textContent = variant.quantity;
+        } else {
+            quantityEl.textContent = "Нет в наличии";
+            quantityEl.classList.remove("text-success");
+            quantityEl.classList.add("text-danger");
+        }
+
+        descriptionEl.textContent = variant.description || "";
+
+        // обновить data-product-id у кнопки "добавить в корзину"
+        addToCartButton.setAttribute("data-product-id", variant.id);
+        $(addToCartButton).data("product-id", variant.id);  // <-- это обязательно!
+
+    }
+
+    // инициализация при загрузке
+    document.addEventListener("DOMContentLoaded", function () {
+        updateSizes(colorSelect.value);
+    });
+
+    colorSelect.addEventListener("change", function () {
+        const selectedColor = this.value;
+        updateSizes(selectedColor);
+    });
+
+    sizeSelect.addEventListener("change", function () {
+        const selectedColor = colorSelect.value;
+        const selectedSize = this.value;
+        updateVariantInfo(selectedColor, selectedSize);
+    });
 </script>
+
+
 {% endblock %}
