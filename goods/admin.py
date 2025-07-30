@@ -48,7 +48,7 @@ class ProductsAdmin(admin.ModelAdmin):
 class ProductVariantAdmin(admin.ModelAdmin):
     list_display = ["sku", "link_to_product", "color", "size", "price", "discount", "quantity"]
     search_fields = ["product", "sku"]
-    list_filter = ["product", "price", "discount"]
+    list_filter = ["size", "price", "discount"]
     fields = get_all_fields(ProductVariant, ["product", "sku", ("price", "discount")])
 
     save_as = True

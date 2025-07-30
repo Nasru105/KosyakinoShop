@@ -40,7 +40,7 @@ class CatalogView(ListView):
             goods = goods.filter(tags__name__in=tags).distinct()
 
         if firms:
-            goods = goods.filter(firm__name__in=firms)
+            goods = goods.filter(firm__name__in=firms).distinct()
 
         if sizes:
             goods = goods.filter(variants__size__in=sizes).distinct()
@@ -77,7 +77,7 @@ class CatalogView(ListView):
             set(sizes),
             key=lambda x: SIZE_ORDER.index(x.lower()) if x.lower() in SIZE_ORDER else float("-inf"),
         )
-        context["tags"] = tags
+        context["tags"] = sorted(set(tags))
 
         return context
 
@@ -99,6 +99,9 @@ class ProductView(DetailView):
         variants = product.variants.all()
 
         variants_color_json = {}
+        SIZE_ORDER = ["xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl", "5xl"]
+        size_index = {size: index for index, size in enumerate(SIZE_ORDER)}
+
         for v in variants:
             if v.color not in variants_color_json:
                 variants_color_json[v.color] = []
@@ -116,7 +119,12 @@ class ProductView(DetailView):
                 }
             )
 
-        SIZE_ORDER = ["xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl", "5xl"]
+        # Сортировка размеров внутри каждого цвета
+        for color, variant_list in variants_color_json.items():
+            variants_color_json[color] = sorted(
+                variant_list, key=lambda x: size_index.get(x["size"].lower(), -999)  # неизвестные — в конец
+            )
+
         context.update(
             {
                 "variants_color_json": variants_color_json,
