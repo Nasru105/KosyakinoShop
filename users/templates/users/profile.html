@@ -16,7 +16,7 @@
                     <form action="{% url "user:profile" %}" method="post" enctype="multipart/form-data" id="profile_form">
                         {% csrf_token %}
                         <div class="text-center mb-4">
-                            <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static "/deps/images/baseavatar.jpg" %}{% endif %}" 
+                            <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static "/deps/images/Not found image 800x800.png" %}{% endif %}" 
                                  alt="Аватар пользователя" 
                                  class="img-thumbnail rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">

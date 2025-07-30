@@ -93,8 +93,7 @@
 
                     {% if variant %}
                         <div id="variant-info">
-                            {% comment %} <p class="mb-2"><strong>Артикул:</strong> <span id="variant-sku">{{ variant.sku }}</span></p> {% endcomment %}
-                            <p class="mb-2"><strong>Артикул:</strong> <span id="product-sku">{{ variant.sku }}</span></p>
+                            <p class="mb-2"><strong>Артикул:</strong> <span id="variant-sku">{{ variant.sku }}</span></p>
                             <p class="mb-2">
                                 <strong>Цена:</strong>
                                 {% if variant.discount and variant.discount > 0 %}
@@ -182,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const colorSelect = document.getElementById("color-select");
     const sizeSelect = document.getElementById("size-select");
 
-    {% comment %} const skuEl = document.getElementById("variant-sku"); {% endcomment %}
+    const skuEl = document.getElementById("variant-sku");
     const priceEl = document.getElementById("variant-price");
     const oldPriceEl = document.getElementById("variant-old-price");
     const discountEl = document.getElementById("variant-discount");
@@ -217,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const variant = findVariant(color, size);
         if (!variant) return;
 
-        // skuEl.textContent = variant.sku;
+        skuEl.textContent = variant.sku;
         priceEl.textContent = `${variant.sell_price} ₽`;
 
         if (variant.discount && parseFloat(variant.discount) > 0) {
