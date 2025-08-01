@@ -79,6 +79,8 @@ class CatalogView(ListView):
         )
         context["tags"] = sorted(set(tags))
 
+        print(self.request.GET.getlist("tags"))
+        print(sorted(set(tags)))
         return context
 
 

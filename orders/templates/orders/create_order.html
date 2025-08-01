@@ -68,12 +68,12 @@
                                     {% if form.requires_delivery.value == "0" %}checked{% endif %}>
                                 <label class="form-check-label" for="id_requires_delivery_pickup">Самовывоз</label>
                             </div>
-                            <div class="form-check form-check-inline">
+                            {% comment %} <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="requires_delivery"
                                     id="id_requires_delivery" value="1"
                                     {% if form.requires_delivery.value == "1" %}checked{% endif %}>
                                 <label class="form-check-label" for="id_requires_delivery">Нужна доставка</label>
-                            </div>
+                            </div> {% endcomment %}
                             {% if form.requires_delivery.errors %}
                                 <div class="alert alert-danger alert-dismissible fade show">{{form.requires_delivery.errors}}</div>
                             {% endif %}
@@ -82,21 +82,21 @@
                             <label for="id_pickupAddressField" class="form-label">Адрес самовывоза:</label>
                             <a href="https://yandex.ru/maps/-/CHXKeXiD">деревня Косякино, 45, Раменский муниципальный округ, Московская область, 140160</a>
                         </div>
-                        <div class="mb-3" id="deliveryAddressField" style="display: none;">
+                        {% comment %} <div class="mb-3" id="deliveryAddressField" style="display: none;">
                             <label for="id_delivery_address" class="form-label">Адрес доставки*:</label>
                             <textarea class="form-control" id="id_delivery_address"
                                 name="delivery_address">{% if form.delivery_address.value %}{{ form.delivery_address.value }}{% endif %}</textarea>
-                        </div>
+                        </div> {% endcomment %}
                         <div class="col-md-12 mb-3" id="paymentOnGetField">
                             <label class="form-label">Способ оплаты: </label>
-                            <div class="form-check form-check-inline">
+                            {% comment %} <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="payment_on_get"
                                     id="id_payment_on_get_0" value="0" 
                                     {% if form.payment_on_get.value == "0" %}checked{% endif %}>
                                 <label class="form-check-label" for="id_payment_on_get_0">
                                     Оплата картой
                                 </label>
-                            </div>
+                            </div> {% endcomment %}
                             <div class="form-check form-check-inline" id="paymentOnGetField1">
                                 <input class="form-check-input" type="radio" 
                                     name="payment_on_get" id="id_payment_on_get_1" value="1" 

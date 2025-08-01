@@ -13,6 +13,7 @@ def tag_categories():
 
 @register.simple_tag(takes_context=True)
 def change_params(context, **kwargs):
-    query = context["request"].GET.dict()
-    query.update(kwargs)
-    return urlencode(query)
+    query = context["request"].GET.copy()
+    for key, value in kwargs.items():
+        query[key] = value
+    return query.urlencode()
