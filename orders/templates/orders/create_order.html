@@ -64,9 +64,9 @@
                             <label for="delivery" class="form-label">Способ доставки: </label>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="requires_delivery"
-                                    id="id_requires_delivery" value="0"
+                                    id="id_requires_delivery_pickup" value="0"
                                     {% if form.requires_delivery.value == "0" %}checked{% endif %}>
-                                <label class="form-check-label" for="id_requires_delivery">Самовывоз</label>
+                                <label class="form-check-label" for="id_requires_delivery_pickup">Самовывоз</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="requires_delivery"
@@ -80,7 +80,7 @@
                         </div>
                         <div class="mb-1" id="pickupAddressField" style="display: none;">
                             <label for="id_pickupAddressField" class="form-label">Адрес самовывоза:</label>
-                            <a href="https://yandex.ru/maps/-/CHDrAZMT">Деревня Косякино, 1, Раменский муниципальный округ, Московская область</a>
+                            <a href="https://yandex.ru/maps/-/CHXKeXiD">деревня Косякино, 45, Раменский муниципальный округ, Московская область, 140160</a>
                         </div>
                         <div class="mb-3" id="deliveryAddressField" style="display: none;">
                             <label for="id_delivery_address" class="form-label">Адрес доставки*:</label>

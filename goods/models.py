@@ -1,7 +1,7 @@
 from decimal import ROUND_HALF_UP, Decimal
 from os import name
 from pyclbr import Class
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
@@ -111,6 +111,14 @@ class ProductVariant(models.Model):
 
     product = models.ForeignKey(Product, related_name="variants", on_delete=models.CASCADE, verbose_name="Товар")
     color = models.CharField(max_length=50, blank=True, null=True, verbose_name="Цвет")
+    color_code = models.CharField(
+        max_length=7,
+        blank=True,
+        null=True,
+        validators=[RegexValidator(regex=r"^#(?:[0-9a-fA-F]{3}){1,2}$", message="Введите корректный HEX-код цвета")],
+        verbose_name="Код цвета",
+        help_text="Например: #FF5733",
+    )
     size = models.CharField(max_length=50, blank=True, null=True, verbose_name="Размер")
     price = models.DecimalField(
         default=Decimal("0.00"),
@@ -157,12 +165,11 @@ class ProductVariant(models.Model):
             self.discount = Decimal("0.00")
         if not self.color:
             self.color = "Оригинал"
-        if self.sku and self.sku[0] == "-":
-            self.sku = self.sku[1:]
-        else:
+        if not self.sku:
             self.sku = (
                 f"{self.product.sku}-{self.color[0].upper() if self.color else 'X'}-{self.size if self.size else 'X'}"
             )
+
         super().save(*args, **kwargs)
 
     def sell_price(self):

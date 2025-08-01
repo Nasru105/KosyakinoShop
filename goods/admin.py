@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
+from django import forms
 from goods.models import Category, Firm, ProductImage, Product, ProductVariant, Tag
 from utils.utils import get_all_fields
 
@@ -16,13 +18,25 @@ class ProductImageInline(admin.TabularInline):
     extra = 1
 
 
+class ProductVariantInlineForm(forms.ModelForm):
+    class Meta:
+        model = ProductVariant
+        fields = "__all__"
+        widgets = {
+            "color_code": forms.TextInput(attrs={"size": 7}),  # уменьшение ширины только для color_code
+            "price": forms.NumberInput(attrs={"style": "width: 60px;"}),  # уменьшение ширины только для price
+            "discount": forms.NumberInput(attrs={"style": "width: 50px;"}),
+        }
+
+
 class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
+    form = ProductVariantInlineForm
     extra = 1
     ordering = ("-sku",)
-    readonly_fields = ("link_to_change",)
+    readonly_fields = ("link_to_change", "color_preview")
 
-    fields = ("link_to_change", "quantity", "color", "size", "price", "discount", "sku")
+    fields = ("link_to_change", "quantity", "color", "color_preview", "color_code", "size", "price", "discount", "sku")
 
     def link_to_change(self, obj):
         if obj.id:
@@ -31,6 +45,16 @@ class ProductVariantInline(admin.TabularInline):
         return "-"
 
     link_to_change.short_description = "Вариант"
+
+    def color_preview(self, obj):
+        if obj.color_code:
+            return format_html(
+                '<div style="width: 20px; height: 20px; background-color: {}; border: 1px solid #000;"></div>',
+                obj.color_code,
+            )
+        return "-"
+
+    color_preview.short_description = "Цвет"
 
 
 @admin.register(Product)
@@ -46,8 +70,8 @@ class ProductsAdmin(admin.ModelAdmin):
 
 @admin.register(ProductVariant)
 class ProductVariantAdmin(admin.ModelAdmin):
-    list_display = ["sku", "link_to_product", "color", "size", "price", "discount", "quantity"]
-    search_fields = ["product", "sku"]
+    list_display = ["sku", "link_to_product", "color_preview", "color", "size", "price", "discount", "quantity"]
+    search_fields = ["sku"]
     list_filter = ["size", "price", "discount"]
     fields = get_all_fields(ProductVariant, ["product", "sku", ("price", "discount")])
 
@@ -63,6 +87,16 @@ class ProductVariantAdmin(admin.ModelAdmin):
         return "-"
 
     link_to_product.short_description = "Товар"
+
+    def color_preview(self, obj):
+        if obj.color_code:
+            return format_html(
+                '<div style="width: 20px; height: 20px; background-color: {}; border: 1px solid #000;"></div>',
+                obj.color_code,
+            )
+        return "-"
+
+    color_preview.short_description = "Цвет"
 
 
 @admin.register(Tag)

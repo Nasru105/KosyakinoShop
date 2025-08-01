@@ -120,8 +120,8 @@
                         <div class="mb-3">
                             <label for="color-select" class="form-label">Выберите цвет:</label>
                             <select class="form-select" id="color-select" name="color">
-                                {% for color in variants_color_json %}
-                                    <option value="{{ color }}" {% if color == variant.color %}selected{% endif %}>{{ color }}</option>
+                                {% for color, variants in variants_color_json.items %}
+                                    <option value="{{ color }}" style="display: inline-block; width: 20px; height: 20px; background-color: {{ variants.0.color_code }}; border: 1px solid #000;" {% if color == variant.color %}selected{% endif %}>{{ color }}</option>
                                 {% endfor %}
                             </select>
                         </div>

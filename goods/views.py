@@ -109,6 +109,7 @@ class ProductView(DetailView):
                 {
                     "id": v.id,
                     "color": v.color,
+                    "color_code": v.color_code,
                     "size": v.size,
                     "sku": v.sku,
                     "sell_price": str(v.sell_price()),
@@ -124,7 +125,7 @@ class ProductView(DetailView):
             variants_color_json[color] = sorted(
                 variant_list, key=lambda x: size_index.get(x["size"].lower(), -999)  # неизвестные — в конец
             )
-
+        print(json.dumps(variants_color_json, indent=4))
         context.update(
             {
                 "variants_color_json": variants_color_json,
