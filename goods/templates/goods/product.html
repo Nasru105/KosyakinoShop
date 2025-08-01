@@ -115,15 +115,27 @@
                                 {% endif %}
                             </p>
                         </div>
+                        
+
 
                         {% if variants_color_json %}
                         <div class="mb-3">
                             <label for="color-select" class="form-label">Выберите цвет:</label>
-                            <select class="form-select" id="color-select" name="color">
-                                {% for color, variants in variants_color_json.items %}
+                            <!-- Текущий выбранный цвет (превью) -->
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="color-preview me-2"
+                                    id="current-color" 
+                                    style="width: 40px; height: 40px; 
+                                            background-color: {{ variant.color_code }};
+                                            border: 2px solid {% if color == variant.color %}#000{% else %}#dee2e6{% endif %};
+                                            border-radius: 8px;">
+                                </div>
+                                <select class="form-select" id="color-select" name="color">
+                                    {% for color, variants in variants_color_json.items %}
                                     <option value="{{ color }}" style="display: inline-block; width: 20px; height: 20px; background-color: {{ variants.0.color_code }}; border: 1px solid #000;" {% if color == variant.color %}selected{% endif %}>{{ color }}</option>
-                                {% endfor %}
-                            </select>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -188,6 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const quantityEl = document.getElementById("variant-quantity");
     const descriptionEl = document.getElementById("variant-description");
     const addToCartButton = document.getElementById("add-to-cart-button");
+    const current_color = document.getElementById("current-color");
 
     function findVariant(color, size) {
         const variants = variantsData[color] || [];
@@ -218,6 +231,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         skuEl.textContent = variant.sku;
         priceEl.textContent = `${variant.sell_price} ₽`;
+
+        if (!variant.color_code){
+            current_color.style.display = "none";
+        } else {
+            current_color.style.display = "";
+            current_color.style.backgroundColor = variant.color_code
+        }
 
         if (variant.discount && parseFloat(variant.discount) > 0) {
             oldPriceEl.textContent = `${variant.price} ₽`;

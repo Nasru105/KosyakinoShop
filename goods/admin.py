@@ -33,7 +33,8 @@ class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
     form = ProductVariantInlineForm
     extra = 1
-    ordering = ("-sku",)
+    # ordering = ("-sku")
+    ordering = ("color",)
     readonly_fields = ("link_to_change", "color_preview")
 
     fields = ("link_to_change", "quantity", "color", "color_preview", "color_code", "size", "price", "discount", "sku")
@@ -72,7 +73,7 @@ class ProductsAdmin(admin.ModelAdmin):
 class ProductVariantAdmin(admin.ModelAdmin):
     list_display = ["sku", "link_to_product", "color_preview", "color", "size", "price", "discount", "quantity"]
     search_fields = ["sku"]
-    list_filter = ["size", "price", "discount"]
+    list_filter = ["product", "size", "price", "discount"]
     fields = get_all_fields(ProductVariant, ["product", "sku", ("price", "discount")])
 
     save_as = True
