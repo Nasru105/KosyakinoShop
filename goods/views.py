@@ -74,7 +74,7 @@ class CatalogView(ListView):
         SIZE_ORDER = ["xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl", "5xl"]
         context["firms"] = sorted(set(firms))
         context["sizes"] = sorted(
-            set(sizes),
+            sorted(set(sizes)),
             key=lambda x: SIZE_ORDER.index(x.lower()) if x.lower() in SIZE_ORDER else float("-inf"),
         )
         context["tags"] = sorted(set(tags))
