@@ -1,5 +1,6 @@
 from django.db import models
 
+from app.settings import DOMAIN
 from goods.models import Product, ProductVariant
 from users.models import User
 
@@ -107,4 +108,4 @@ class OrderItem(models.Model):
         return f"Товар {self.name} | Заказ №{self.order.display_id()}"
 
     def product_link(self):
-        return f"https:///kosyakino.up.railway.app/catalog/product/{self.product_variant.slug()}/"
+        return f"https:///{DOMAIN}/catalog/product/{self.product_variant.slug()}/"

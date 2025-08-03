@@ -29,7 +29,7 @@ class CartAddView(CartMixin, View):
             )
 
         response_data = {
-            "message": "Товар добавлен в корзину",
+            "message": f'"{product.name()}" добавлен в корзину',
             "cart_items_html": self.render_cart(request),
         }
 

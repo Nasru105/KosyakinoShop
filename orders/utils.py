@@ -9,13 +9,12 @@ def send_order_email(order, order_items):
     # Товары в HTML
     html_items = ""
     for item in order_items:
-        html_items += f'<li><a href="{item.product_link()}" class="text-dark">{item.name} {item.product_variant.sku}</a> — {item.quantity} шт. * {item.price} ₽</li>'
+        html_items += f'<li><a href="{item.product_link()}" class="text-dark">{item.name} {item.product_variant.sku} </a> {item.product_variant.color} {item.product_variant.size} — {item.quantity} шт. * {item.price} ₽</li>'
 
     html_message = f"""
         <p><strong>Пользователь:</strong> {order.user.get_full_name()} ({order.user.username})</p>
         <p><strong>Email:</strong> {order.user.email}</p>
         <p><strong>Телефон:</strong> +7 {phone_number_format(order.phone_number)}</p>
-        <p><strong>Адрес доставки:</strong> {order.delivery_address}</p>
         <p><strong>Комментарий:</strong> {order.comment}</p>
         <p><strong>Товары:</strong></p>
         <ul>
@@ -29,12 +28,11 @@ def send_order_email(order, order_items):
         f"Пользователь: {order.user.get_full_name()} ({order.user.username})\n"
         f"Email: {order.user.email}\n"
         f"Телефон: +7 {phone_number_format(order.phone_number)}\n"
-        f"Адрес доставки: {order.delivery_address}\n"
         f"Комментарий: {order.comment}\n"
         f"Товары:\n"
     )
     for item in order_items:
-        text_message += f"- {item.name} ({item.product_link()}) — {item.quantity} шт.\n"
+        text_message += f"- {item.name} ({item.product_link()}) {item.product_variant.color} {item.product_variant.size} — {item.quantity} шт.\n"
 
     text_message += f"\nИтого: {order.total_price()} ₽"
 
@@ -55,9 +53,7 @@ def send_cancel_order_email(order):
         <p><strong>Пользователь:</strong> {order.user.get_full_name()} ({order.user.username})</p>
         <p><strong>Email:</strong> {order.user.email}</p>
         <p><strong>Телефон:</strong> +7 {phone_number_format(order.phone_number)}</p>
-        <p><strong>Адрес доставки:</strong> {order.delivery_address}</p>
         <p><strong>Комментарий:</strong> {order.comment}</p>
-        <p><strong>Товары:</strong></p>
         <p><strong>Итого:</strong> {order.total_price()} ₽</p>
     """
 
@@ -66,9 +62,7 @@ def send_cancel_order_email(order):
         f"Пользователь: {order.user.get_full_name()} ({order.user.username})\n"
         f"Email: {order.user.email}\n"
         f"Телефон: +7 {phone_number_format(order.phone_number)}\n"
-        f"Адрес доставки: {order.delivery_address}\n"
         f"Комментарий: {order.comment}\n"
-        f"Товары:\n"
     )
     text_message += f"\nИтого: {order.total_price()} ₽"
 

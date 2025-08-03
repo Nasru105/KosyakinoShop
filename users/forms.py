@@ -59,7 +59,7 @@ class ProfileForm(UserChangeForm):
     def clean_phone_number(self):
         data = self.cleaned_data["phone_number"]
         if not data:
-            return data
+            raise forms.ValidationError("Введите номер телефона")
 
         if len(data) < 10:
             raise forms.ValidationError("Номер должен содержать 11 цифр")
