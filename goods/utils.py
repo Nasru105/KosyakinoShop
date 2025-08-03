@@ -1,4 +1,5 @@
 from re import search
+import re
 from goods.models import Product
 from django.db.models import Q
 from django.contrib.postgres.search import (
@@ -43,3 +44,14 @@ def q_search(query):
     #     q_objects |= Q(name__icontains=token)
 
     # return Product.objects.filter(q_objects)
+
+
+def sort_key(color):
+    # Ищем число в начале строки
+    match = re.match(r"^(\d+)", color)
+    if match:
+        # Если число есть — сортируем по нему (как int)
+        return (0, int(match.group(1)), color)
+    else:
+        # Если числа нет — ставим после всех с числами, сортируем по алфавиту
+        return (1, color)

@@ -64,17 +64,13 @@ class Product(models.Model):
         null=True,
         verbose_name="Изображение",
     )
-    price = models.DecimalField(
-        default=Decimal("0.00"),
-        max_digits=7,
-        decimal_places=2,
+    price = models.IntegerField(
+        default=0,
         validators=[MinValueValidator(0)],
         verbose_name="Цена",
     )
-    discount = models.DecimalField(
-        default=Decimal("0.00"),
-        max_digits=4,
-        decimal_places=2,
+    discount = models.IntegerField(
+        default=0,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         verbose_name="Скидка (%)",
     )
@@ -103,8 +99,8 @@ class Product(models.Model):
             discount_amount = self.price * self.discount / Decimal("100")
             discounted_price = self.price - discount_amount
             # округлим до 2 знаков в сторону ближайшего
-            return discounted_price.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-        return self.price
+            return int(round(discounted_price))
+        return int(round(self.price))
 
 
 class ProductVariant(models.Model):
@@ -120,17 +116,13 @@ class ProductVariant(models.Model):
         help_text="Например: #FF5733",
     )
     size = models.CharField(max_length=50, blank=True, null=True, verbose_name="Размер")
-    price = models.DecimalField(
-        default=Decimal("0.00"),
-        max_digits=7,
-        decimal_places=2,
+    price = models.IntegerField(
+        default=0,
         validators=[MinValueValidator(0)],
         verbose_name="Цена",
     )
-    discount = models.DecimalField(
-        default=Decimal("0.00"),
-        max_digits=4,
-        decimal_places=2,
+    discount = models.IntegerField(
+        default=0,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         verbose_name="Скидка (%)",
     )
@@ -176,8 +168,8 @@ class ProductVariant(models.Model):
         if self.discount:
             discount_amount = self.price * self.discount / Decimal("100")
             discounted_price = self.price - discount_amount
-            return discounted_price.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-        return self.price
+            return int(round(discounted_price))
+        return int(round(self.price))
 
 
 class ProductImage(models.Model):

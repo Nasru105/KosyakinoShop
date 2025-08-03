@@ -1,4 +1,5 @@
 import json
+from collections import OrderedDict
 from typing import Any
 from django.db.models import QuerySet
 from django.db.models.base import Model as Model
@@ -8,7 +9,7 @@ from django.views.generic import DetailView, ListView
 from django.core.serializers.json import DjangoJSONEncoder
 
 from goods.models import Category, Firm, Product, ProductVariant, Tag
-from goods.utils import q_search
+from goods.utils import q_search, sort_key
 
 
 class CatalogView(ListView):
@@ -119,18 +120,22 @@ class ProductView(DetailView):
                     "description": v.description,
                 }
             )
-
         # Сортировка размеров внутри каждого цвета
         for color, variant_list in variants_color_json.items():
             variants_color_json[color] = sorted(
                 variant_list, key=lambda x: size_index.get(x["size"].lower(), -999)  # неизвестные — в конец
             )
 
+        variants_color_json_sorted = OrderedDict(
+            sorted(variants_color_json.items(), key=lambda item: sort_key(item[0]))
+        )
+
         # print(json.dumps(variants_color_json, indent=4))
+        print(variants_color_json_sorted.keys())
         context.update(
             {
-                "variants_color_json": variants_color_json,
-                "variants_color_json_str": json.dumps(variants_color_json, cls=DjangoJSONEncoder),
+                "variants_color_json": variants_color_json_sorted,
+                "variants_color_json_str": json.dumps(variants_color_json_sorted, cls=DjangoJSONEncoder),
                 "title": product.name,
                 "variant": variants.last(),
             }
