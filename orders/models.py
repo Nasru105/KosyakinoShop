@@ -19,11 +19,13 @@ class Order(models.Model):
         PENDING = "pending", "Ожидает оплату"
         PAID = "paid", "Оплачено"
         FAILED = "failed", "Ошибка оплаты"
+        CANCELLED = "cancelled", "Заказ отменён"
 
     class DeliveryStatus(models.TextChoices):
         PROCESSING = "processing", "В обработке"
         WAITING_PICKUP = "waiting_pickup", "Ожидает в пункте выдачи"
         DELIVERED = "delivered", "Товар доставлен"
+        CANCELLED = "cancelled", "Заказ отменён"
 
     user = models.ForeignKey(
         to=User,

@@ -4,7 +4,7 @@ from typing import Any
 import uuid
 
 from django.db.models import QuerySet
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
@@ -15,7 +15,7 @@ from django.views import View
 from django.views.generic import FormView
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from yookassa import Payment
 from yookassa.domain.notification import WebhookNotificationFactory
 
@@ -23,7 +23,7 @@ from app import settings
 from carts.models import Cart
 from orders.models import Order, OrderItem, OrderitemQuerySet
 from orders.forms import CreateOrderForm
-from orders.utils import send_order_email
+from orders.utils import send_cancel_order_email, send_order_email
 from utils.utils import phone_number_format
 
 
@@ -197,3 +197,18 @@ class YooKassaWebhookView(View):
                 pass
 
         return HttpResponse(status=200)
+
+
+class CancelOrderView(View):
+    def post(self, request, *args, **kwargs):
+        order_id = kwargs.get("order_id")
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+
+        if order.status not in ["cancelled", "paid"]:  # отменяем только если не оплачено
+            order.status = "cancelled"
+            order.delivery_status = "cancelled"
+            order.save()
+            send_cancel_order_email(order)
+            return JsonResponse({"success": True, "message": "Заказ отменён"})
+        else:
+            return JsonResponse({"success": False, "message": "Невозможно отменить заказ"})

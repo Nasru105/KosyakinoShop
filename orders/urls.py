@@ -23,4 +23,5 @@ app_name = "orders"
 urlpatterns = [
     path("checkout/", views.CreateOrderView.as_view(), name="create_order"),
     path("webhook/yookassa/", views.YooKassaWebhookView.as_view(), name="yookassa_webhook"),
+    path("cancel_order/<int:order_id>/", views.CancelOrderView.as_view(), name="cancel_order"),
 ]
