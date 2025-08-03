@@ -131,7 +131,6 @@ class ProductView(DetailView):
         )
 
         # print(json.dumps(variants_color_json, indent=4))
-        print(variants_color_json_sorted.keys())
         context.update(
             {
                 "variants_color_json": variants_color_json_sorted,

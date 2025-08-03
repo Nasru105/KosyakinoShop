@@ -116,31 +116,45 @@
                             </p>
                         </div>
                         
-
-
-                        {% if variants_size_json %}
-                        <div class="mb-3">
-                            <label for="size-select" class="form-label">Выберите размер:</label>
-                            <select class="form-select" id="size-select" name="size">
-                                {% for size, variants in variants_size_json.items %}
-                                    <option value="{{ size }}" {% if size == variant.size|lower %}selected{% endif %}>{{ size|upper }}</option>
-                                {% endfor %}
-                            </select>
+                        <div id="selection-mode" class="d-flex gap-2 align-items-center mb-4">
+                            <label class="btn btn-outline-dark active" id="color-first-label">
+                                <input type="radio" name="mode" value="color-first" class="d-none" checked>
+                                Цвет → Размер
+                            </label>
+                            <label class="btn btn-outline-dark" id="size-first-label">
+                                <input type="radio" name="mode" value="size-first" class="d-none">
+                                Размер → Цвет
+                            </label>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="color-select" class="form-label">Выберите цвет:</label>
-                            <!-- Текущий выбранный цвет (превью) -->
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="color-preview me-2"
-                                    id="current-color" 
-                                    style="width: 40px; height: 40px; 
-                                            background-color: {{ variant.color_code }};
-                                            border: 2px solid {% if color == variant.color %}#000{% else %}#dee2e6{% endif %};
-                                            border-radius: 8px;">
+                        {% if variants_data %}
+                        <div id="variant-selectors" class="p-3 border rounded shadow-sm bg-light">
+                            <!-- Выбор цвета -->
+                            <div id="color-container" class="mb-4">
+                                <label for="color-select" class="form-label fw-semibold">Выберите цвет:</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="color-preview"
+                                        id="current-color"
+                                        style="width: 40px; height: 40px;
+                                                background-color: {{ variant.color_code }};
+                                                border: 2px solid #dee2e6;
+                                                border-radius: 8px;">
+                                    </div>
+                                    <select class="form-select w-auto" id="color-select"  name="color" style="min-width: 150px;">
+                                        <!-- Цвета подставляются через JS -->
+                                    </select>
                                 </div>
-                                <select class="form-select" id="color-select" name="color">
-                                    <!-- Цвета подставляются через JS -->
+                            </div>
+
+                            <!-- Выбор размера -->
+                            <div id="size-container" class="mb-2">
+                                <label for="size-select" class="form-label fw-semibold">Выберите размер:</label>
+                                <select class="form-select w-auto" id="size-select" name="size" style="min-width: 150px;">
+                                    {% for size, variants in variants_data.sizes.items %}
+                                        <option value="{{ size }}" {% if size == variant.size|lower %}selected{% endif %}>
+                                            {{ size|upper }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -185,14 +199,71 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script id="variants-json" type="application/json">
-    {{ variants_json|safe }}
+    {{ variants_data|safe }}
 </script>
 
 <script>
-    // variantsData — теперь структура вида { size: [{variant1}, {variant2}], ... }
-    const variantsData = {{ variants_size_json_str|safe }};
+document.addEventListener("DOMContentLoaded", () => {
+    const modeRadios = document.querySelectorAll('input[name="mode"]');
+    const selectorsContainer = document.getElementById("variant-selectors");
+    const colorContainer = document.getElementById("color-container");
+    const sizeContainer = document.getElementById("size-container");
+
+    function updateSelectors() {
+        const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+
+        if (selectedMode === "color-first") {
+            selectorsContainer.append(colorContainer);
+            selectorsContainer.append(sizeContainer);
+        } else {
+            selectorsContainer.append(sizeContainer);
+            selectorsContainer.append(colorContainer);
+        }
+    }
+
+    modeRadios.forEach(radio => {
+        radio.addEventListener("change", () => {
+            updateSelectors();
+        });
+    });
+
+    // Инициализация
+    updateSelectors();
+});
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modeButtons = document.querySelectorAll('#selection-mode label');
+        const colorContainer = document.getElementById('color-container');
+        const sizeContainer = document.getElementById('size-container');
+
+        modeButtons.forEach(label => {
+            label.addEventListener('click', () => {
+                modeButtons.forEach(btn => btn.classList.remove('active'));
+                label.classList.add('active');
+
+                const input = label.querySelector('input');
+                if (input.value === "color-first") {
+                    colorContainer.before(sizeContainer); // Цвет сверху
+                } else {
+                    sizeContainer.before(colorContainer); // Размер сверху
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    const variantsData = {{ variants_data|safe }}; 
+    // структура вида:
+    // {
+    //   sizes: { "S": [{color, ...}], "M": [...] },
+    //   colors: { "Red": [{size, ...}], "Blue": [...] }
+    // }
+
     const colorSelect = document.getElementById("color-select");
     const sizeSelect = document.getElementById("size-select");
+    const modeRadios = document.querySelectorAll('input[name="mode"]');
 
     const skuEl = document.getElementById("variant-sku");
     const priceEl = document.getElementById("variant-price");
@@ -203,16 +274,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const addToCartButton = document.getElementById("add-to-cart-button");
     const current_color = document.getElementById("current-color");
 
-    function findVariant(size, color) {
-        const variants = variantsData[size] || [];
-        return variants.find(v => v.color === color);
+    function getMode() {
+        return [...modeRadios].find(r => r.checked).value;
     }
 
-    // Обновляем список цветов при выборе размера
-    function updateColors(selectedSize) {
-        const colors = variantsData[selectedSize] || [];
-        colorSelect.innerHTML = "";
+    function findVariant(size, color) {
+        if (getMode() === "size-first") {
+            const variants = variantsData.sizes[size] || [];
+            return variants.find(v => v.color === color);
+        } else {
+            const variants = variantsData.colors[color] || [];
+            return variants.find(v => v.size === size);
+        }
+    }
 
+    function updateSizesForColor(selectedColor) {
+        const sizes = variantsData.colors[selectedColor] || [];
+        sizeSelect.innerHTML = "";
+        sizes.forEach(variant => {
+            const option = document.createElement("option");
+            option.value = variant.size;
+            option.textContent = variant.size;
+            sizeSelect.appendChild(option);
+        });
+        if (sizes.length > 0) {
+            sizeSelect.value = sizes[0].size;
+            updateVariantInfo(sizes[0].size, selectedColor);
+        }
+    }
+
+    function updateColorsForSize(selectedSize) {
+        const colors = variantsData.sizes[selectedSize] || [];
+        colorSelect.innerHTML = "";
         colors.forEach(variant => {
             const option = document.createElement("option");
             option.value = variant.color;
@@ -220,8 +313,6 @@ document.addEventListener("DOMContentLoaded", function () {
             option.style.backgroundColor = variant.color_code || "transparent";
             colorSelect.appendChild(option);
         });
-
-        // Обновляем инфо для первого цвета
         if (colors.length > 0) {
             colorSelect.value = colors[0].color;
             updateVariantInfo(selectedSize, colors[0].color);
@@ -235,7 +326,9 @@ document.addEventListener("DOMContentLoaded", function () {
         skuEl.textContent = variant.sku;
         priceEl.textContent = `${variant.sell_price} ₽`;
 
-        if (!variant.color_code){
+
+
+        if (!variant.color_code) {
             current_color.style.display = "none";
         } else {
             current_color.style.display = "";
@@ -257,15 +350,15 @@ document.addEventListener("DOMContentLoaded", function () {
             quantityEl.classList.add("text-success");
             quantityEl.textContent = variant.quantity;
 
-            addToCartButton.disabled = false;                        
-            addToCartButton.classList.remove("disabled");            
+            addToCartButton.disabled = false;
+            addToCartButton.classList.remove("disabled");
         } else {
             quantityEl.textContent = "Нет в наличии";
             quantityEl.classList.remove("text-success");
             quantityEl.classList.add("text-danger");
 
-            addToCartButton.disabled = true;                         
-            addToCartButton.classList.add("disabled");               
+            addToCartButton.disabled = true;
+            addToCartButton.classList.add("disabled");
         }
 
         descriptionEl.textContent = variant.description || "";
@@ -274,32 +367,58 @@ document.addEventListener("DOMContentLoaded", function () {
         $(addToCartButton).data("product-id", variant.id);
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        // Инициализируем список размеров
-        sizeSelect.innerHTML = "";
-        Object.keys(variantsData).forEach(size => {
-            const option = document.createElement("option");
-            option.value = size;
-            option.textContent = size;
-            sizeSelect.appendChild(option);
-        });
+    function init() {
+        if (getMode() === "size-first") {
+            sizeSelect.innerHTML = "";
+            Object.keys(variantsData.sizes).forEach(size => {
+                const option = document.createElement("option");
+                option.value = size;
+                option.textContent = size;
+                sizeSelect.appendChild(option);
+            });
+            if (sizeSelect.options.length > 0) {
+                sizeSelect.value = sizeSelect.options[0].value;
+                updateColorsForSize(sizeSelect.value);
+            }
+        } else {
+            colorSelect.innerHTML = "";
+            Object.keys(variantsData.colors).forEach(color => {
+                const option = document.createElement("option");
+                option.value = color;
+                option.textContent = color;
+                option.style.backgroundColor = variantsData.colors[color][0].color_code || "transparent"; // ✅ исправлено
+                colorSelect.appendChild(option);
+            });
 
-        // Выбираем первый размер и обновляем цвета
-        if (sizeSelect.options.length > 0) {
-            sizeSelect.value = sizeSelect.options[0].value;
-            updateColors(sizeSelect.value);
+            if (colorSelect.options.length > 0) {
+                colorSelect.value = colorSelect.options[0].value;
+                updateSizesForColor(colorSelect.value);
+            }
         }
+    }
+
+
+    modeRadios.forEach(radio => {
+        radio.addEventListener("change", init);
     });
 
     sizeSelect.addEventListener("change", function () {
-        updateColors(this.value);
+        if (getMode() === "size-first") {
+            updateColorsForSize(this.value);
+        } else {
+            updateVariantInfo(this.value, colorSelect.value);
+        }
     });
 
     colorSelect.addEventListener("change", function () {
-        updateVariantInfo(sizeSelect.value, this.value);
+        if (getMode() === "color-first") {
+            updateSizesForColor(this.value);
+        } else {
+            updateVariantInfo(sizeSelect.value, this.value);
+        }
     });
+
+    document.addEventListener("DOMContentLoaded", init);
 </script>
-
-
-
 {% endblock %}
+
