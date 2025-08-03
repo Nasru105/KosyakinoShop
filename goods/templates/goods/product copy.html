@@ -118,16 +118,7 @@
                         
 
 
-                        {% if variants_size_json %}
-                        <div class="mb-3">
-                            <label for="size-select" class="form-label">Выберите размер:</label>
-                            <select class="form-select" id="size-select" name="size">
-                                {% for size, variants in variants_size_json.items %}
-                                    <option value="{{ size }}" {% if size == variant.size|lower %}selected{% endif %}>{{ size|upper }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
+                        {% if variants_color_json %}
                         <div class="mb-3">
                             <label for="color-select" class="form-label">Выберите цвет:</label>
                             <!-- Текущий выбранный цвет (превью) -->
@@ -140,9 +131,18 @@
                                             border-radius: 8px;">
                                 </div>
                                 <select class="form-select" id="color-select" name="color">
-                                    <!-- Цвета подставляются через JS -->
+                                    {% for color, variants in variants_color_json.items %}
+                                    <option value="{{ color }}" style="display: inline-block; width: 20px; height: 20px; background-color: {{ variants.0.color_code }}; border: 1px solid #000;" {% if color == variant.color %}selected{% endif %}>{{ color }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="size-select" class="form-label">Выберите размер:</label>
+                            <select class="form-select" id="size-select" name="size">
+                                <!-- Здесь будут размеры подставляться через JS -->
+                            </select>
                         </div>
                         {% endif %}
                     {% endif %}
@@ -189,8 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
-    // variantsData — теперь структура вида { size: [{variant1}, {variant2}], ... }
-    const variantsData = {{ variants_size_json_str|safe }};
+    const variantsData = {{ variants_color_json_str|safe }};
     const colorSelect = document.getElementById("color-select");
     const sizeSelect = document.getElementById("size-select");
 
@@ -203,33 +202,31 @@ document.addEventListener("DOMContentLoaded", function () {
     const addToCartButton = document.getElementById("add-to-cart-button");
     const current_color = document.getElementById("current-color");
 
-    function findVariant(size, color) {
-        const variants = variantsData[size] || [];
-        return variants.find(v => v.color === color);
+    function findVariant(color, size) {
+        const variants = variantsData[color] || [];
+        return variants.find(v => v.size === size);
     }
 
-    // Обновляем список цветов при выборе размера
-    function updateColors(selectedSize) {
-        const colors = variantsData[selectedSize] || [];
-        colorSelect.innerHTML = "";
+    function updateSizes(selectedColor) {
+        const sizes = variantsData[selectedColor] || [];
+        sizeSelect.innerHTML = "";
 
-        colors.forEach(variant => {
+        sizes.forEach(variant => {
             const option = document.createElement("option");
-            option.value = variant.color;
-            option.textContent = variant.color;
-            option.style.backgroundColor = variant.color_code || "transparent";
-            colorSelect.appendChild(option);
+            option.value = variant.size;
+            option.textContent = variant.size;
+            sizeSelect.appendChild(option);
         });
 
-        // Обновляем инфо для первого цвета
-        if (colors.length > 0) {
-            colorSelect.value = colors[0].color;
-            updateVariantInfo(selectedSize, colors[0].color);
+        // Обновить данные на основе первого размера
+        if (sizes.length > 0) {
+            sizeSelect.value = sizes[0].size;
+            updateVariantInfo(selectedColor, sizes[0].size);
         }
     }
 
-    function updateVariantInfo(size, color) {
-        const variant = findVariant(size, color);
+    function updateVariantInfo(color, size) {
+        const variant = findVariant(color, size);
         if (!variant) return;
 
         skuEl.textContent = variant.sku;
@@ -239,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
             current_color.style.display = "none";
         } else {
             current_color.style.display = "";
-            current_color.style.backgroundColor = variant.color_code;
+            current_color.style.backgroundColor = variant.color_code
         }
 
         if (variant.discount && parseFloat(variant.discount) > 0) {
@@ -270,36 +267,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
         descriptionEl.textContent = variant.description || "";
 
+        // обновить data-product-id у кнопки "добавить в корзину"
         addToCartButton.setAttribute("data-product-id", variant.id);
-        $(addToCartButton).data("product-id", variant.id);
+        $(addToCartButton).data("product-id", variant.id);  // <-- это обязательно!
+
     }
 
+    // инициализация при загрузке
     document.addEventListener("DOMContentLoaded", function () {
-        // Инициализируем список размеров
-        sizeSelect.innerHTML = "";
-        Object.keys(variantsData).forEach(size => {
-            const option = document.createElement("option");
-            option.value = size;
-            option.textContent = size;
-            sizeSelect.appendChild(option);
-        });
-
-        // Выбираем первый размер и обновляем цвета
-        if (sizeSelect.options.length > 0) {
-            sizeSelect.value = sizeSelect.options[0].value;
-            updateColors(sizeSelect.value);
-        }
-    });
-
-    sizeSelect.addEventListener("change", function () {
-        updateColors(this.value);
+        updateSizes(colorSelect.value);
     });
 
     colorSelect.addEventListener("change", function () {
-        updateVariantInfo(sizeSelect.value, this.value);
+        const selectedColor = this.value;
+        updateSizes(selectedColor);
+    });
+
+    sizeSelect.addEventListener("change", function () {
+        const selectedColor = colorSelect.value;
+        const selectedSize = this.value;
+        updateVariantInfo(selectedColor, selectedSize);
     });
 </script>
-
 
 
 {% endblock %}

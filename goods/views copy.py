@@ -99,15 +99,14 @@ class ProductView(DetailView):
 
         variants = product.variants.all()
 
+        variants_color_json = {}
         SIZE_ORDER = ["xs", "s", "m", "l", "xl", "2xl", "3xl", "4xl", "5xl"]
-        size_index = {size: idx for idx, size in enumerate(SIZE_ORDER)}
+        size_index = {size: index for index, size in enumerate(SIZE_ORDER)}
 
-        variants_size_json = {}
         for v in variants:
-            size = v.size.lower()
-            if size not in variants_size_json:
-                variants_size_json[size] = []
-            variants_size_json[size].append(
+            if v.color not in variants_color_json:
+                variants_color_json[v.color] = []
+            variants_color_json[v.color].append(
                 {
                     "id": v.id,
                     "color": v.color,
@@ -121,20 +120,22 @@ class ProductView(DetailView):
                     "description": v.description,
                 }
             )
+        # Сортировка размеров внутри каждого цвета
+        for color, variant_list in variants_color_json.items():
+            variants_color_json[color] = sorted(
+                variant_list, key=lambda x: size_index.get(x["size"].lower(), -999)  # неизвестные — в конец
+            )
 
-        # Сортируем цвета внутри каждого размера по нужному правилу (с числом впереди)
-        for size, variants_list in variants_size_json.items():
-            variants_list.sort(key=lambda x: sort_key(x["color"]))
-
-        # Сортируем размеры по порядку SIZE_ORDER
-        variants_size_json_sorted = OrderedDict(
-            sorted(variants_size_json.items(), key=lambda x: size_index.get(x[0], 999))
+        variants_color_json_sorted = OrderedDict(
+            sorted(variants_color_json.items(), key=lambda item: sort_key(item[0]))
         )
 
+        # print(json.dumps(variants_color_json, indent=4))
+        print(variants_color_json_sorted.keys())
         context.update(
             {
-                "variants_size_json": variants_size_json_sorted,
-                "variants_size_json_str": json.dumps(variants_size_json_sorted, cls=DjangoJSONEncoder),
+                "variants_color_json": variants_color_json_sorted,
+                "variants_color_json_str": json.dumps(variants_color_json_sorted, cls=DjangoJSONEncoder),
                 "title": product.name,
                 "variant": variants.last(),
             }
