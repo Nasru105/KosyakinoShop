@@ -40,7 +40,7 @@ function bindPhoneFormatters() {
         if ($phone.length === 0) return;
 
         const cleaned = $phone.val().replace(/[()\+\-\s]/g, '');
-        if (cleaned === '' || /^\d{10}$/.test(cleaned)) {
+        if ( /^\d{10}$/.test(cleaned)) {
             $('#phone_number_error').hide();
             $phone.val(cleaned);
         } else {

@@ -1,18 +1,27 @@
-$(document).ready(function () {
 
-})
+// Закрытие Django-уведомлений
 function bindNotificationHandlers() {
-    // Берем из разметки элемент по id - оповещения от django
-    var notification = $('#notification');
-    // И через 7 сек. убираем
+    const notification = $('#notification');
     if (notification.length > 0) {
-        setTimeout(function () {
-            notification.alert('close');
+        setTimeout(() => {
+            notification.fadeOut(400, () => notification.remove());
         }, 5000);
     }
 }
-function showNotification(message, duration = 5000) {
+
+// Универсальная функция для показа уведомлений
+function showNotification(message, type = "success", duration = 5000) {
     const notification = $("#jq-notification");
-    notification.html(message).fadeIn(400);
-    setTimeout(() => notification.fadeOut(400), duration);
+
+    // Удаляем предыдущие классы и добавляем новый по типу уведомления
+    notification
+        .removeClass("alert-success alert-danger alert-warning alert-info")
+        .addClass(`alert alert-${type}`)
+        .html(message)
+        .fadeIn(300);
+
+    // Автоматическое скрытие
+    setTimeout(() => {
+        notification.fadeOut(400);
+    }, duration);
 }
