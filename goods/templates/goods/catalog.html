@@ -52,8 +52,10 @@
                         onclick="event.stopPropagation();">
                         <!-- Скрытое поле для поиска -->
                         {% if request.GET.q %}
-                            <input type="hidden" name="q" value="{{ request.GET.q }}">
+                        <input type="hidden" name="q" value="{{ request.GET.q }}">
                         {% endif %}
+                        <!-- Скрытое поле для текущего paginate_by -->
+                        <input type="hidden" name="paginate_by" value="{{ paginate_by }}">
 
                         <!-- Товары по акции -->
                         <div class="mb-3">
@@ -170,6 +172,28 @@
                             Применить
                         </button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Пагинация -->
+            <div class="col-auto">
+                <div class="dropdown mb-3">
+                    <button class="btn btn-dark dropdown-toggle" 
+                            type="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        Показать по: {{ paginate_by }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for step in pagination_steps %}
+                            <li>
+                                <a class="dropdown-item {% if paginate_by == step|stringformat:"s" %}active{% endif %}" 
+                                href="?{% change_params paginate_by=step page=1 %}">
+                                    {{ step }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

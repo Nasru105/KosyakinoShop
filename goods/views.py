@@ -61,6 +61,12 @@ class CatalogView(ListView):
         context["firms_query"] = self.request.GET.getlist("firm")  # список производителей
         context["sizes_query"] = self.request.GET.getlist("size")  # список размеров
 
+        # Передаём список возможных шагов пагинации
+        context["pagination_steps"] = [6, 12, 24, 48]
+        context["paginate_by"] = (
+            self.request.GET.get("paginate_by") or self.paginate_by
+        )  # Количество товаров на странице
+
         # Фильтрация фирм по уникальным значениям и выбранной категории
         category_slug = self.kwargs.get("category_slug")
         if category_slug:
@@ -82,10 +88,8 @@ class CatalogView(ListView):
 
         return context
 
-
-from collections import OrderedDict
-import json
-from django.core.serializers.json import DjangoJSONEncoder
+    def get_paginate_by(self, queryset):
+        return int(self.request.GET.get("paginate_by") or self.paginate_by)
 
 
 class ProductView(DetailView):
