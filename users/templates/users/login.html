@@ -31,13 +31,13 @@
             <a href="{% url 'password_reset' %}">Забыли пароль?</a> | <a href="{% url "users:registration" %}">Создать аккаунт</a>
         </div>
         <hr>
-        <div class="text-center">
+        {% comment %} <div class="text-center">
             <p>Или авторизуйтесь через:</p>
             <a href="#" class="btn btn-dark">
                 <img class="mx-1" src="{% static "/deps/icons/google.svg" %}" alt="Catalog Icon" width="16" height="16">
                 Google
             </a>
-        </div>
+        </div> {% endcomment %}
     </div>
 </div>
 {% endblock content %}
